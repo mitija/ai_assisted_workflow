@@ -1,0 +1,7 @@
+# Local, machine-specific config (copy from project_context.template.yaml)
+project_context.yaml
+
+# Odoo connection/credentials files
+odoo-qa.ini
+odoo_config.ini
+config.ini

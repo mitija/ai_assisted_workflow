@@ -1,0 +1,72 @@
+# project_context.template.yaml
+#
+# Copy this file to `project_context.yaml` and fill in the values for your
+# local machine / project. `project_context.yaml` should be gitignored.
+#
+# Agents read this file at the start of a session to discover project-specific
+# paths, credentials, and commands. Never hard-code these values in code or docs.
+
+project:
+  name:                  # Human-readable project name, e.g. "Gulli Foods barcode suite"
+  description:           # One-line description of what this project is
+
+# Where the code and docs live. Adjust to match this project's layout.
+layout:
+  source_dir:            # Directory holding the source code, e.g. "src" or "odoo-sco-pca"
+  docs_dir:              # Directory holding project docs, e.g. "docs"
+  summary_file: PROJECT_SUMMARY.md   # File holding current project state (no history)
+
+# Spec-driven workflow: where the specification and tests live (see
+# AI_assisted_development_workflow.md). Specs/tests are usually in a separate,
+# tagged documentation repo. Agents read these before implementing.
+spec:
+  docs_repo:             ./docs # Path or URL of the documentation repo, e.g. "../project-docs"
+  customer_facing_dir:   ./docs/customer_facing # Dir holding <epic>_SPEC.md and <epic>_TESTS.md, e.g. "project-docs/customer-facing"
+  current_tag:           # Spec freeze tag to implement against, e.g. "spec-260513"
+
+# Generic build / quality commands. Fill in for non-Odoo projects, or in addition
+# to the Odoo section below. Agents run these for build/lint/typecheck/format and
+# before declaring a task done. (Odoo tests use odoo.scripts.run_tests instead.)
+commands:
+  install:               # e.g. "npm install" / "pip install -e ."
+  build:                 # e.g. "npm run build"
+  lint:                  # e.g. "ruff check ." / "npm run lint"
+  typecheck:             # e.g. "mypy ." / "tsc --noEmit"
+  format:                # e.g. "ruff format ." / "prettier -w ."
+  test:                  # generic test command (Odoo uses odoo.scripts.run_tests)
+
+# ----------------------------------------------------------------------------
+# Odoo-specific section. Remove this whole block for non-Odoo projects.
+# ----------------------------------------------------------------------------
+odoo:
+  version:               # e.g. "17"
+
+  # Odoo source code (read-only reference)
+  source:
+    base:                # Base Odoo source, e.g. "/path/to/odoo/17/odoo"
+    enterprise:          # Enterprise source, e.g. "/path/to/odoo/17/enterprise"
+
+  # Executable / scripts
+  scripts:
+    start:               # Odoo launcher wrapper, e.g. "/path/to/odoo/17/start_odoo17.sh"
+    run_tests:           # Test wrapper (drops/recreates DB), e.g. "/path/to/odoo/17/run_tests.sh"
+    config_ini:          # Odoo connection config, e.g. "scripts/odoo_config.ini" (gitignored)
+
+  # Local database used for development / tests
+  database:
+    default_name:        # e.g. "odoo_test" or "letsgo_qa"
+    user:                # e.g. "odoo17"
+    host: localhost
+    port: 5432
+    password:            # leave blank if no password
+
+  # Remote instance reachable via XMLRPC for data checks (optional)
+  qa_instance:
+    config_ini:          # Credentials file, e.g. "odoo-qa.ini" (gitignored)
+    url:                 # e.g. "https://qa.example.com"
+
+  # Modules maintained in this project (optional, list as needed)
+  modules:
+    # - name: gullifood_stock_barcode
+    #   path: odoo-gulli-foods/gullifood_stock_barcode
+    #   depends: [stock_barcode, stock_barcode_mrp, product_multiple_barcodes]
