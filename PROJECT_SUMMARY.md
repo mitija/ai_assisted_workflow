@@ -15,14 +15,21 @@ guidance/skill bundle for agents.
   acceptance demo). Referenced from `AGENTS.md` via `@AGENTS.odoo.md`.
 - `project_context.template.yaml` — template for machine/project-specific values
   (paths, spec docs repo + tag, generic `commands:` block for build/lint/typecheck/
-  format/test, Odoo source/scripts/DB/QA, modules). Copy to `project_context.yaml`
-  (gitignored) per project.
+  format/test, Odoo source/scripts, modules). Odoo DB credentials removed — they
+  live in `odoo_config.ini` exclusively. Copy to `project_context.yaml` (gitignored)
+  per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
+- `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
+  with inferred defaults; asks the user only for what cannot be discovered.
+- `skills/specification-methodology/SKILL.md` — 5-step spec writing (Models, Roles,
+  Use Cases identification, Use Cases documentation, Review).
 - `skills/test-scenarios/SKILL.md` — how to write contractual, customer-facing
   `<epic>_TESTS.md` scenarios.
+- `skills/todo-list/SKILL.md` — TDD-based TODO list generator (Red/Green phases,
+  Review & Commit checkpoints) for entry-level programmers.
 
-## What `AGENTS.md` covers
+## What `agents/AGENTS.md` covers
 - Spec-driven workflow rules: spec is the contract; never fill gaps with assumptions
   (ambiguity is a blocker — ask interactively, one question at a time, unpacking
   complex ones); no mid-flight spec changes; tests are executable spec and tests win;
@@ -41,25 +48,30 @@ guidance/skill bundle for agents.
 - Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).
 - Skills: `coding-standards`, `test-scenarios`.
 
+## What `AGENTS.md` (workspace root) covers
+- Meta-guidance for working on this repo itself.
+- Consistency triangle: `agents/AGENTS.md` ↔ `project_context.template.yaml` ↔
+  `init-project/SKILL.md` must stay in sync.
+- Skills table and Definition of Done for this repo.
+
 ## Key source documents
-- `AI_assisted_development_workflow.md` (repo root) — the methodology `AGENTS.md`
+- `AI_assisted_development_workflow.md` (docs/) — the methodology `agents/AGENTS.md`
   encodes. Workspace root with separate docs and source repos; docs repo split into
   `customer-facing/` and versioned `working/`; unversioned workspace-level `local/`
   scratch material; docs freeze tags; 5-step spec methodology; state-table tests;
   multi-layer acceptance; known gaps.
-- Real test-scenario reference used to design the `test-scenarios` skill:
-  a customer-facing Odoo procurement test document (not included in this repo).
 
 ## Design notes / decisions
-- `test-scenarios` skill format is based on the real scorptec artifact (Pre-conditions /
-  Steps with Before/After / Expected-result tables, grouped into Categories, `T-NN` IDs),
-  with the workflow doc's Appendix A state-table style kept as a documented alternative.
-- Contractual, customer-facing scenarios are explicitly distinguished from non-contractual
-  developer implementation tests.
+- `test-scenarios` skill format uses Pre-conditions / Steps with Before/After /
+  Expected-result tables, grouped into Categories, `T-NN` IDs. State-table format
+  kept as a documented alternative for multi-step scenarios.
+- Contractual, customer-facing scenarios are explicitly distinguished from
+  non-contractual developer implementation tests.
+- `init-project` skill redesigned to scan filesystem first and infer defaults
+  before asking questions — typically 0–3 questions instead of 12.
+- `project_context.template.yaml` streamlined: Odoo DB credentials (`user`, `host`,
+  `port`, `password`) and `qa_instance.url` removed — they come from `odoo_config.ini`.
 
 ## Planned / open
-- No `specification` skill exists yet in the repo; the workflow doc §4 references one.
-  Create it (5-step methodology: Models, Roles, Use Case identification, Use Case
-  documentation, Review) if/when wanted.
-- Consider an `AGENTS.md` note on non-functional requirements (workflow §8.8 gap).
+- Consider an `agents/AGENTS.md` note on non-functional requirements (workflow §8.8 gap).
 - Nothing committed yet (per convention: ask before committing).

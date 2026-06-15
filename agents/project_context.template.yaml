@@ -20,8 +20,8 @@ layout:
 # AI_assisted_development_workflow.md). Specs/tests are usually in a separate,
 # tagged documentation repo. Agents read these before implementing.
 spec:
-  docs_repo:             ./docs # Path or URL of the documentation repo, e.g. "../project-docs"
-  customer_facing_dir:   ./docs/customer_facing # Dir holding <epic>_SPEC.md and <epic>_TESTS.md, e.g. "project-docs/customer-facing"
+  docs_repo:             ./docs                   # Path or URL of the documentation repo
+  customer_facing_dir:   ./docs/customer-facing   # Dir holding <epic>_SPEC.md and <epic>_TESTS.md
   current_tag:           # Spec freeze tag to implement against, e.g. "spec-260513"
 
 # Generic build / quality commands. Fill in for non-Odoo projects, or in addition
@@ -50,20 +50,15 @@ odoo:
   scripts:
     start:               # Odoo launcher wrapper, e.g. "/path/to/odoo/17/start_odoo17.sh"
     run_tests:           # Test wrapper (drops/recreates DB), e.g. "/path/to/odoo/17/run_tests.sh"
-    config_ini:          # Odoo connection config, e.g. "scripts/odoo_config.ini" (gitignored)
+    # Connection config for the local dev/test database. All DB credentials
+    # (host, port, user, password, dbname) come from this file — do not
+    # duplicate them here.
+    config_ini:          # e.g. "scripts/odoo_config.ini"  (gitignored)
 
-  # Local database used for development / tests
-  database:
-    default_name:        # e.g. "odoo_test" or "letsgo_qa"
-    user:                # e.g. "odoo17"
-    host: localhost
-    port: 5432
-    password:            # leave blank if no password
-
-  # Remote instance reachable via XMLRPC for data checks (optional)
+  # Remote QA instance reachable via XMLRPC for data checks (optional).
+  # All connection details (URL, credentials) are read from config_ini below.
   qa_instance:
-    config_ini:          # Credentials file, e.g. "odoo-qa.ini" (gitignored)
-    url:                 # e.g. "https://qa.example.com"
+    config_ini:          # e.g. "scripts/odoo-qa.ini"  (gitignored)
 
   # Modules maintained in this project (optional, list as needed)
   modules:
