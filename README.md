@@ -40,8 +40,9 @@ This symlinks `agents/` to `~/.agents`. Alternatively, copy the directory manual
 | Skill | Description |
 |-------|-------------|
 | `coding-standards` | Logging and code quality standards |
-| `test-scenarios` | Writing contractual, customer-facing test scenarios |
+| `init-project` | Initialize or inspect a project's `project_context.yaml` configuration file |
 | `specification-methodology` | 5-step spec writing (Models, Roles, Use Cases, Documentation, Review) |
+| `test-scenarios` | Writing contractual, customer-facing test scenarios |
 | `todo-list` | TDD-based TODO list generator for entry-level programmers |
 
 ## License
