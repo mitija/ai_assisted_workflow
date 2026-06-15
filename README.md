@@ -1,7 +1,7 @@
-# AI Agent Configs
+# AI Assisted Workflow
 
 A reusable set of agent instructions, skills, and project templates for
-AI-assisted, spec-driven software development. Drop into any project to give
+AI-assisted, spec-driven, red / green phases software development. Drop into any project to give
 AI coding agents a consistent, structured workflow.
 
 This is part of my working philosophy - I constantly refine and improve on my workflows. As I work on a project I also work on improving these set of files
