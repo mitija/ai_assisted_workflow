@@ -23,7 +23,12 @@ guidance/skill bundle for agents.
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
   with inferred defaults; asks the user only for what cannot be discovered.
 - `skills/specification-methodology/SKILL.md` — 5-step spec writing (Models, Roles,
-  Use Cases identification, Use Cases documentation, Review).
+  Use Cases identification, Use Cases documentation, Review). Produces wiki-style
+  `spec/` directory with individual files per model (`models/`, global/shared) and
+  use case (`use-cases/`, flat by default or grouped under `epics/<epic>/` for
+  large-scope projects), cross-referenced via relative links. Main `spec-index.md`
+  serves as index; sections over 40 lines extract to standalone files. Gherkin
+  acceptance criteria feed the contractual `<epic>_TESTS.md` (see test-scenarios).
 - `skills/test-scenarios/SKILL.md` — how to write contractual, customer-facing
   `<epic>_TESTS.md` scenarios.
 - `skills/todo-list/SKILL.md` — TDD-based TODO list generator (Red/Green phases,
@@ -71,6 +76,14 @@ guidance/skill bundle for agents.
   before asking questions — typically 0–3 questions instead of 12.
 - `project_context.template.yaml` streamlined: Odoo DB credentials (`user`, `host`,
   `port`, `password`) and `qa_instance.url` removed — they come from `odoo_config.ini`.
+- `specification-methodology` output format changed from single monolithic file to
+  wiki-style directory tree (`spec/` with `models/`, `use-cases/` subdirs,
+  `spec-index.md` as index). Use cases reference models via a `## Related Models`
+  section; model files do not back-reference use cases (maintenance trade-off).
+  Sections exceeding 40 lines extract to standalone files. Review process is
+  agent-run with human validation at each step and a "Wiki Integrity" check.
+  Large-scope projects may split use cases under `epics/<epic>/` (one
+  `<epic>_TESTS.md` each) while the data model stays global.
 
 ## Planned / open
 - Consider an `agents/AGENTS.md` note on non-functional requirements (workflow §8.8 gap).
