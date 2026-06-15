@@ -86,7 +86,15 @@ Spec: docs@spec-260513
 
 ## 4. The Specification
 
-A 5-step methodology, formalized as a reusable AI skill (full version: `Specification skill.md`):
+### 4.0 Requirement refinement (precursor)
+
+Before the methodology proper, a **refinement** step hardens the initial plain-English requirement. It is a guided, one-question-at-a-time interview (formalized as the `spec-refinement` skill) that turns a rough, high-level requirement into a precise, unambiguous narrative — clarifying the entities, their relationships, the main ways they are manipulated, the key business rules, and the terminology.
+
+It is deliberately **not exhaustive**: it stops once the requirement is precise enough to begin defining models. Exhaustive CRUD, full permissions, field-level types, and exception flows are left to the methodology. The refined narrative is written to `docs/working/refined-requirements.md` and becomes the input to the 5-step methodology below.
+
+### 4.1 The 5-step methodology
+
+A 5-step methodology, formalized as a reusable AI skill (the `specification-methodology` skill):
 
 1. **Models** — entities, fields with explicit types and constraints, relationships, on-delete behaviour. All models extend a `BaseModel` with audit fields.
 2. **Roles** — user types and permissions matrix per use case.
@@ -94,7 +102,9 @@ A 5-step methodology, formalized as a reusable AI skill (full version: `Specific
 4. **Use case documentation** — pre-conditions, actors and triggers, main sequence, alternative flows, exception flows, post-conditions, Gherkin acceptance criteria.
 5. **Review** — completeness, consistency, traceability, technical feasibility.
 
-Outputs are structured markdown. Naming conventions, field types, constraint notation (`*`, `U`, `RO`, `C`, `C/S`, `Rel`), and relationship semantics (`ref` vs `m2o`) are formalized so that **two consultants — or two LLMs — produce comparable artifacts.**
+Naming conventions, field types, constraint notation (`*`, `U`, `RO`, `C`, `C/S`, `Rel`, `Rel/S`), and relationship semantics (`ref` vs `m2o`) are formalized so that **two consultants — or two LLMs — produce comparable artifacts.**
+
+Outputs are a **wiki-style directory tree** rather than a single document: a `spec-index.md` index plus one file per model under `models/` (global, shared across epics) and one file per use case under `use-cases/`. Large or multi-item sections extract to their own files; large-scope projects may group use cases and tests under `epics/<epic>/` while the data model stays global.
 
 The spec covers as much as needed: functional logic, data schema, business rules, and UI/UX where it deviates from framework defaults. For Odoo, UI/UX is usually thin.
 
@@ -120,7 +130,8 @@ If the spec and tests disagree, **the tests win** and the spec is corrected befo
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Consultant (with AI)                                           │
-│  1. Draft/update SPEC and TESTS in docs repo                    │
+│  1. Refine the requirement (§4.0), then draft/update SPEC and   │
+│     TESTS in docs repo (§4.1)                                   │
 │  2. Customer reviews and validates (via docs repo access)       │
 │  3. Commit + tag docs when ready (e.g. spec-260513)             │
 │  4. Notify developer                                            │

@@ -22,6 +22,13 @@ guidance/skill bundle for agents.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
   with inferred defaults; asks the user only for what cannot be discovered.
+- `skills/spec-refinement/SKILL.md` — guided, one-question-at-a-time session that runs
+  *before* `specification-methodology`. Refines a rough/high-level requirement into a
+  precise, unambiguous freeform narrative at `docs/working/refined-requirements.md`,
+  clarifying entities, relationships, core manipulation intent, and key business rules
+  (and terminology) — deliberately non-exhaustive: defers full CRUD, roles, field types,
+  and exception flows to the full spec. Dynamic questioning (no fixed phases), always
+  offers a recommended answer, updates the narrative inline.
 - `skills/specification-methodology/SKILL.md` — 5-step spec writing (Models, Roles,
   Use Cases identification, Use Cases documentation, Review). Produces wiki-style
   `spec/` directory with individual files per model (`models/`, global/shared) and
@@ -51,7 +58,7 @@ guidance/skill bundle for agents.
 - Security & Secrets: treat config values (esp. credentials) as secret; never emit them.
 - Communication & Output: concise responses, `file_path:line` references.
 - Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).
-- Skills: `coding-standards`, `test-scenarios`.
+- Skills: `coding-standards`, `spec-refinement`, `test-scenarios`.
 
 ## What `AGENTS.md` (workspace root) covers
 - Meta-guidance for working on this repo itself.

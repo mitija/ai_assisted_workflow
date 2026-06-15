@@ -17,6 +17,7 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
   skills/
     coding-standards/SKILL.md  Logging and code quality standards
     init-project/SKILL.md      Initialize project_context.yaml
+    spec-refinement/SKILL.md   Refine a rough requirement before specification-methodology
     specification-methodology/ 5-step spec writing methodology
     test-scenarios/SKILL.md    Contractual customer-facing test scenarios
     todo-list/SKILL.md         TDD-based TODO list generator
@@ -34,6 +35,7 @@ local/                         Unversioned scratch material (not in git)
 |---|---|
 | `coding-standards` | Writing or modifying any application code, script, or service |
 | `init-project` | `project_context.yaml` is missing or incomplete |
+| `spec-refinement` | A rough/ambiguous requirement needs refining before specification-methodology |
 | `specification-methodology` | Creating or writing software specifications |
 | `test-scenarios` | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
 | `todo-list` | Generating a TDD-based TODO list for entry-level programmers |

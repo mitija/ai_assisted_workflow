@@ -128,6 +128,11 @@ permission prompts and keeps the workflow autonomous.
 - `coding-standards` — follow when writing or modifying application code
   (currently covers logging requirements). Load whenever you add or change code
   that runs as an app, script, or service.
+- `spec-refinement` — load before `specification-methodology` when an initial
+  requirement is rough or ambiguous. Runs a guided, one-question-at-a-time
+  session that refines the high-level requirement until the entities, their
+  relationships, the main ways they are manipulated, and the key business rules
+  are clear — without expanding into the full spec.
 - `test-scenarios` — follow when authoring or reviewing the contractual,
   customer-facing `<epic>_TESTS.md` scenarios. Load when writing or updating
   specification-level test scenarios (not developer-only implementation tests).
