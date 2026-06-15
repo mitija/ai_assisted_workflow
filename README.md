@@ -29,11 +29,12 @@ This symlinks `agents/` to `~/.agents`. Alternatively, copy the directory manual
 
 ## How it works
 
-1. Copy `agents/project_context.template.yaml` to your project root as
-   `project_context.yaml` and fill in your local paths, commands, and credentials.
+1. Run the `init-project` skill — it copies
+   [`agents/project_context.template.yaml`](agents/project_context.template.yaml) to your project root as
+   `project_context.yaml` and guides you through filling in local paths, commands, and credentials.
 2. The agent reads `AGENTS.md` and `project_context.yaml` at the start of each
    session to understand the project context and workflow.
-3. Follow the spec-driven workflow described in `docs/AI_assisted_development_workflow.md`.
+3. Follow the [spec-driven workflow](docs/AI_assisted_development_workflow.md) described in the methodology docs.
 
 ## Skills
 
