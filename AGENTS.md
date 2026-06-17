@@ -14,6 +14,10 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
   AGENTS.md                    Generic agent guidance — drop into any project
   AGENTS.odoo.md               Odoo-specific companion (testing, DB, acceptance)
   project_context.template.yaml  Template for machine/project-specific config
+  agent/
+    conductor.md               Conductor orchestration agent (opencode agent definition)
+    committer.md               Committer agent — groups changes into focused commits (opencode agent definition)
+    reviewer.md                Reviewer agent — read-only code review (opencode agent definition)
   skills/
     coding-standards/SKILL.md  Logging and code quality standards
     init-project/SKILL.md      Initialize project_context.yaml
@@ -25,7 +29,7 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
 docs/
   AI_assisted_development_workflow.md  The methodology these files encode
 tools/
-  install.sh                   Symlinks agents/ to ~/.agents
+  install.sh                   Symlinks agents/ to ~/.agents and agents/agent/ to ~/.config/opencode/agent
 local/                         Unversioned scratch material (not in git)
 ```
 
@@ -47,6 +51,7 @@ local/                         Unversioned scratch material (not in git)
 This repo has no application code. A "task" here is editing one or more of:
 - `agents/AGENTS.md` or `agents/AGENTS.odoo.md`
 - `agents/project_context.template.yaml`
+- An agent definition under `agents/agent/`
 - A skill file under `agents/skills/`
 - `docs/AI_assisted_development_workflow.md`
 - Project tooling (`tools/`, `README.md`, this file)
@@ -65,15 +70,22 @@ changes, check the other two.
 - If a skill is added or removed, update both `agents/AGENTS.md` (skills table)
   and `README.md` (skills table).
 
+### Agent definitions
+
+opencode agents live as markdown files (YAML frontmatter + prompt body) under
+`agents/agent/`. `tools/install.sh` symlinks `agents/agent/` to
+`~/.config/opencode/agent`, where opencode auto-discovers them — so no
+`opencode.json` entry is needed for a file-based agent. When adding or changing
+an agent, keep the repo-layout block above, `README.md`, and `PROJECT_SUMMARY.md`
+in sync. The `conductor` agent uses the `todo-list` skill for code decomposition
+and the `committer` agent for commits; changes to either must stay compatible
+with `agents/agent/conductor.md`.
+
 ### Minimal diff
 
 Make the smallest change that satisfies the intent. Do not reformat surrounding
 content, reorganise unrelated sections, or change wording outside the scope of
 the task.
-
-### No commits without asking
-
-Never run `git commit` or any git write operation unless explicitly asked.
 
 ### Keep PROJECT_SUMMARY.md current
 
@@ -88,4 +100,3 @@ Before reporting a task complete:
 - [ ] The consistency triangle is checked (template ↔ AGENTS.md ↔ init-project skill).
 - [ ] `README.md` skills table is up to date.
 - [ ] `PROJECT_SUMMARY.md` reflects the new state.
-- [ ] Nothing committed unless asked.

@@ -3,7 +3,9 @@ description: Reviews work done for correctness, style, and completeness. Produce
 mode: primary
 model: openrouter/anthropic/claude-opus-4.8
 permission:
-  edit: read-only
+  edit: deny
+  bash: ask
+  webfetch: deny
 ---
 
 # Reviewer

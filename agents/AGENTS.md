@@ -54,7 +54,7 @@ contractual.
 
 ### Implementation deliverables
 At the end of a cycle, produce:
-1. Source code, committed against the docs tag (only commit when asked — see below).
+1. Source code, committed against the docs tag.
 2. An automated test suite covering every state-table row and every cross-cutting
    invariant in scope.
 3. A short development report: summary of work tied to use cases/test scenarios,
@@ -77,7 +77,6 @@ Before reporting a task complete, confirm all of the following:
 - Lint, typecheck, and build are clean.
 - The development report is written (see Implementation deliverables).
 - Test-doc and config-sample files are in sync (see Working Conventions).
-- Nothing has been committed unless the user explicitly asked.
 
 ## Stack-Specific Guidance
 For Odoo projects, also follow the rules in @AGENTS.odoo.md (testing, source
@@ -98,7 +97,6 @@ what's done, what's planned next).
 
 ## Working Conventions
 - Use subagents extensively to keep the main context window small and save tokens.
-- Do not commit anything before asking first.
 - **Minimal diff.** Make the smallest change that satisfies the spec and tests. Do
   not refactor, rename, or reformat code that is outside the scope of the task.
 - **Blocker protocol.** If a contractual test fails or the environment is broken,

@@ -2,8 +2,8 @@
 
 ## Purpose
 Build a reusable, working `AGENTS.md` to drop into all projects, plus an Odoo-specific
-companion, so AI coding agents follow a consistent spec-driven workflow. Deliverables
-live in `agents/`.
+companion and a set of agents/skills, so AI coding agents follow a consistent
+spec-driven workflow. Deliverables live in `agents/`.
 
 ## Current status
 Working draft complete and internally consistent. No code/app component — this is a
@@ -19,6 +19,20 @@ guidance/skill bundle for agents.
   live in `odoo_config.ini` exclusively. Copy to `project_context.yaml` (gitignored)
   per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
+- `agent/conductor.md` — opencode agent definition for the `conductor` (orchestration
+  agent). Symlinked to `~/.config/opencode/agent` by `tools/install.sh` for
+  auto-discovery. Decomposes work into a dependency-aware task graph, spawns `general`
+  sub-agents (parallel where the graph allows), verifies each task, commits per task via
+  the `committer` agent, aborts on failure, and writes a report to `docs/working/`. Has
+  an interactive mode (stop and ask on ambiguity) and an autonomous mode (record the
+  assumption and continue). Uses the `todo-list` skill for code decomposition.
+- `agent/committer.md` — opencode agent definition for the `committer` (sub-agent).
+  Inspects the working tree, groups changes by topic into focused commits with
+  descriptive messages, and executes them. Never tags, pushes, or branches unless
+  explicitly asked.
+- `agent/reviewer.md` — opencode agent definition for the `reviewer`. Read-only
+  inspection of work for correctness, style, and completeness. Produces a structured
+  review plan with findings (issues, warnings, passes) and verdict, but never edits files.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
   with inferred defaults; asks the user only for what cannot be discovered.
@@ -38,8 +52,11 @@ guidance/skill bundle for agents.
   acceptance criteria feed the contractual `<epic>_TESTS.md` (see test-scenarios).
 - `skills/test-scenarios/SKILL.md` — how to write contractual, customer-facing
   `<epic>_TESTS.md` scenarios.
-- `skills/todo-list/SKILL.md` — TDD-based TODO list generator (Red/Green phases,
-  Review & Commit checkpoints) for entry-level programmers.
+- `skills/todo-list/SKILL.md` — TDD-based TODO list generator. Each implementation TD
+  has Red (TDxx.1) / Green (TDxx.2) / Commit (TDxx.3) phases; the TD's changes are
+  committed after the Green phase passes, delegated to the `committer` agent. (The old
+  per-feature "Review & Commit" human-checkpoint TD and the one-TD-at-a-time / no-commit
+  rules were removed.)
 
 ## What `agents/AGENTS.md` covers
 - Spec-driven workflow rules: spec is the contract; never fill gaps with assumptions
@@ -50,11 +67,11 @@ guidance/skill bundle for agents.
 - Build/Lint/Verify: commands sourced from `project_context.yaml` `commands:`; run
   before done; minimal-diff/no scope-creep formatting.
 - Definition of Done checklist (tests pass, lint/typecheck/build clean, report written,
-  sample files synced, no unsolicited commits).
+  sample files synced).
 - Project config via `project_context.yaml` (lives in the project folder, one level
   above the `docs` and `src` repos); maintain `PROJECT_SUMMARY.md`.
-- Working conventions (use subagents, don't commit without asking, minimal diff,
-  blocker protocol — never weaken/skip/mock contractual tests, keep samples in sync).
+- Working conventions (use subagents, minimal diff, blocker protocol — never
+  weaken/skip/mock contractual tests, keep samples in sync).
 - Security & Secrets: treat config values (esp. credentials) as secret; never emit them.
 - Communication & Output: concise responses, `file_path:line` references.
 - Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).
@@ -74,6 +91,20 @@ guidance/skill bundle for agents.
   multi-layer acceptance; known gaps.
 
 ## Design notes / decisions
+- `conductor` agent created to orchestrate multi-step work: decomposes into a
+  dependency-aware task graph, spawns `general` sub-agents in parallel (topological
+  rounds), verifies each task, commits per task via `committer`, and writes a report.
+  Has interactive and autonomous modes. Agent definition lives in `agent/conductor.md`
+  (file-based opencode agent, symlinked to `~/.config/opencode/agent`).
+- `committer` agent created to own the commit workflow: inspects the working tree,
+  groups changes by topic into focused commits with descriptive messages, and executes
+  them. Never pushes/tags/branches unless asked. Agent definition lives in
+  `agent/committer.md`.
+- `todo-list` skill revised: removed the one-TD-at-a-time rule, the
+  no-commit-without-permission rule, and the per-feature "Review & Commit" checkpoint
+  TD. Each TD now has a mandatory TDxx.3 Commit phase that delegates to the `committer`
+  agent. The skill retains its TDD Red/Green discipline for entry-level-programmer-level
+  task decomposition.
 - `test-scenarios` skill format uses Pre-conditions / Steps with Before/After /
   Expected-result tables, grouped into Categories, `T-NN` IDs. State-table format
   kept as a documented alternative for multi-step scenarios.
@@ -94,4 +125,3 @@ guidance/skill bundle for agents.
 
 ## Planned / open
 - Consider an `agents/AGENTS.md` note on non-functional requirements (workflow §8.8 gap).
-- Nothing committed yet (per convention: ask before committing).

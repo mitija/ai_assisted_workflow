@@ -19,3 +19,18 @@ fi
 
 ln -s "$SOURCE_DIR" "$TARGET_DIR"
 echo "Linked $SOURCE_DIR -> $TARGET_DIR"
+
+# Link opencode agent definitions (e.g. conductor) so opencode discovers them.
+AGENT_SOURCE_DIR="$SOURCE_DIR/agent"
+AGENT_TARGET_DIR="$HOME/.config/opencode/agent"
+
+if [ -L "$AGENT_TARGET_DIR" ]; then
+  echo "~/.config/opencode/agent is already a symlink. Remove it first to reinstall."
+elif [ -d "$AGENT_TARGET_DIR" ]; then
+  echo "~/.config/opencode/agent already exists as a directory."
+  echo "Back it up and remove it first: mv ~/.config/opencode/agent ~/.config/opencode/agent.bak"
+else
+  mkdir -p "$HOME/.config/opencode"
+  ln -s "$AGENT_SOURCE_DIR" "$AGENT_TARGET_DIR"
+  echo "Linked $AGENT_SOURCE_DIR -> $AGENT_TARGET_DIR"
+fi

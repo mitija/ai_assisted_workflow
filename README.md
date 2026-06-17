@@ -55,6 +55,7 @@ Alternatively, copy the directories manually.
 | Agent | Description |
 |-------|-------------|
 | `conductor` | Decomposes work into an ordered, dependency-aware task graph, spawns sub-agents to execute each task (in parallel where the graph allows), verifies each result, commits per task via the `committer` agent, and aborts on failure. Runs interactively (asks on ambiguity) or autonomously (records assumptions and continues). Writes a report to `docs/working/`. |
+| `committer` | Inspects staged/unstaged changes, groups them by topic, and makes one or more focused commits with clear messages. Never tags, pushes, or creates branches unless explicitly asked. |
 | `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and verdict, but never edits files or runs side-effect commands. |
 
 ## License
