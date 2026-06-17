@@ -13,6 +13,7 @@ agents/          Agent instructions and skills (copy/symlink to ~/.agents)
   AGENTS.md        Generic agent guidance for all projects
   AGENTS.odoo.md   Odoo-specific companion (testing, source layout, DB/instances)
   project_context.template.yaml  Template for machine/project-specific config
+  agent/           opencode agent definitions (conductor, reviewer)
   skills/          Reusable agent skills (coding-standards, test-scenarios, etc.)
 docs/            Methodology documentation
 tools/           Shell scripts and utilities
@@ -25,7 +26,9 @@ git clone <repo-url>
 ./tools/install.sh
 ```
 
-This symlinks `agents/` to `~/.agents`. Alternatively, copy the directory manually.
+This symlinks `agents/` to `~/.agents` and `agents/agent/` to
+`~/.config/opencode/agent` (so opencode discovers the bundled agents).
+Alternatively, copy the directories manually.
 
 ## How it works
 
@@ -45,7 +48,14 @@ This symlinks `agents/` to `~/.agents`. Alternatively, copy the directory manual
 | `spec-refinement` | Guided session that refines a rough requirement before specification-methodology |
 | `specification-methodology` | 5-step spec writing (Models, Roles, Use Cases, Documentation, Review) |
 | `test-scenarios` | Writing contractual, customer-facing test scenarios |
-| `todo-list` | TDD-based TODO list generator for entry-level programmers |
+| `todo-list` | TDD-based TODO list generator (Red → Green → Commit phases) |
+
+## Agents
+
+| Agent | Description |
+|-------|-------------|
+| `conductor` | Decomposes work into an ordered, dependency-aware task graph, spawns sub-agents to execute each task (in parallel where the graph allows), verifies each result, commits per task via the `committer` agent, and aborts on failure. Runs interactively (asks on ambiguity) or autonomously (records assumptions and continues). Writes a report to `docs/working/`. |
+| `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and verdict, but never edits files or runs side-effect commands. |
 
 ## License
 
