@@ -71,7 +71,7 @@ guidance/skill bundle for agents.
 - Project config via `project_context.yaml` (lives in the project folder, one level
   above the `docs` and `src` repos); maintain `PROJECT_SUMMARY.md`.
 - Working conventions (use subagents, minimal diff, blocker protocol — never
-  weaken/skip/mock contractual tests, keep samples in sync).
+  weaken/skip/mock contractual tests, never create git tags, keep samples in sync).
 - Security & Secrets: treat config values (esp. credentials) as secret; never emit them.
 - Communication & Output: concise responses, `file_path:line` references.
 - Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).
@@ -81,7 +81,7 @@ guidance/skill bundle for agents.
 - Meta-guidance for working on this repo itself.
 - Consistency triangle: `agents/AGENTS.md` ↔ `project_context.template.yaml` ↔
   `init-project/SKILL.md` must stay in sync.
-- Skills table and Definition of Done for this repo.
+- Skills table and Definition of Done for this repo (including "No git tags created").
 
 ## Key source documents
 - `AI_assisted_development_workflow.md` (docs/) — the methodology `agents/AGENTS.md`

@@ -102,6 +102,9 @@ what's done, what's planned next).
 - **Blocker protocol.** If a contractual test fails or the environment is broken,
   never weaken, skip, or mock away the test to make it pass — report the blocker.
   Tests win (see Spec-Driven Workflow); the build conforms to them, not the reverse.
+- **Never create git tags.** Tagging is a user action. The AI must not create tags
+  on the user's behalf. Document the docs tag to trace against but never run
+  `git tag` or equivalent.
 - When a feature is added, behaviour changes, or a bug is fixed, keep any test-doc
   and config-sample files (including `project_context.template.yaml`) in sync.
 

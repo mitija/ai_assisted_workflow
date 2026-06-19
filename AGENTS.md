@@ -100,3 +100,4 @@ Before reporting a task complete:
 - [ ] The consistency triangle is checked (template ↔ AGENTS.md ↔ init-project skill).
 - [ ] `README.md` skills table is up to date.
 - [ ] `PROJECT_SUMMARY.md` reflects the new state.
+- [ ] No git tags were created (tagging is a user action only).

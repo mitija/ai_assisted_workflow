@@ -143,3 +143,4 @@ Finish by giving the user a concise summary and the report's path.
   interactive mode a failing contractual test or broken environment is a
   blocker to surface, never something to weaken or mock away.
 - Commits go through the `committer` sub-agent, scoped per task.
+- **Never create git tags.** Tagging is a user action — do not tag yourself or instruct a sub-agent to tag.
