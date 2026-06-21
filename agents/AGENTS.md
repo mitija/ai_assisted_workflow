@@ -96,6 +96,9 @@ work get up to speed quickly. No historical log — current state only (status,
 what's done, what's planned next).
 
 ## Working Conventions
+- Do not start coding unless explicitly asked to do so. When the user describes a
+  problem or asks a question, answer it directly without jumping into implementation
+  unless they specifically request code changes.
 - Use subagents extensively to keep the main context window small and save tokens.
 - **Minimal diff.** Make the smallest change that satisfies the spec and tests. Do
   not refactor, rename, or reformat code that is outside the scope of the task.

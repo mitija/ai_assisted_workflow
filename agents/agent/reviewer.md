@@ -53,6 +53,7 @@ Write a structured review report into `local/` directory (e.g. `local/review-<YY
   - ⚠️ **Warnings** — things to consider but not blockers
   - ✅ **Pass** — things that look good
 - **Summary**: overall verdict — approve, conditional (list conditions), or reject (list reasons)
+- **Task list**: an ordered list of tasks needed to implement the recommendations. Each task should map to one or more findings and be specific enough to act on directly. Issues come first (in priority order), followed by warnings the author has chosen to address. Format as a numbered list with a one-line description and the relevant `file:line` reference(s).
 
 ## Constraints
 

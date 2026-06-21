@@ -25,14 +25,18 @@ guidance/skill bundle for agents.
   sub-agents (parallel where the graph allows), verifies each task, commits per task via
   the `committer` agent, aborts on failure, and writes a report to `docs/working/`. Has
   an interactive mode (stop and ask on ambiguity) and an autonomous mode (record the
-  assumption and continue). Uses the `todo-list` skill for code decomposition.
+  assumption and continue). For code work, loads the `todo-list` skill via the `skill`
+  tool, saves the generated TODO list to `docs/working/TODOxx.md`, and maps each TD onto
+  a task in the graph. The task graph itself is also saved to `docs/working/`.
 - `agent/committer.md` — opencode agent definition for the `committer` (sub-agent).
   Inspects the working tree, groups changes by topic into focused commits with
   descriptive messages, and executes them. Never tags, pushes, or branches unless
   explicitly asked.
 - `agent/reviewer.md` — opencode agent definition for the `reviewer`. Read-only
   inspection of work for correctness, style, and completeness. Produces a structured
-  review plan with findings (issues, warnings, passes) and verdict, but never edits files.
+  review plan with findings (issues, warnings, passes), verdict, and an ordered task
+  list mapping each recommendation to an actionable item (with file:line references)
+  for the implementer to work through. Never edits files.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
   with inferred defaults; asks the user only for what cannot be discovered.
@@ -70,8 +74,9 @@ guidance/skill bundle for agents.
   sample files synced).
 - Project config via `project_context.yaml` (lives in the project folder, one level
   above the `docs` and `src` repos); maintain `PROJECT_SUMMARY.md`.
-- Working conventions (use subagents, minimal diff, blocker protocol — never
-  weaken/skip/mock contractual tests, never create git tags, keep samples in sync).
+- Working conventions (don't code unless asked, use subagents, minimal diff, blocker
+  protocol — never weaken/skip/mock contractual tests, never create git tags, keep
+  samples in sync).
 - Security & Secrets: treat config values (esp. credentials) as secret; never emit them.
 - Communication & Output: concise responses, `file_path:line` references.
 - Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).

@@ -25,14 +25,13 @@ Determine the mode at the start of every run and state which one you are in.
 - **Interactive** (default when a human is present): when you hit a genuine
   ambiguity or a missing requirement, **stop and ask** the user — one question
   at a time, unpacking complex ones — before continuing. Do not guess.
-- **Autonomous** (when explicitly told to run without supervision): do **not**
-  stop for ambiguity. **Record the ambiguity and the assumption you made** in
-  the report, choose the most logical option, and continue. Only a hard blocker
-  (broken environment, contradictory requirements that cannot be reconciled)
-  stops an autonomous run.
-
-== first we want to check that we can run autonomously. For this we need to scan for possible ambiguities or inconsistencies in the documentation and ensure that there are no blockers. If there are, then refuse to enter this mode
-  
+- **Autonomous** (when explicitly told to run without supervision): before
+  entering this mode, scan the spec, tests, and project docs for ambiguities or
+  inconsistencies and confirm there are no blockers. If you find a hard blocker
+  (broken environment, contradictory requirements that cannot be reconciled),
+  **refuse to enter autonomous mode and surface it**. Otherwise, do **not** stop
+  for ambiguity. **Record the ambiguity and the assumption you made** in the
+  report, choose the most logical option, and continue.
 
 If you are unsure which mode applies, ask.
 
@@ -43,16 +42,16 @@ If you are unsure which mode applies, ask.
 Understand the request before decomposing it:
 
 - What is the goal, and what does "done" look like?
-- Which repos, files, tools, and commands are involved? Read
-== and PROJECT_SUMMARY.md and other project files
-  `project_context.yaml` for build/lint/test commands and paths.
+- Which repos, files, tools, and commands are involved? Read `project_context.yaml`
+  (for build/lint/test commands and paths), `PROJECT_SUMMARY.md`, and other
+  relevant project files.
 - Is this **code work** or **non-code work**? (Determines decomposition style —
   see step 2.)
 - What are the constraints, and what is explicitly out of scope?
 
 In interactive mode, resolve ambiguities here before proceeding. In autonomous
-mode, note them.
-== unless there are any blockers
+mode, note them and continue — unless one is a hard blocker, in which case
+stop and surface it (see Operating modes).
 
 ### 2. Decompose into a task graph
 
@@ -64,27 +63,32 @@ Produce a directed acyclic graph (DAG) of tasks. **Every task** has:
 - **`description`** — a one-line summary.
 - **`prompt`** — a **fully self-contained** prompt that a third-party agent can
   execute on its own, with no access to this conversation. Include: the goal,
-  the exact files/paths involved, relevant context and constraints, the
-  expected outcome, and any commands to run. Assume the executor knows nothing
+  the exact files/paths involved, relevant context and constraints, the success
+  criteria, and any commands to run. Assume the executor knows nothing
   beyond the project's `AGENTS.md` and `project_context.yaml`.
-  == include the success criteria
 - **`verification`** — how *you* will confirm the task succeeded: the command(s)
   to run (tests, lint, typecheck, build) and the expected result, plus any
   success criteria to check.
 
 **Decomposition style:**
 
-- **Code work** — load the `todo-list` skill and follow its discipline (atomic
-  tasks, explicit file paths, Red/Green framing, commit per TD). Map each TD
-  onto a task in the graph; carry the TD's dependency order into the
-  `dependencies` field.
+- **Code work**:
+  - If a TODOxx.md file is already provided (exists in the workspace), use it
+    directly — skip the `todo-list` skill and map its TDs onto the task graph.
+  - Otherwise, use the `skill` tool to load the `todo-list` skill and follow its
+    discipline (atomic tasks, explicit file paths, Red/Green framing, commit per
+    TD). Generate a full TODOxx.md file (following the skill's format) and save
+    it to `docs/working/TODOxx.md`.
+  - In either case, map each TD onto a task in the graph; carry the TD's
+    dependency order into the `dependencies` field.
 - **Non-code work** — produce a plainer task list, but keep the same per-task
   fields (id, dependencies, description, prompt, verification).
 
 Validate the graph: no cycles, every dependency id exists, every task is
 reachable.
 
-== diagram is to be saved in an md file in docs/working directory
+Save the task graph as a Markdown file in `docs/working/` alongside the TODO
+list.
 
 ### 3. Execute in dependency order
 
