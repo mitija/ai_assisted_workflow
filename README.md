@@ -13,7 +13,7 @@ agents/          Agent instructions and skills (copy/symlink to ~/.agents)
   AGENTS.md        Generic agent guidance for all projects
   AGENTS.odoo.md   Odoo-specific companion (testing, source layout, DB/instances)
   project_context.template.yaml  Template for machine/project-specific config
-  agent/           opencode agent definitions (conductor, reviewer)
+  agent/           opencode agent definitions (conductor, committer, reviewer, escalate1, escalate2)
   skills/          Reusable agent skills (coding-standards, test-scenarios, etc.)
 docs/            Methodology documentation
 tools/           Shell scripts and utilities
@@ -39,6 +39,51 @@ Alternatively, copy the directories manually.
    session to understand the project context and workflow.
 3. Follow the [spec-driven workflow](docs/AI_assisted_development_workflow.md) described in the methodology docs.
 
+## End-to-end flow
+
+The process splits into two phases: an **interactive** spec-writing phase and an
+**autonomous** development phase.
+
+### Phase 1 — Interactive: spec writing
+
+The user drives this phase with guidance from skills:
+
+1. **Refine** a rough requirement with `spec-refinement` (one question at a time
+   until entities, relationships, and business rules are clear).
+2. **Write the spec** with `specification-methodology` (models, roles, use
+   cases).
+3. **Write contractual tests** with `test-scenarios` (every business rule mapped
+   to a `T-NN` scenario in `<epic>_TESTS.md`).
+4. **Freeze** the spec doc repo with a tag (e.g. `spec-260613`).
+
+The output is a tagged specification with executable tests.
+
+### Phase 2 — Autonomous: development
+
+From here, the **conductor** drives everything autonomously. It loads the spec
+docs at the current tag and determines what to implement by diffing the specs
+and tests against the previous tag — so only new or changed scenarios become
+work items:
+
+1. **Diff** — the conductor compares the current spec/tests tag against the
+   previous implementation tag to identify new or changed scenarios.
+2. **Decompose** — it uses the `todo-list` skill to break the diffs into a
+   dependency-aware task graph (`TODOxx.md` + task graph file in `docs/working/`).
+3. **Execute** — spawns `general` sub-agents in topological rounds to implement
+   each task, then runs verification (lint, typecheck, tests, build).
+4. **Commit** — each passing task is committed by the `committer` sub-agent as
+   a focused, scoped commit.
+5. **Escalate on failure** — if a task fails verification, the conductor spawns
+   `escalate1` (first-tier, read-only diagnosis + task plan), then `escalate2`
+   (second-tier, deep-dive), before aborting. A cheaper model executes the task
+   plans produced by the escalation agents.
+6. **Report** — the conductor writes a full report to `docs/working/` covering
+   every task, its verification result, and the overall status.
+
+The user touches the process at two points: writing/refining the spec (Phase 1),
+and reviewing the final report (end of Phase 2). Everything between runs
+autonomously by default.
+
 ## Skills
 
 | Skill | Description |
@@ -55,9 +100,11 @@ Alternatively, copy the directories manually.
 
 | Agent | Description |
 |-------|-------------|
-| `conductor` | Decomposes work into an ordered, dependency-aware task graph, spawns sub-agents to execute each task (in parallel where the graph allows), verifies each result, commits per task via the `committer` agent, and aborts on failure. Runs interactively (asks on ambiguity) or autonomously (records assumptions and continues). Writes a report to `docs/working/`. |
-| `committer` | Inspects staged/unstaged changes, groups them by topic, and makes one or more focused commits with clear messages. Never tags, pushes, or creates branches unless explicitly asked. |
+| `conductor` | Decomposes work into an ordered, dependency-aware task graph, spawns sub-agents to execute each task (in parallel where the graph allows), verifies each result, commits per task via the `committer` agent, and escalates failures to `escalate1`/`escalate2` before aborting. Runs interactively (asks on ambiguity) or autonomously (default — records assumptions and continues). Writes a report to `docs/working/`. |
+| `committer` | Inspects staged/unstaged changes, groups them by topic, and makes one or more focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. |
 | `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and verdict, but never edits files or runs side-effect commands. |
+| `escalate1` | First-tier escalation. Diagnoses failures the normal build agent cannot resolve and produces an ordered task plan for a cheaper model to execute. Read-only — never edits or runs commands directly. Uses a cost-efficient model (GLM 5.2). |
+| `escalate2` | Second-tier escalation. Deep-dive diagnosis on hard problems — spec ambiguities, complex logic errors, cross-cutting refactors. Produces a task plan for a cheaper model to execute. Read-only. Called when Escalate1 cannot resolve. Uses the most capable model (Claude Opus 4.8). |
 
 ## License
 

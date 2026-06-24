@@ -23,7 +23,8 @@ guidance/skill bundle for agents.
   agent). Symlinked to `~/.config/opencode/agent` by `tools/install.sh` for
   auto-discovery. Decomposes work into a dependency-aware task graph, spawns `general`
   sub-agents (parallel where the graph allows), verifies each task, commits per task via
-  the `committer` agent, aborts on failure, and writes a report to `docs/working/`. Has
+  the `committer` agent, escalates failures to `escalate1` then `escalate2` before
+  aborting, and writes a report to `docs/working/`. Has
   an interactive mode (stop and ask on ambiguity) and an autonomous mode (record the
   assumption and continue). For code work, loads the `todo-list` skill via the `skill`
   tool, saves the generated TODO list to `docs/working/TODOxx.md`, and maps each TD onto
@@ -37,6 +38,14 @@ guidance/skill bundle for agents.
   review plan with findings (issues, warnings, passes), verdict, and an ordered task
   list mapping each recommendation to an actionable item (with file:line references)
   for the implementer to work through. Never edits files.
+- `agent/escalate1.md` — opencode agent definition for `Escalate1`, the first-tier
+  escalation subagent. Called when the primary build agent hits an issue it cannot
+  resolve. Read-only (edit/bash/webfetch all denied) — diagnoses and produces a
+  task plan for a cheaper model to execute. Uses GLM 5.2.
+- `agent/escalate2.md` — opencode agent definition for `Escalate2`, the second-tier
+  escalation subagent. Called when Escalate1 cannot resolve an issue. Read-only
+  (edit/bash/webfetch all denied) — deep-dive diagnosis producing a task plan for a
+  cheaper model to execute. Uses Claude Opus 4.8 for deep reasoning on hard problems.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/handover/SKILL.md` — creates self-contained HANDOVER-xx.md at session end.
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
@@ -99,9 +108,11 @@ guidance/skill bundle for agents.
 ## Design notes / decisions
 - `conductor` agent created to orchestrate multi-step work: decomposes into a
   dependency-aware task graph, spawns `general` sub-agents in parallel (topological
-  rounds), verifies each task, commits per task via `committer`, and writes a report.
-  Has interactive and autonomous modes. Agent definition lives in `agent/conductor.md`
-  (file-based opencode agent, symlinked to `~/.config/opencode/agent`).
+  rounds), verifies each task, commits per task via `committer`, escalates failures to
+  `escalate1` then `escalate2` (read-only planners) before aborting, and writes a
+  report. Has interactive and autonomous modes. Agent definition lives in
+  `agent/conductor.md` (file-based opencode agent, symlinked to
+  `~/.config/opencode/agent`).
 - `committer` agent created to own the commit workflow: inspects the working tree,
   groups changes by topic into focused commits with descriptive messages, and executes
   them. Never pushes/tags/branches unless asked. Agent definition lives in
