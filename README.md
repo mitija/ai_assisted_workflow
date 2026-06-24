@@ -44,6 +44,7 @@ Alternatively, copy the directories manually.
 | Skill | Description |
 |-------|-------------|
 | `coding-standards` | Logging and code quality standards |
+| `handover` | Create session-end handover documents for the next chat |
 | `init-project` | Initialize or inspect a project's `project_context.yaml` configuration file |
 | `spec-refinement` | Guided session that refines a rough requirement before specification-methodology |
 | `specification-methodology` | 5-step spec writing (Models, Roles, Use Cases, Documentation, Review) |

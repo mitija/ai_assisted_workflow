@@ -129,6 +129,8 @@ permission prompts and keeps the workflow autonomous.
 - Never use Bash with pipes (`|`) or redirections (`2>&1`, `>`) to read/search files.
 
 ## Skills
+- `handover` — create a self-contained `HANDOVER-xx.md` at session end so the next
+  chat can continue without access to the current conversation.
 - `coding-standards` — follow when writing or modifying application code
   (currently covers logging requirements). Load whenever you add or change code
   that runs as an app, script, or service.

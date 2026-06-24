@@ -20,6 +20,7 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
     reviewer.md                Reviewer agent — read-only code review (opencode agent definition)
   skills/
     coding-standards/SKILL.md  Logging and code quality standards
+    handover/SKILL.md          Create session-end handover documents
     init-project/SKILL.md      Initialize project_context.yaml
     spec-refinement/SKILL.md   Refine a rough requirement before specification-methodology
     specification-methodology/ 5-step spec writing methodology
@@ -37,6 +38,7 @@ local/                         Unversioned scratch material (not in git)
 
 | Skill | When to load |
 |---|---|
+| `handover` | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
 | `coding-standards` | Writing or modifying any application code, script, or service |
 | `init-project` | `project_context.yaml` is missing or incomplete |
 | `spec-refinement` | A rough/ambiguous requirement needs refining before specification-methodology |

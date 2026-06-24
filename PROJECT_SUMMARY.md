@@ -38,6 +38,7 @@ guidance/skill bundle for agents.
   list mapping each recommendation to an actionable item (with file:line references)
   for the implementer to work through. Never edits files.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
+- `skills/handover/SKILL.md` — creates self-contained HANDOVER-xx.md at session end.
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
   with inferred defaults; asks the user only for what cannot be discovered.
 - `skills/spec-refinement/SKILL.md` — guided, one-question-at-a-time session that runs
@@ -80,7 +81,7 @@ guidance/skill bundle for agents.
 - Security & Secrets: treat config values (esp. credentials) as secret; never emit them.
 - Communication & Output: concise responses, `file_path:line` references.
 - Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).
-- Skills: `coding-standards`, `spec-refinement`, `test-scenarios`.
+- Skills: `coding-standards`, `handover`, `spec-refinement`, `test-scenarios`.
 
 ## What `AGENTS.md` (workspace root) covers
 - Meta-guidance for working on this repo itself.
