@@ -27,11 +27,11 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
     test-scenarios/SKILL.md    Contractual customer-facing test scenarios
     todo-list/SKILL.md         TDD-based TODO list generator
   .gitignore                   Ignores project_context.yaml and *.ini credentials
+opencode.json                  Per-agent model assignments (merged with global ~/.config/opencode/opencode.json)
 docs/
   AI_assisted_development_workflow.md  The methodology these files encode
 tools/
   install.sh                   Symlinks agents/ to ~/.agents and agents/agent/ to ~/.config/opencode/agent
-local/                         Unversioned scratch material (not in git)
 ```
 
 ## Skills
@@ -51,6 +51,7 @@ local/                         Unversioned scratch material (not in git)
 ### What counts as a change
 
 This repo has no application code. A "task" here is editing one or more of:
+- `opencode.json` (project-level config — per-agent model assignments)
 - `agents/AGENTS.md` or `agents/AGENTS.odoo.md`
 - `agents/project_context.template.yaml`
 - An agent definition under `agents/agent/`
@@ -77,11 +78,13 @@ changes, check the other two.
 opencode agents live as markdown files (YAML frontmatter + prompt body) under
 `agents/agent/`. `tools/install.sh` symlinks `agents/agent/` to
 `~/.config/opencode/agent`, where opencode auto-discovers them — so no
-`opencode.json` entry is needed for a file-based agent. When adding or changing
-an agent, keep the repo-layout block above, `README.md`, and `PROJECT_SUMMARY.md`
-in sync. The `conductor` agent uses the `todo-list` skill for code decomposition
-and the `committer` agent for commits; changes to either must stay compatible
-with `agents/agent/conductor.md`.
+`opencode.json` entry is needed for file-based agent *discovery*. However, per-agent
+model assignments should live in the project-level `opencode.json` (not in the agent
+frontmatter) to keep execution config separate from agent behaviour. When adding or
+changing an agent, keep the repo-layout block above, `README.md`, and
+`PROJECT_SUMMARY.md` in sync. The `conductor` agent uses the `todo-list` skill for
+code decomposition and the `committer` agent for commits; changes to either must
+stay compatible with `agents/agent/conductor.md`.
 
 ### Minimal diff
 

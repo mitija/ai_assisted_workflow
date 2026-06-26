@@ -3,7 +3,6 @@ description: >-
   Reviews work for correctness, style, and completeness. Produces a review plan
   only — never edits files.
 mode: primary
-model: openrouter/z-ai/glm-5.2
 permission:
   edit: deny
   bash: ask

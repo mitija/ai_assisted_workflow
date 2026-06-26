@@ -4,7 +4,6 @@ description: >-
   focused commits with clear messages. Never tags. Does not push or create
   branches unless explicitly asked.
 mode: subagent
-model: openrouter/deepseek/deepseek-v4-flash
 permission:
   bash: allow
   edit: allow

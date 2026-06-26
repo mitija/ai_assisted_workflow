@@ -4,7 +4,6 @@ description: >-
   resolve and produces an ordered task plan for a cheaper model to execute.
   Read-only — never edits or runs commands directly.
 mode: subagent
-model: openrouter/z-ai/glm-5.2
 permission:
   edit: deny
   bash: deny

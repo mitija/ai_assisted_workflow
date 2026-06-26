@@ -19,16 +19,19 @@ guidance/skill bundle for agents.
   live in `odoo_config.ini` exclusively. Copy to `project_context.yaml` (gitignored)
   per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
-- `agent/conductor.md` — opencode agent definition for the `conductor` (orchestration
-  agent). Symlinked to `~/.config/opencode/agent` by `tools/install.sh` for
-  auto-discovery. Decomposes work into a dependency-aware task graph, spawns `general`
-  sub-agents (parallel where the graph allows), verifies each task, commits per task via
-  the `committer` agent, escalates failures to `escalate1` then `escalate2` before
-  aborting, and writes a report to `docs/working/`. Has
-  an interactive mode (stop and ask on ambiguity) and an autonomous mode (record the
-  assumption and continue). For code work, loads the `todo-list` skill via the `skill`
-  tool, saves the generated TODO list to `docs/working/TODOxx.md`, and maps each TD onto
-  a task in the graph. The task graph itself is also saved to `docs/working/`.
+- `opencode.json` — project-level per-agent model assignments (merged with global config).
+- `agent/conductor.md` — opencode agent definition for the `conductor`
+  (orchestration agent). Symlinked to `~/.config/opencode/agent` by
+  `tools/install.sh` for auto-discovery. Conductor runs on a better AI model
+  than sub-agents and **owns all thinking, planning, and decision-making**
+  (determining goals, constraints, scope, task decomposition). It **never**
+  reads/writes files, edits code, or runs commands itself — those mechanical
+  actions are delegated to sub-agents. Interactive mode (default) is a
+  dialogue with the user for ambiguity resolution; autonomous mode only when
+  requested. Decomposes work into a dependency-aware task graph, uses `explore`
+  sub-agents for file reading, `general` sub-agents for execution and
+  verification, `committer` for commits, `escalate1`/`escalate2` for failure
+  diagnosis, and delegates report writing to a sub-agent.
 - `agent/committer.md` — opencode agent definition for the `committer` (sub-agent).
   Inspects the working tree, groups changes by topic into focused commits with
   descriptive messages, and executes them. Never tags, pushes, or branches unless
@@ -41,11 +44,11 @@ guidance/skill bundle for agents.
 - `agent/escalate1.md` — opencode agent definition for `Escalate1`, the first-tier
   escalation subagent. Called when the primary build agent hits an issue it cannot
   resolve. Read-only (edit/bash/webfetch all denied) — diagnoses and produces a
-  task plan for a cheaper model to execute. Uses GLM 5.2.
+  task plan for a cheaper model to execute.
 - `agent/escalate2.md` — opencode agent definition for `Escalate2`, the second-tier
   escalation subagent. Called when Escalate1 cannot resolve an issue. Read-only
   (edit/bash/webfetch all denied) — deep-dive diagnosis producing a task plan for a
-  cheaper model to execute. Uses Claude Opus 4.8 for deep reasoning on hard problems.
+  cheaper model to execute. Deep reasoning on hard problems.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/handover/SKILL.md` — creates self-contained HANDOVER-xx.md at session end.
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
@@ -106,11 +109,11 @@ guidance/skill bundle for agents.
   multi-layer acceptance; known gaps.
 
 ## Design notes / decisions
-- `conductor` agent created to orchestrate multi-step work: decomposes into a
-  dependency-aware task graph, spawns `general` sub-agents in parallel (topological
-  rounds), verifies each task, commits per task via `committer`, escalates failures to
-  `escalate1` then `escalate2` (read-only planners) before aborting, and writes a
-  report. Has interactive and autonomous modes. Agent definition lives in
+- `conductor` agent created to orchestrate multi-step work. Conductor owns the
+  thinking (goal/scope/constraint analysis, task decomposition, result interpretation)
+  and delegates all mechanical actions (file I/O, command execution, report writing)
+  to sub-agents. Interactive mode is the default — the Analyze phase is designed as a
+  dialogue with the user. Agent definition lives in
   `agent/conductor.md` (file-based opencode agent, symlinked to
   `~/.config/opencode/agent`).
 - `committer` agent created to own the commit workflow: inspects the working tree,

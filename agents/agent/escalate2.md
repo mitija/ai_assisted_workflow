@@ -4,7 +4,6 @@ description: >-
   Produces a deep-dive diagnosis and an ordered task plan for a cheaper model to
   execute. Read-only — never edits or runs commands directly.
 mode: subagent
-model: openrouter/anthropic/claude-opus-4.8
 permission:
   edit: deny
   bash: deny
