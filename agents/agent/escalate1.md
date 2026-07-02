@@ -36,8 +36,8 @@ confirmed.
 
 ### 2. Produce an ordered task plan
 
-Write a structured task plan into `local/` (e.g.
-`local/escalate1-plan-<YYYYMMDD-HHMM>.md`). Each task must be:
+Return a structured task plan **in your final message** (you are read-only — do
+not write any files). Each task must be:
 
 - **Self-contained** — a normal agent can execute it with no extra context.
 - **Ordered** — numbered in dependency order (earlier tasks first).
@@ -56,9 +56,9 @@ For example, a task might say:
 
 ### 3. Report
 
-Summarise the diagnosis and point to the task plan file. If the issue is
-genuinely unresolvable (requires human credentials, fundamentally blocked),
-state that clearly and recommend escalate2 or manual intervention.
+Summarise the diagnosis and include the full task plan in your final message. If
+the issue is genuinely unresolvable (requires human credentials, fundamentally
+blocked), state that clearly and recommend escalate2 or manual intervention.
 
 ## Constraints
 

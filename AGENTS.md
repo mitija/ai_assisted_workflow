@@ -18,6 +18,8 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
     conductor.md               Conductor orchestration agent (opencode agent definition)
     committer.md               Committer agent — groups changes into focused commits (opencode agent definition)
     reviewer.md                Reviewer agent — read-only code review (opencode agent definition)
+    escalate1.md               First-tier escalation agent — read-only diagnosis + task plan
+    escalate2.md               Second-tier escalation agent — deep-dive diagnosis + task plan
   skills/
     coding-standards/SKILL.md  Logging and code quality standards
     handover/SKILL.md          Create session-end handover documents
@@ -26,12 +28,13 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
     specification-methodology/ 5-step spec writing methodology
     test-scenarios/SKILL.md    Contractual customer-facing test scenarios
     todo-list/SKILL.md         TDD-based TODO list generator
+    conductor-*/SKILL.md       [Conductor-internal] six phase skills loaded on demand by the conductor
   .gitignore                   Ignores project_context.yaml and *.ini credentials
 opencode.json                  Per-agent model assignments (merged with global ~/.config/opencode/opencode.json)
 docs/
   AI_assisted_development_workflow.md  The methodology these files encode
 tools/
-  install.sh                   Symlinks agents/ to ~/.agents and agents/agent/ to ~/.config/opencode/agent
+  install.sh                   Symlinks agents/ to ~/.agents, agents/agent/ to ~/.config/opencode/agent, and agents/skills/ to ~/.config/opencode/skills
 ```
 
 ## Skills
@@ -45,6 +48,16 @@ tools/
 | `specification-methodology` | Creating or writing software specifications |
 | `test-scenarios` | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
 | `todo-list` | Generating a TDD-based TODO list for entry-level programmers |
+| `conductor-analyze` | [Conductor-internal] Phase 1 — goal/scope/constraints analysis |
+| `conductor-code-decomposition` | [Conductor-internal] Phase 2 — code-work task graph generation |
+| `conductor-noncode-decomposition` | [Conductor-internal] Phase 2 — non-code task graph generation |
+| `conductor-execute` | [Conductor-internal] Phase 3 — topological-round execution and verification |
+| `conductor-escalate` | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
+| `conductor-report` | [Conductor-internal] Phase 5 — final report generation |
+
+> **Note:** Skills prefixed with `conductor-` are loaded automatically by the
+> conductor agent during its workflow. They are not meant to be loaded directly
+> by users or general agents.
 
 ## Working on this repo
 

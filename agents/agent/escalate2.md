@@ -37,8 +37,8 @@ ambiguities, environmental drift, toolchain version incompatibilities.
 
 ### 2. Produce an ordered task plan
 
-Write a structured task plan into `local/` (e.g.
-`local/escalate2-plan-<YYYYMMDD-HHMM>.md`). Each task must be:
+Return a structured task plan **in your final message** (you are read-only — do
+not write any files). Each task must be:
 
 - **Self-contained** — a normal agent can execute it with no extra context.
 - **Ordered** — numbered in dependency order (earlier tasks first).
@@ -62,7 +62,7 @@ ambiguity and the recommended interpretation, then a task to fix the code.
 
 Write a thorough report covering:
 - Root cause (with file:line references).
-- A pointer to the task plan file.
+- The full task plan (included in the final message — no file is written).
 - If still unresolvable, a clear statement of why and what human intervention
   is needed.
 

@@ -26,9 +26,10 @@ git clone <repo-url>
 ./tools/install.sh
 ```
 
-This symlinks `agents/` to `~/.agents` and `agents/agent/` to
-`~/.config/opencode/agent` (so opencode discovers the bundled agents).
-Alternatively, copy the directories manually.
+This symlinks `agents/` to `~/.agents`, `agents/agent/` to
+`~/.config/opencode/agent` (so opencode discovers the bundled agents), and
+`agents/skills/` to `~/.config/opencode/skills` (so the `skill` tool discovers
+the bundled skills). Alternatively, copy the directories manually.
 
 ## How it works
 
@@ -67,18 +68,19 @@ work items:
 
 1. **Diff** — the conductor compares the current spec/tests tag against the
    previous implementation tag to identify new or changed scenarios.
-2. **Decompose** — it uses the `todo-list` skill to break the diffs into a
-   dependency-aware task graph (`TODOxx.md` + task graph file in `docs/working/`).
-3. **Execute** — spawns `general` sub-agents in topological rounds to implement
-   each task, then runs verification (lint, typecheck, tests, build).
-4. **Commit** — each passing task is committed by the `committer` sub-agent as
-   a focused, scoped commit.
-5. **Escalate on failure** — if a task fails verification, the conductor spawns
-   `escalate1` (first-tier, read-only diagnosis + task plan), then `escalate2`
-   (second-tier, deep-dive), before aborting. A cheaper model executes the task
-   plans produced by the escalation agents.
-6. **Report** — the conductor writes a full report to `docs/working/` covering
-   every task, its verification result, and the overall status.
+2. **Decompose** — the conductor loads its `conductor-analyze` skill to determine
+   goal and scope, then one of two decomposition skills: `conductor-code-decomposition`
+   (uses the `todo-list` skill to break diffs into a TODOxx.md and dependency-aware
+   task graph) or `conductor-noncode-decomposition` (for non-code work like docs
+   and config).
+3. **Execute** — the `conductor-execute` skill guides topological-round execution:
+   spawns `general` sub-agents in parallel, runs verification (lint, typecheck, tests,
+   build), commits passing tasks via the `committer` sub-agent.
+4. **Escalate on failure** — if a task fails verification, the `conductor-escalate`
+   skill guides spawning `escalate1` (first-tier, read-only diagnosis + task plan),
+   then `escalate2` (second-tier, deep-dive), before aborting.
+5. **Report** — the `conductor-report` skill writes a full report to `docs/working/`
+   covering every task, its verification result, and the overall status.
 
 The user touches the process at two points: writing/refining the spec (Phase 1),
 and reviewing the final report (end of Phase 2). Everything between runs
@@ -95,12 +97,20 @@ autonomously by default.
 | `specification-methodology` | 5-step spec writing (Models, Roles, Use Cases, Documentation, Review) |
 | `test-scenarios` | Writing contractual, customer-facing test scenarios |
 | `todo-list` | TDD-based TODO list generator (Red → Green → Commit phases) |
+| `conductor-analyze` | [Conductor-internal] Phase 1 — goal/scope/constraints analysis |
+| `conductor-code-decomposition` | [Conductor-internal] Phase 2 — code-work task graph generation (uses spec-refinement, specification-methodology, todo-list) |
+| `conductor-noncode-decomposition` | [Conductor-internal] Phase 2 — non-code task graph generation |
+| `conductor-execute` | [Conductor-internal] Phase 3 — topological-round execution and verification |
+| `conductor-escalate` | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
+| `conductor-report` | [Conductor-internal] Phase 5 — final report generation |
+
+> **Note:** Skills prefixed with `conductor-` are loaded automatically by the conductor agent during its workflow. They are not meant to be loaded directly by users or general agents.
 
 ## Agents
 
 | Agent | Description |
 |-------|-------------|
-| `conductor` | Decomposes work into an ordered, dependency-aware task graph, spawns sub-agents to execute each task (in parallel where the graph allows), verifies each result, commits per task via the `committer` agent, and escalates failures to `escalate1`/`escalate2` before aborting. Runs interactively (asks on ambiguity) or autonomously (default — records assumptions and continues). Writes a report to `docs/working/`. |
+| `conductor` | Plans and orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. The workflow is split across six conductor-* skills loaded on demand (analyze, code-decomposition, noncode-decomposition, execute, escalate, report) so the base prompt stays small and only relevant phase instructions are loaded. Interactive by default for ambiguity resolution; autonomous when requested. |
 | `committer` | Inspects staged/unstaged changes, groups them by topic, and makes one or more focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. |
 | `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and verdict, but never edits files or runs side-effect commands. |
 | `escalate1` | First-tier escalation. Diagnoses failures the normal build agent cannot resolve and produces an ordered task plan for a cheaper model to execute. Read-only — never edits or runs commands directly. |

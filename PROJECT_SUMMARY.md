@@ -26,12 +26,15 @@ guidance/skill bundle for agents.
   than sub-agents and **owns all thinking, planning, and decision-making**
   (determining goals, constraints, scope, task decomposition). It **never**
   reads/writes files, edits code, or runs commands itself — those mechanical
-  actions are delegated to sub-agents. Interactive mode (default) is a
-  dialogue with the user for ambiguity resolution; autonomous mode only when
-  requested. Decomposes work into a dependency-aware task graph, uses `explore`
-  sub-agents for file reading, `general` sub-agents for execution and
-  verification, `committer` for commits, `escalate1`/`escalate2` for failure
-  diagnosis, and delegates report writing to a sub-agent.
+  actions are delegated to sub-agents. The detailed workflow is split across
+  six `conductor-*` skills in `skills/` (analyze, code-decomposition,
+  noncode-decomposition, execute, escalate, report) loaded on demand so the
+  base prompt stays small. Interactive mode (default) is a dialogue with the
+  user for ambiguity resolution; autonomous mode only when requested.
+  Decomposes work into a dependency-aware task graph, uses `explore` sub-agents
+  for file reading, `general` sub-agents for execution and verification,
+  `committer` for commits, `escalate1`/`escalate2` for failure diagnosis, and
+  delegates report writing to a sub-agent.
 - `agent/committer.md` — opencode agent definition for the `committer` (sub-agent).
   Inspects the working tree, groups changes by topic into focused commits with
   descriptive messages, and executes them. Never tags, pushes, or branches unless
@@ -116,6 +119,12 @@ guidance/skill bundle for agents.
   dialogue with the user. Agent definition lives in
   `agent/conductor.md` (file-based opencode agent, symlinked to
   `~/.config/opencode/agent`).
+- The conductor's detailed workflow was **split out of the agent file into six
+  conductor-* skills** (`conductor-analyze`, `conductor-code-decomposition`,
+  `conductor-noncode-decomposition`, `conductor-execute`, `conductor-escalate`,
+  `conductor-report`) to reduce the base prompt size, segregate code-work from
+  non-code-work flows, and load phase instructions on demand rather than loading
+  everything at every turn.
 - `committer` agent created to own the commit workflow: inspects the working tree,
   groups changes by topic into focused commits with descriptive messages, and executes
   them. Never pushes/tags/branches unless asked. Agent definition lives in
