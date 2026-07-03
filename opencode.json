@@ -6,6 +6,10 @@
     "reviewer":   { "model": "openrouter/z-ai/glm-5.2" },
     "committer":  { "model": "openrouter/deepseek/deepseek-v4-flash" },
     "escalate1":  { "model": "openrouter/z-ai/glm-5.2" },
-    "escalate2":  { "model": "openrouter/anthropic/claude-opus-4.8" }
+    "escalate2":  { "model": "openrouter/anthropic/claude-opus-4.8" },
+    "build":      { "model": "openrouter/deepseek/deepseek-v4-flash" },
+    "plan":       { "model": "openrouter/z-ai/glm-5.2" },
+    "explore":    { "model": "openrouter/deepseek/deepseek-v4-flash" },
+    "general":    { "model": "openrouter/deepseek/deepseek-v4-flash" }
   }
 }
