@@ -46,11 +46,11 @@ guidance/skill bundle for agents.
   for the implementer to work through. Never edits files.
 - `agent/escalate1.md` — opencode agent definition for `Escalate1`, the first-tier
   escalation subagent. Called when the primary build agent hits an issue it cannot
-  resolve. Read-only (edit/bash/webfetch all denied) — diagnoses and produces a
+  resolve. Read-only (edit/webfetch denied; bash limited to a curated read-only inspection allow-list) — diagnoses and produces a
   task plan for a cheaper model to execute.
 - `agent/escalate2.md` — opencode agent definition for `Escalate2`, the second-tier
   escalation subagent. Called when Escalate1 cannot resolve an issue. Read-only
-  (edit/bash/webfetch all denied) — deep-dive diagnosis producing a task plan for a
+  (edit/webfetch denied; bash limited to a curated read-only inspection allow-list) — deep-dive diagnosis producing a task plan for a
   cheaper model to execute. Deep reasoning on hard problems.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/handover/SKILL.md` — creates self-contained HANDOVER-xx.md at session end.

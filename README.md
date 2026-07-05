@@ -112,8 +112,8 @@ autonomously by default.
 |-------|-------------|
 | `conductor` | Plans and orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. The workflow is split across six conductor-* skills loaded on demand (analyze, code-decomposition, noncode-decomposition, execute, escalate, report) so the base prompt stays small and only relevant phase instructions are loaded. Interactive by default for ambiguity resolution; autonomous when requested. |
 | `committer` | Inspects staged/unstaged changes, groups them by topic, and makes one or more focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. |
-| `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and verdict, but never edits files or runs side-effect commands. |
-| `escalate1` | First-tier escalation. Diagnoses failures the normal build agent cannot resolve and produces an ordered task plan for a cheaper model to execute. Read-only — never edits or runs commands directly. |
+| `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and verdict, but never edits files or runs anything beyond a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo). |
+| `escalate1` | First-tier escalation. Diagnoses failures the normal build agent cannot resolve and produces an ordered task plan for a cheaper model to execute. Read-only — never edits files; may run a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo) to gather diagnostic context. |
 | `escalate2` | Second-tier escalation. Deep-dive diagnosis on hard problems — spec ambiguities, complex logic errors, cross-cutting refactors. Produces a task plan for a cheaper model to execute. Read-only. Called when Escalate1 cannot resolve. |
 
 ## License

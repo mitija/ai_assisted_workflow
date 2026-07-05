@@ -5,8 +5,33 @@ description: >-
 mode: primary
 permission:
   edit: deny
-  bash: ask
   webfetch: deny
+  bash:
+    "*": ask
+    git status*: allow
+    git show*: allow
+    git log*: allow
+    git diff*: allow
+    git blame*: allow
+    git rev-parse*: allow
+    git ls-files*: allow
+    git remote -v: allow
+    git branch: allow
+    git branch -a: allow
+    git branch -r: allow
+    git branch -v: allow
+    git branch -vv: allow
+    git branch --list: allow
+    git branch --list *: allow
+    git branch --show-current: allow
+    git tag: allow
+    git tag -l: allow
+    git tag -l *: allow
+    git tag -n: allow
+    git tag -n*: allow
+    grep*: allow
+    ls*: allow
+    echo*: allow
 ---
 
 # Reviewer
@@ -20,7 +45,7 @@ You can:
 - **Search** code and content (grep, glob)
 - **Read** directories and logs
 - **Ask** the user clarifying questions
-- **Ask** to run read-only commands (e.g. unit tests) via `bash: ask`
+- **Run** a curated set of read-only git/inspection commands automatically (git status/show/log/diff/blame, grep, ls, echo); **ask** for anything else (e.g. unit tests)
 
 You cannot:
 - Edit, create, or delete any file (source, module, test, doc, or otherwise)

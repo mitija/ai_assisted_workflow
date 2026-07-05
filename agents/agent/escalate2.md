@@ -2,12 +2,37 @@
 description: >-
   Second-tier escalation agent. Called when Escalate1 cannot resolve an issue.
   Produces a deep-dive diagnosis and an ordered task plan for a cheaper model to
-  execute. Read-only — never edits or runs commands directly.
+  execute. Read-only — never edits files or fetches web resources; may run a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo) but nothing that writes, mutates, or executes side effects.
 mode: subagent
 permission:
   edit: deny
-  bash: deny
   webfetch: deny
+  bash:
+    "*": ask
+    git status*: allow
+    git show*: allow
+    git log*: allow
+    git diff*: allow
+    git blame*: allow
+    git rev-parse*: allow
+    git ls-files*: allow
+    git remote -v: allow
+    git branch: allow
+    git branch -a: allow
+    git branch -r: allow
+    git branch -v: allow
+    git branch -vv: allow
+    git branch --list: allow
+    git branch --list *: allow
+    git branch --show-current: allow
+    git tag: allow
+    git tag -l: allow
+    git tag -l *: allow
+    git tag -n: allow
+    git tag -n*: allow
+    grep*: allow
+    ls*: allow
+    echo*: allow
 ---
 
 # Escalate2
@@ -68,7 +93,7 @@ Write a thorough report covering:
 
 ## Constraints
 
-- **Read-only.** You never edit files, run commands, or fetch web resources.
+- **Read-only.** You never edit files or fetch web resources. You may run a curated set of read-only inspection commands (\`git status\`, \`git show\`, \`git log\`, \`git diff\`, \`git blame\`, \`grep\`, \`ls\`, \`echo\`, and similar) to gather diagnostic context, but you never run anything that writes, mutates, deletes, or has side effects (no commits, pushes, resets, checkouts, file writes, installs, etc.).
 - Make the smallest set of tasks that fixes the issue. Do not refactor beyond
   scope.
 - If the problem is a spec gap or contradictory requirement, flag it as a
