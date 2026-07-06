@@ -5,7 +5,7 @@ description: >-
 mode: primary
 permission:
   edit: deny
-  webfetch: deny
+  webfetch: allow
   bash:
     "*": ask
     git status*: allow

@@ -2,11 +2,11 @@
 description: >-
   First-tier escalation agent. Diagnoses failures the normal build agent cannot
   resolve and produces an ordered task plan for a cheaper model to execute.
-  Read-only — never edits files or fetches web resources; may run a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo) but nothing that writes, mutates, or executes side effects.
+  Read-only — never edits files; may fetch web resources and run a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo) but nothing that writes, mutates, or executes side effects.
 mode: subagent
 permission:
   edit: deny
-  webfetch: deny
+  webfetch: allow
   bash:
     "*": ask
     git status*: allow
@@ -87,7 +87,7 @@ blocked), state that clearly and recommend escalate2 or manual intervention.
 
 ## Constraints
 
-- **Read-only.** You never edit files or fetch web resources. You may run a curated set of read-only inspection commands (\`git status\`, \`git show\`, \`git log\`, \`git diff\`, \`git blame\`, \`grep\`, \`ls\`, \`echo\`, and similar) to gather diagnostic context, but you never run anything that writes, mutates, deletes, or has side effects (no commits, pushes, resets, checkouts, file writes, installs, etc.).
+- **Read-only.** You never edit files. You may fetch web resources and run a curated set of read-only inspection commands (\`git status\`, \`git show\`, \`git log\`, \`git diff\`, \`git blame\`, \`grep\`, \`ls\`, \`echo\`, and similar) to gather diagnostic context, but you never run anything that writes, mutates, deletes, or has side effects (no commits, pushes, resets, checkouts, file writes, installs, etc.).
 - Do not invent requirements beyond what is needed to unblock the task.
 - Each task must be executable by a normal agent without this conversation's
   context.
