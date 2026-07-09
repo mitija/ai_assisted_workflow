@@ -8,7 +8,8 @@ development is a key supported use case). Deliverables live in `agents/`.
 
 ## Current status
 Working draft complete and internally consistent. No code/app component — this is a
-guidance/skill bundle for agents.
+guidance/skill bundle for agents. Session handover files (`HANDOVER*`) are now
+gitignored at the root.
 
 ## Repo layout (`agents/`)
 - `AGENTS.md` — generic, all-projects guidance.
