@@ -2,8 +2,9 @@
 
 ## Purpose
 Build a reusable, working `AGENTS.md` to drop into all projects, plus an Odoo-specific
-companion and a set of agents/skills, so AI coding agents follow a consistent
-spec-driven workflow. Deliverables live in `agents/`.
+companion, a set of agents/skills, and a general-purpose conductor agent, so AI coding
+agents can orchestrate multi-step tasks using a consistent workflow (spec-driven
+development is a key supported use case). Deliverables live in `agents/`.
 
 ## Current status
 Working draft complete and internally consistent. No code/app component — this is a
