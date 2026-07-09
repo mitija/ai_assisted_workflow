@@ -1,8 +1,10 @@
 # AI Assisted Workflow
 
 A reusable set of agent instructions, skills, and project templates for
-AI-assisted, spec-driven, red / green phases software development. Drop into any project to give
-AI coding agents a consistent, structured workflow.
+AI-assisted, multi-step task orchestration — code, documentation, configuration,
+research, and more. Drop into any project to give AI coding agents a consistent,
+structured workflow. Spec-driven development with red/green phases is a key
+supported workflow.
 
 This is part of my working philosophy - I constantly refine and improve on my workflows. As I work on a project I also work on improving these set of files
 
@@ -38,16 +40,61 @@ the bundled skills). Alternatively, copy the directories manually.
    `project_context.yaml` and guides you through filling in local paths, commands, and credentials.
 2. The agent reads `AGENTS.md` and `project_context.yaml` at the start of each
    session to understand the project context and workflow.
-3. Follow the [spec-driven workflow](docs/AI_assisted_development_workflow.md) described in the methodology docs.
+3. Use the **conductor** agent as a general orchestrator for multi-step tasks.
+   For spec-driven feature implementation, follow the workflow described in
+   [docs/AI_assisted_development_workflow.md](docs/AI_assisted_development_workflow.md).
 
 ## End-to-end flow
 
-The process splits into two phases: an **interactive** spec-writing phase and an
-**autonomous** development phase.
+The **conductor** agent orchestrates any multi-step task — code implementation,
+documentation, configuration, research, project setup, and more. Its workflow is
+split across five phases, each loaded from a `conductor-*` skill on demand:
 
-### Phase 1 — Interactive: spec writing
+### Phase 1 — Analyze
 
-The user drives this phase with guidance from skills:
+The conductor determines the goal, scope, and constraints; identifies the type
+of work needed (code vs non-code); and gathers relevant context. If the
+requirement is rough or ambiguous, it resolves questions interactively with the
+user.
+
+### Phase 2 — Decompose
+
+Depending on the work type, the conductor loads the appropriate decomposition
+skill:
+
+- **`conductor-code-decomposition`** — for code-related tasks. If the
+  requirement is rough, it first loads `spec-refinement` then
+  `specification-methodology` to produce a spec, then uses the `todo-list` skill
+  to generate a TDD-based TODO list and a dependency-aware task graph.
+- **`conductor-noncode-decomposition`** — for non-code tasks (documentation,
+  configuration, research, project setup). Produces a task graph directly.
+
+### Phase 3 — Execute
+
+The `conductor-execute` skill guides topological-round execution: ready tasks
+are spawned in parallel via `general` sub-agents, each task is verified with
+appropriate checks (e.g. lint, typecheck, tests, build) on completion, and
+passing tasks are committed via the
+`committer` sub-agent.
+
+### Phase 4 — Escalate on failure
+
+If a task fails verification, the `conductor-escalate` skill spawns `escalate1`
+(first-tier, read-only diagnosis + task plan) and, if needed, `escalate2`
+(second-tier, deep-dive) before continuing or aborting.
+
+### Phase 5 — Report
+
+The `conductor-report` skill writes a full report to `docs/working/` covering
+every task, its verification result, and the overall status.
+
+The conductor runs in **interactive mode** by default (it consults the user when
+it encounters ambiguity) and switches to **autonomous mode** when requested.
+
+### Spec-driven development (supported workflow)
+
+A key use case of the conductor is spec-driven feature implementation. In this
+workflow, the specification is written interactively before the conductor runs:
 
 1. **Refine** a rough requirement with `spec-refinement` (one question at a time
    until entities, relationships, and business rules are clear).
@@ -57,33 +104,14 @@ The user drives this phase with guidance from skills:
    to a `T-NN` scenario in `<epic>_TESTS.md`).
 4. **Freeze** the spec doc repo with a tag (e.g. `spec-260613`).
 
-The output is a tagged specification with executable tests.
+The conductor then runs its general flow against the frozen spec. It loads the
+spec docs at the current tag, determines what to implement — for example, by
+comparing against the previous implementation tag — and drives development
+through the five phases above. Verification runs the contractual tests as part
+of every task round.
 
-### Phase 2 — Autonomous: development
-
-From here, the **conductor** drives everything autonomously. It loads the spec
-docs at the current tag and determines what to implement by diffing the specs
-and tests against the previous tag — so only new or changed scenarios become
-work items:
-
-1. **Diff** — the conductor compares the current spec/tests tag against the
-   previous implementation tag to identify new or changed scenarios.
-2. **Decompose** — the conductor loads its `conductor-analyze` skill to determine
-   goal and scope, then one of two decomposition skills: `conductor-code-decomposition`
-   (uses the `todo-list` skill to break diffs into a TODOxx.md and dependency-aware
-   task graph) or `conductor-noncode-decomposition` (for non-code work like docs
-   and config).
-3. **Execute** — the `conductor-execute` skill guides topological-round execution:
-   spawns `general` sub-agents in parallel, runs verification (lint, typecheck, tests,
-   build), commits passing tasks via the `committer` sub-agent.
-4. **Escalate on failure** — if a task fails verification, the `conductor-escalate`
-   skill guides spawning `escalate1` (first-tier, read-only diagnosis + task plan),
-   then `escalate2` (second-tier, deep-dive), before aborting.
-5. **Report** — the `conductor-report` skill writes a full report to `docs/working/`
-   covering every task, its verification result, and the overall status.
-
-The user touches the process at two points: writing/refining the spec (Phase 1),
-and reviewing the final report (end of Phase 2). Everything between runs
+The user typically touches the process at two points: writing/refining the spec
+and freezing it, then reviewing the final report. Everything between runs
 autonomously by default.
 
 ## Skills
