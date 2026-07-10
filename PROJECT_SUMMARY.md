@@ -22,6 +22,12 @@ gitignored at the root.
   per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
 - `opencode.json` — project-level per-agent model assignments (merged with global config).
+  Current assignments: `conductor`, `reviewer`, `escalate1`, `plan` run on
+  `openrouter/openai/gpt-5.6-luna`; `escalate2` on
+  `openrouter/openai/gpt-5.6-terra`; `committer`, `build`, `explore`,
+  `general` on `openrouter/deepseek/deepseek-v4-flash`. OpenRouter model
+  entries `openai/gpt-5.6-luna` and `openai/gpt-5.6-terra` use the
+  `reasoningEffort: "max"` option under `provider.openrouter.models`.
 - `agent/conductor.md` — opencode agent definition for the `conductor`
   (orchestration agent). Symlinked to `~/.config/opencode/agent` by
   `tools/install.sh` for auto-discovery. Conductor runs on a better AI model
