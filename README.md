@@ -77,7 +77,7 @@ appropriate checks (e.g. lint, typecheck, tests, build) on completion, and
 passing tasks are committed via the
 `committer` sub-agent. After the graph is exhausted, the `reviewer` performs a
 final audit; critical or blocking findings trigger a remediation loop that
-repeats review until clean, while warnings and suggestions are assessed by the
+repeats review until no critical or blocking findings remain, while warnings and suggestions are assessed by the
 conductor and do not trigger another reviewer invocation on their own.
 
 ### Phase 4 — Escalate on failure

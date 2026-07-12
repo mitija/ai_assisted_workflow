@@ -111,7 +111,7 @@ If a field genuinely cannot be filled (e.g. the correct behaviour is unclear
 because the spec does not cover the case), the reviewer **must do one of**:
 - **Gather context**: inspect the repository further (grep, glob, read related
   files, check project_context.yaml) until the field can be filled.
-- **Report a blocker/question**: state the ambiguity, why it matters, the options
+- **Report a blocking finding with a clarification question**: state the ambiguity, why it matters, the options
   and their trade-offs, and a recommendation. Do **not** leave the field blank,
   write "TBD", or defer the decision to the implementer.
 
@@ -147,7 +147,7 @@ Findings, and Summary (approve or conditional).
 If during inspection you encounter a situation where a concrete change cannot be
 specified because the repository lacks necessary context (e.g. a missing spec,
 an undocumented integration contract, a dependency not yet implemented), treat
-this as a **blocker/question** in the Findings section rather than writing a
+this as a **blocking finding** (paired with a **clarification question**) in the Findings section rather than writing a
 vague task. The Finding should state:
 
 - What is missing (file/line reference if applicable)
@@ -155,8 +155,8 @@ vague task. The Finding should state:
 - What specific context is needed and where it should come from
 - A recommended path (e.g. "ask user: what is the expected behaviour for X?")
 
-The task list should then contain only tasks that *are* specific. Blockers
-are listed separately under a "Blockers" heading in Findings and are not
+The task list should then contain only tasks that *are* specific. Blocking findings
+are listed separately under a "Blocking findings" heading in Findings and are not
 converted into implementation tasks until resolved.
 
 ## Constraints
