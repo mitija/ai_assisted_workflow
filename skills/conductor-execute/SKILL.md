@@ -68,9 +68,11 @@ Based on the reviewer's findings:
 - **If any critical or blocking findings exist:** the conductor creates remedial
   tasks from the reviewer's task list (or refines them as needed), adds them to
   the graph, and executes them using the same execute/verify/commit workflow
-  (steps 1–5, one round). After all remedial tasks are committed, invoke the
-  `reviewer` sub-agent **again** to verify the fixes. Repeat this
-  remediation/review cycle only while critical or blocking findings remain.
+  (steps 1–5), repeatedly computing and executing all eligible topological rounds
+  until the remedial task graph is exhausted. Each remedial task is mechanically
+  verified and every passing remedial task is committed. After all remedial rounds
+  are exhausted successfully, invoke the `reviewer` sub-agent **again** to verify
+  the fixes. Repeat this remediation/review cycle only while critical or blocking findings remain.
   Critical/blocking findings **cannot** be ignored.
 - **If only warnings or suggestions exist:** the conductor assesses each
   non-blocking finding. Suggestions may be accepted for implementation or
