@@ -20,6 +20,7 @@ Collect the following into a structured form you can pass to the `general` sub-a
 - **Overall status** — `complete` (graph fully executed) or `aborted` (escalation exhausted).
 - **Task count** — how many tasks completed successfully vs. total tasks in the graph.
 - **Per-task detail**, for each task in graph order: id, description, dependencies, the full prompt given to the executor, the verification performed and its result (pass/fail), the commit made (if any), and final status (passed / failed / not-started).
+- **Review rounds**: for each reviewer invocation, record the round number, the reviewer's findings (counts per severity and key observations), and the conductor's resolution (remedial tasks created, suggestions implemented or advisory, any re-review outcome).
 
 ### 2. Delegate report writing
 
@@ -53,6 +54,24 @@ The report must contain:
 
 For each task, also include the full prompt that was given to the executor (below the table or in an appendix).
 
-### 4. Final summary
+### 4. Review section
+
+After the task details, include a review section:
+
+```markdown
+## Review
+
+| Round | Critical | Blocking | Warning | Suggestion | Resolution |
+|-------|----------|----------|---------|------------|------------|
+| 1 | 0 | 2 | 1 | 3 | 2 remedial tasks created, 1 warning accepted, 3 suggestions (1 implemented, 2 advisory) |
+| 2 | 0 | 0 | 0 | 0 | No critical/blocking findings — clean |
+```
+
+For each round, describe the key findings and the conductor's decision. If the
+review had non-blocking warnings or suggestions, note them explicitly — do not
+claim "No tasks" means no findings of any kind. Distinguish between "no
+critical/blocking findings" and a completely clean review.
+
+### 5. Final summary
 
 After the report is written, give the user a concise summary and the report's path.

@@ -42,16 +42,23 @@ gitignored at the root.
   Decomposes work into a dependency-aware task graph, uses `explore` sub-agents
   for file reading, `general` sub-agents for execution and verification,
   `committer` for commits, `escalate1`/`escalate2` for failure diagnosis, and
-  delegates report writing to a sub-agent.
+  delegates report writing to a sub-agent. After graph completion, invokes the
+  `reviewer` for a final audit; critical/blocking findings trigger a
+  remediation/re-review loop, while warnings and suggestions are assessed by the
+  conductor and do not trigger another reviewer invocation on their own.
 - `agent/committer.md` — opencode agent definition for the `committer` (sub-agent).
   Inspects the working tree, groups changes by topic into focused commits with
   descriptive messages, and executes them. Never tags, pushes, or branches unless
   explicitly asked.
 - `agent/reviewer.md` — opencode agent definition for the `reviewer`. Read-only
   inspection of work for correctness, style, and completeness. Produces a structured
-  review plan with findings (issues, warnings, passes), verdict, and an ordered task
-  list mapping each recommendation to an actionable item (with file:line references)
-  for the implementer to work through. Never edits files.
+  review plan with findings (issues, warnings, passes), verdict, and an
+  implementation-ready task list: every task specifies exact file path + line,
+  a concrete change instruction, the rationale/behaviour rule, dependency ordering,
+  and a verify command with expected result. Prohibits vague/deferred wording
+  ("review this", "investigate", "fix as appropriate"); unresolved ambiguities are
+  reported as blockers/questions rather than left for the implementer. Outputs an
+  explicit "No tasks" result when no changes are needed. Never edits files.
 - `agent/escalate1.md` — opencode agent definition for `Escalate1`, the first-tier
   escalation subagent. Called when the primary build agent hits an issue it cannot
   resolve. Read-only (edit denied; webfetch allowed; bash limited to a curated read-only inspection allow-list) — diagnoses and produces a

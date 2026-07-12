@@ -48,9 +48,44 @@ If **any** task in the round fails to execute or fails verification:
 - Do **not** commit the failed task's work.
 - Load the [`conductor-escalate`](../conductor-escalate/SKILL.md) skill via the `skill` tool to handle the failure.
 
-### 7. Route to report on completion
+### 7. Reviewer audit (after graph exhausted)
 
-When the graph is exhausted with no failures, load the [`conductor-report`](../conductor-report/SKILL.md) skill via the `skill` tool to produce the final report.
+When the graph is exhausted with no failures, invoke the `reviewer` sub-agent
+once for a final audit of all completed work. Provide the reviewer with:
+
+- The full task graph (all prompts, verification criteria, and outcomes).
+- The relevant specification/tests (docs tag, TESTS.md).
+- The repository diff and commit history so the reviewer can inspect all
+  changes, including already committed ones.
+
+The reviewer returns a review plan with findings (severity-classified) and an
+implementation-ready task list for any actionable findings.
+
+### 8. Assess findings and decide
+
+Based on the reviewer's findings:
+
+- **If any critical or blocking findings exist:** the conductor creates remedial
+  tasks from the reviewer's task list (or refines them as needed), adds them to
+  the graph, and executes them using the same execute/verify/commit workflow
+  (steps 1–5, one round). After all remedial tasks are committed, invoke the
+  `reviewer` sub-agent **again** to verify the fixes. Repeat this
+  remediation/review cycle only while critical or blocking findings remain.
+  Critical/blocking findings **cannot** be ignored.
+- **If only warnings or suggestions exist:** the conductor assesses each
+  non-blocking finding. Suggestions may be accepted for implementation or
+  recorded as advisory. Accepted suggestions are implemented as tasks and
+  committed. Advisory suggestions are noted but not acted on. **Do not** invoke
+  the reviewer again for suggestions alone — this prevents an unbounded loop.
+  Warnings should be evaluated similarly: fix if warranted, otherwise record.
+
+### 9. Route to report on completion
+
+When the graph is exhausted and the reviewer audit has passed (no critical or
+blocking findings remain, and any accepted suggestions have been implemented),
+load the [`conductor-report`](../conductor-report/SKILL.md) skill via the
+`skill` tool to produce the final report. Include the reviewer findings and
+resolution in the data passed to the report skill.
 
 ### Parallelism notes
 

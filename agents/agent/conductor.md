@@ -78,6 +78,7 @@ same schema so the execute and report phases are interchangeable:
 | `committer` | Inspects changes and makes focused commits; never tags/pushes/branches |
 | `escalate1` | First-tier escalation — diagnoses failures and produces a task plan for a cheaper model to execute. Read-only. |
 | `escalate2` | Second-tier escalation — deep-dive diagnosis on hard problems; produces a task plan. Read-only. Called when escalate1 cannot resolve. |
+| `reviewer` | Reviews completed work for correctness, completeness, and spec adherence. Read-only. Produces findings classified as critical, blocking, warning, or suggestion and an implementation-ready task list for actionable findings. |
 
 ## Rules
 

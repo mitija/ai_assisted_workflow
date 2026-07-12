@@ -75,7 +75,10 @@ The `conductor-execute` skill guides topological-round execution: ready tasks
 are spawned in parallel via `general` sub-agents, each task is verified with
 appropriate checks (e.g. lint, typecheck, tests, build) on completion, and
 passing tasks are committed via the
-`committer` sub-agent.
+`committer` sub-agent. After the graph is exhausted, the `reviewer` performs a
+final audit; critical or blocking findings trigger a remediation loop that
+repeats review until clean, while warnings and suggestions are assessed by the
+conductor and do not trigger another reviewer invocation on their own.
 
 ### Phase 4 — Escalate on failure
 
@@ -86,7 +89,8 @@ If a task fails verification, the `conductor-escalate` skill spawns `escalate1`
 ### Phase 5 — Report
 
 The `conductor-report` skill writes a full report to `docs/working/` covering
-every task, its verification result, and the overall status.
+every task, its verification result, reviewer findings and resolution, and the
+overall status.
 
 The conductor runs in **interactive mode** by default (it consults the user when
 it encounters ambiguity) and switches to **autonomous mode** when requested.
@@ -140,7 +144,7 @@ autonomously by default.
 |-------|-------------|
 | `conductor` | Plans and orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. The workflow is split across six conductor-* skills loaded on demand (analyze, code-decomposition, noncode-decomposition, execute, escalate, report) so the base prompt stays small and only relevant phase instructions are loaded. Interactive by default for ambiguity resolution; autonomous when requested. |
 | `committer` | Inspects staged/unstaged changes, groups them by topic, and makes one or more focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. |
-| `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and verdict, but never edits files or runs anything beyond a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo). |
+| `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings, verdict, and an implementation-ready task list where every task specifies exact file path + line, concrete change, rationale, dependencies, and a verify command with expected result. Prohibits vague/deferred wording; unresolved ambiguities are reported as blockers rather than left for the implementer. Never edits files or runs anything beyond a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo). |
 | `escalate1` | First-tier escalation. Diagnoses failures the normal build agent cannot resolve and produces an ordered task plan for a cheaper model to execute. Read-only — never edits files; may run a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo) to gather diagnostic context. |
 | `escalate2` | Second-tier escalation. Deep-dive diagnosis on hard problems — spec ambiguities, complex logic errors, cross-cutting refactors. Produces a task plan for a cheaper model to execute. Read-only. Called when Escalate1 cannot resolve. |
 
