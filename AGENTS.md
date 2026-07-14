@@ -20,6 +20,7 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
     reviewer.md                Reviewer agent — read-only code review (opencode agent definition)
     escalate1.md               First-tier escalation agent — read-only diagnosis + task plan
     escalate2.md               Second-tier escalation agent — deep-dive diagnosis + task plan
+    verifier.md                Verification agent — runs exact delegated commands, reports PASS/FAIL/BLOCKED
   skills/
     coding-standards/SKILL.md  Logging and code quality standards
     handover/SKILL.md          Create session-end handover documents

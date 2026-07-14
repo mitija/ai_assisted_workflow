@@ -1,6 +1,6 @@
 ---
 name: conductor-execute
-description: Phase 3 of the conductor workflow. Executes the task graph in topological rounds — spawns the ready set in parallel via general sub-agents, verifies each task on return, commits passing tasks via the committer. Routes to conductor-escalate on failure.
+description: Phase 3 of the conductor workflow. Executes the task graph in topological rounds — spawns the ready set in parallel via general sub-agents, delegates verification to the verifier sub-agent, commits passing tasks via the committer. Routes to conductor-escalate on failure.
 ---
 
 # Conductor: Execute
@@ -25,7 +25,7 @@ Issue one `general` sub-agent per task in the ready set. Each sub-agent receives
 
 When all sub-agents in the round return:
 
-- For each task, spawn a `general` sub-agent to execute the task's `verification` criteria. Tell it to run the commands and report pass/fail. Do **not** run verification commands yourself.
+- For each task, spawn a `verifier` sub-agent to execute the exact verification commands. Pass the commands verbatim and require structured `VERIFY PASS|FAIL|BLOCKED` evidence. Treat BLOCKED as a failed verification — it routes through normal failure/escalation (step 6). Do **not** run verification commands yourself.
 - Collect the pass/fail results for every task in the round.
 
 ### 4. Commit passing tasks

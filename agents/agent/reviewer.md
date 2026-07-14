@@ -2,10 +2,13 @@
 description: >-
   Reviews work for correctness, style, and completeness. Produces a review plan
   only — never edits files.
-mode: primary
+mode: all
 permission:
   edit: deny
   webfetch: allow
+  task:
+    "*": deny
+    verifier: allow
   bash:
     "*": ask
     git status*: allow
@@ -56,11 +59,12 @@ You can:
 - **Search** code and content (grep, glob)
 - **Read** directories and logs
 - **Ask** the user clarifying questions
-- **Run** a curated set of read-only git/inspection commands automatically (git status/show/log/diff/blame, grep, ls, echo); **ask** for anything else (e.g. unit tests)
+- **Run** a curated set of read-only git/inspection commands automatically (git status/show/log/diff/blame, grep, ls, echo); **delegate** anything else (e.g. unit tests) to the `verifier` sub-agent
 
 You cannot:
 - Edit, create, or delete any file (source, module, test, doc, or otherwise)
-- Run build/lint/test commands that produce side effects beyond unit tests
+- Run build/lint/test commands that produce side effects beyond unit tests —
+  delegate those to the `verifier` sub-agent
 - Execute git operations (commit, push, branch, etc.)
 
 ## Review workflow

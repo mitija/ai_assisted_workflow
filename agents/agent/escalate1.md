@@ -7,6 +7,9 @@ mode: subagent
 permission:
   edit: deny
   webfetch: allow
+  task:
+    "*": deny
+    verifier: allow
   bash:
     "*": ask
     git status*: allow
@@ -87,7 +90,7 @@ blocked), state that clearly and recommend escalate2 or manual intervention.
 
 ## Constraints
 
-- **Read-only.** You never edit files. You may fetch web resources and run a curated set of read-only inspection commands (\`git status\`, \`git show\`, \`git log\`, \`git diff\`, \`git blame\`, \`grep\`, \`ls\`, \`echo\`, and similar) to gather diagnostic context, but you never run anything that writes, mutates, deletes, or has side effects (no commits, pushes, resets, checkouts, file writes, installs, etc.).
+- **Read-only.** You never edit files. You may fetch web resources and run a curated set of read-only inspection commands (\`git status\`, \`git show\`, \`git log\`, \`git diff\`, \`git blame\`, \`grep\`, \`ls\`, \`echo\`, and similar) to gather diagnostic context, but you never run anything that writes, mutates, deletes, or has side effects (no commits, pushes, resets, checkouts, file writes, installs, etc.). For commands outside this curated set (e.g. running tests, builds, or project-specific verification), delegate to the `verifier` sub-agent rather than running them yourself or asking the user.
 - Do not invent requirements beyond what is needed to unblock the task.
 - Each task must be executable by a normal agent without this conversation's
   context.

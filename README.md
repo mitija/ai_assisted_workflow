@@ -15,7 +15,7 @@ agents/          Agent instructions and skills (copy/symlink to ~/.agents)
   AGENTS.md        Generic agent guidance for all projects
   AGENTS.odoo.md   Odoo-specific companion (testing, source layout, DB/instances)
   project_context.template.yaml  Template for machine/project-specific config
-  agent/           opencode agent definitions (conductor, committer, reviewer, escalate1, escalate2)
+  agent/           opencode agent definitions (conductor, committer, verifier, reviewer, escalate1, escalate2)
   skills/          Reusable agent skills (coding-standards, test-scenarios, etc.)
 docs/            Methodology documentation
 tools/           Shell scripts and utilities
@@ -73,8 +73,9 @@ skill:
 
 The `conductor-execute` skill guides topological-round execution: ready tasks
 are spawned in parallel via `general` sub-agents, each task is verified with
-appropriate checks (e.g. lint, typecheck, tests, build) on completion, and
-passing tasks are committed via the
+appropriate checks (e.g. lint, typecheck, tests, build) on completion —
+delegated to the `verifier` sub-agent for shell-command verification steps,
+and passing tasks are committed via the
 `committer` sub-agent. After the graph is exhausted, the `reviewer` performs a
 final audit; critical or blocking findings trigger a remediation loop that
 repeats review until no critical or blocking findings remain, while warnings and suggestions are assessed by the
@@ -147,6 +148,7 @@ autonomously by default.
 | `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings, verdict, and an implementation-ready task list where every task specifies exact file path + line, concrete change, rationale, dependencies, and a verify command with expected result. Prohibits vague/deferred wording; unresolved ambiguities are reported as blockers rather than left for the implementer. Never edits files or runs anything beyond a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo). |
 | `escalate1` | First-tier escalation. Diagnoses failures the normal build agent cannot resolve and produces an ordered task plan for a cheaper model to execute. Read-only — never edits files; may run a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo) to gather diagnostic context. |
 | `escalate2` | Second-tier escalation. Deep-dive diagnosis on hard problems — spec ambiguities, complex logic errors, cross-cutting refactors. Produces a task plan for a cheaper model to execute. Read-only. Called when Escalate1 cannot resolve. |
+| `verifier` | Runs exact delegated verification commands and reports structured PASS/FAIL/BLOCKED evidence. Never edits files, never invokes sub-agents (task: deny prevents recursion). `bash: allow` — unrestricted by design; delegating agents must provide only trusted commands (see PROJECT_SUMMARY.md trust boundary notes). Use for any verification step that runs a shell command — delegated to by Reviewer, Escalate1, or Escalate2 for commands outside their curated read-only allowlists. |
 
 ## License
 

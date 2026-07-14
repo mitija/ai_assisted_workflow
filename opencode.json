@@ -10,7 +10,8 @@
     "build":      { "model": "openrouter/deepseek/deepseek-v4-flash" },
     "plan":       { "model": "openrouter/openai/gpt-5.6-luna" },
     "explore":    { "model": "openrouter/deepseek/deepseek-v4-flash" },
-    "general":    { "model": "openrouter/deepseek/deepseek-v4-flash" }
+    "general":    { "model": "openrouter/deepseek/deepseek-v4-flash" },
+    "verifier":   { "model": "openrouter/deepseek/deepseek-v4-flash" }
   },
 
   "provider": {

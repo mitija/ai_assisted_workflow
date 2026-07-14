@@ -25,7 +25,7 @@ gitignored at the root.
   Current assignments: `conductor`, `reviewer`, `escalate1`, `plan` run on
   `openrouter/openai/gpt-5.6-luna`; `escalate2` on
   `openrouter/openai/gpt-5.6-terra`; `committer`, `build`, `explore`,
-  `general` on `openrouter/deepseek/deepseek-v4-flash`. OpenRouter model
+  `general`, `verifier` on `openrouter/deepseek/deepseek-v4-flash`. OpenRouter model
   entries `openai/gpt-5.6-luna` and `openai/gpt-5.6-terra` use the
   `reasoningEffort: "max"` option under `provider.openrouter.models`.
 - `agent/conductor.md` — opencode agent definition for the `conductor`
@@ -40,17 +40,21 @@ gitignored at the root.
   base prompt stays small. Interactive mode (default) is a dialogue with the
   user for ambiguity resolution; autonomous mode only when requested.
   Decomposes work into a dependency-aware task graph, uses `explore` sub-agents
-  for file reading, `general` sub-agents for execution and verification,
+  for file reading, `general` sub-agents for execution, `verifier` sub-agents for verification,
   `committer` for commits, `escalate1`/`escalate2` for failure diagnosis, and
   delegates report writing to a sub-agent. After graph completion, invokes the
   `reviewer` for a final audit; critical/blocking findings trigger a
   remediation/re-review loop, while warnings and suggestions are assessed by the
   conductor and do not trigger another reviewer invocation on their own.
+  Final review by `reviewer` is mandatory — cannot substitute another agent.
+  The `verifier` sub-agent handles delegated shell-command verification steps.
+  Loop prevention rules prohibit recursive or self-delegation.
 - `agent/committer.md` — opencode agent definition for the `committer` (sub-agent).
   Inspects the working tree, groups changes by topic into focused commits with
   descriptive messages, and executes them. Never tags, pushes, or branches unless
   explicitly asked.
-- `agent/reviewer.md` — opencode agent definition for the `reviewer`. Read-only
+- `agent/reviewer.md` — opencode agent definition for the `reviewer`.
+  `mode: all` (both primary and subagent invocable). Read-only
   inspection of work for correctness, style, and completeness. Produces a structured
   review plan with findings (issues, warnings, passes), verdict, and an
   implementation-ready task list: every task specifies exact file path + line,
@@ -59,14 +63,30 @@ gitignored at the root.
   ("review this", "investigate", "fix as appropriate"); unresolved ambiguities are
   reported as blockers/questions rather than left for the implementer. Outputs an
   explicit "No tasks" result when no changes are needed. Never edits files.
+  Delegates commands outside its curated read-only allowlist to the `verifier`
+  sub-agent.
 - `agent/escalate1.md` — opencode agent definition for `Escalate1`, the first-tier
   escalation subagent. Called when the primary build agent hits an issue it cannot
-  resolve. Read-only (edit denied; webfetch allowed; bash limited to a curated read-only inspection allow-list) — diagnoses and produces a
-  task plan for a cheaper model to execute.
+  resolve. Read-only (edit denied; webfetch allowed; bash limited to a curated
+  read-only inspection allow-list; task limited to invocations of `verifier` only) —
+  diagnoses and produces a task plan for a cheaper model to execute. Delegates
+  commands outside its curated allowlist to the `verifier` sub-agent.
 - `agent/escalate2.md` — opencode agent definition for `Escalate2`, the second-tier
   escalation subagent. Called when Escalate1 cannot resolve an issue. Read-only
-  (edit denied; webfetch allowed; bash limited to a curated read-only inspection allow-list) — deep-dive diagnosis producing a task plan for a
-  cheaper model to execute. Deep reasoning on hard problems.
+  (edit denied; webfetch allowed; bash limited to a curated read-only inspection
+  allow-list; task limited to invocations of `verifier` only) — deep-dive diagnosis
+  producing a task plan for a cheaper model to execute. Delegates commands outside
+  its curated allowlist to the `verifier` sub-agent. Deep reasoning on hard problems.
+- `agent/verifier.md` — opencode agent definition for the `verifier` subagent.
+  `mode: subagent`; `edit: deny`; `task: deny` (flat deny — recursion impossible);
+  `bash: allow` (unrestricted — see trust boundary caveat under Design notes).
+  Runs exact delegated verification shell commands and reports structured
+  PASS/FAIL/BLOCKED evidence (command, exit status, output). Strict prompt
+  forbids installs, deployments, destructive ops, invented commands, shell
+  composition, and asking the user. Reports BLOCKED if the command is unsafe,
+  absent, ambiguous, or requires approval. May be invoked by `reviewer`,
+  `escalate1`, or `escalate2` for commands outside their curated read-only
+  allowlists.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/handover/SKILL.md` — creates self-contained HANDOVER-xx.md at session end.
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
@@ -169,3 +189,13 @@ gitignored at the root.
 
 ## Planned / open
 - Consider an `agents/AGENTS.md` note on non-functional requirements (workflow §8.8 gap).
+
+## Accepted trust boundary
+
+The `verifier` sub-agent has `bash: allow` — unrestricted shell access. This is
+an intentional design choice: project-specific verification commands (tests,
+builds, linters, typecheckers) vary arbitrarily across projects, and a
+project-specific allowlist would defeat the verifier's generality. Non-mutation
+and non-destructive restrictions are prompt-enforced rather than enforced by a
+technical sandbox. Delegating parent agents (Reviewer, Escalate1, Escalate2)
+must provide only trusted verification commands.
