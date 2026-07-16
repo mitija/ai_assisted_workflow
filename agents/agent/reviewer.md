@@ -10,7 +10,7 @@ permission:
     "*": deny
     verifier: allow
   bash:
-    "*": ask
+    "*": deny
     git status*: allow
     git show*: allow
     git log*: allow
