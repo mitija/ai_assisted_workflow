@@ -37,7 +37,7 @@ The methodology's scope is broader than software development alone. It aims to p
 - A mechanism for the LLM to assert completed work against those criteria.
 - The ability to continue autonomously until criteria are met, without requiring human intervention at every step.
 
-This broader scope is partly aspirational: current practice focuses on code implementation, but the architecture of the workflow — spec-driven, test-validated, acceptance-gated — is designed to generalize.
+This broader scope is partly aspirational: current practice is increasingly focused on expanding toward reliable non-coding long-horizon work, while specification-driven coding is already relatively mature. The architecture of the workflow — spec-driven, test-validated, acceptance-gated — is designed to generalize.
 
 ## Current goals
 

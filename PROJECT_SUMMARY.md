@@ -135,7 +135,7 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
 - Security & Secrets: treat config values (esp. credentials) as secret; never emit them.
 - Communication & Output: concise responses, `file_path:line` references.
 - Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).
-- Skills: `coding-standards`, `handover`, `spec-refinement`, `test-scenarios`.
+- Skills: `coding-standards`, `handover`, `init-project`, `spec-refinement`, `specification-methodology`, `test-scenarios`, `todo-list`.
 
 ## What `AGENTS.md` (workspace root) covers
 - Meta-guidance for working on this repo itself.
