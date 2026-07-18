@@ -27,7 +27,7 @@ Although the repository is developed for use with opencode, the material — spe
 
 ### 2. Continuous Improvement Through Real Project Feedback
 
-The methodology is not a theoretical exercise. It evolves through application on real projects, and each project is expected to maintain a `LESSONS_LEARNT.md` file at the project root. Observations from these files feed improvements back into this repository — whether as refinements to skills, corrections to the workflow, or new patterns. The repository itself is a living artifact shaped by practice.
+The methodology is not a theoretical exercise. It evolves through application on real projects. A personal/project practice is to maintain a `LESSONS_LEARNT.md` file at the project root. This is a voluntary personal/project practice, **not a formal methodology requirement**. Observations from these files feed improvements back into this repository — whether as refinements to skills, corrections to the workflow, or new patterns. The repository itself is a living artifact shaped by practice.
 
 ### 3. Broad Scope Beyond Software Development
 

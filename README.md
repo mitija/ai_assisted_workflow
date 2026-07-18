@@ -8,7 +8,9 @@ supported workflow.
 
 ## Continuous improvement
 
-Each project using the framework maintains a project-level `LESSONS_LEARNT.md`. Observations about what worked or did not work feed back into skills, agents, workflow documents, and future framework revisions. See [`docs/workflow/philosophy.md`](docs/workflow/philosophy.md) for the fuller rationale.
+Experience from real projects feeds improvements back into the framework's skills,
+agents, and workflow documents. See [`docs/workflow/philosophy.md`](docs/workflow/philosophy.md)
+for the fuller rationale.
 
 ## What's inside
 
@@ -85,9 +87,12 @@ are spawned in parallel via `general` sub-agents, each task is verified with
 appropriate checks (e.g. lint, typecheck, tests, build) on completion —
 delegated to the `verifier` sub-agent for shell-command verification steps,
 and passing tasks are committed via the
-`committer` sub-agent. After the graph is exhausted, the `reviewer` performs a
-final audit; critical or blocking findings trigger a remediation loop that
-repeats review until no critical or blocking findings remain, while warnings and suggestions are assessed by the
+`committer` sub-agent. After the graph is exhausted, a **higher-level review**
+is performed by the `reviewer` sub-agent: it audits all completed work against
+the original goal, specification, and acceptance criteria, producing findings
+classified as critical, blocking, warning, or suggestion. Critical or blocking
+findings trigger a remediation loop that repeats review until no critical or
+blocking findings remain, while warnings and suggestions are assessed by the
 conductor and do not trigger another reviewer invocation on their own.
 
 ### Phase 4 — Escalate on failure
@@ -104,6 +109,8 @@ overall status.
 
 The conductor runs in **interactive mode** by default (it consults the user when
 it encounters ambiguity) and switches to **autonomous mode** when requested.
+
+
 
 ### Spec-driven development (supported workflow)
 

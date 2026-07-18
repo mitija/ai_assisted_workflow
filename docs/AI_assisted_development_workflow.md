@@ -1,8 +1,8 @@
 # Agentic Framework for Long-Horizon AI Work
 
-**Status:** Working but evolving. Used on real projects, primarily Odoo customization.
+**Status:** Working but evolving. Used on real projects, primarily Odoo-related work but not limited to Odoo.
 
-**Audience:** Senior developers who may collaborate with us under this flow, or who want to evaluate the methodology. Comments, questions, and suggestions are explicitly welcome — this document is shared for feedback as much as for collaboration.
+**Audience:** Senior developers, expanding to people who want to run long-horizon AI tasks. Comments, questions, and suggestions are explicitly welcome — this document is shared for feedback as much as for collaboration.
 
 ---
 
@@ -20,6 +20,8 @@ The thesis:
 > **If the specification is precise enough and the test suite is exhaustive enough, an LLM-assisted developer should be able to produce conforming software in hours, not days — and the cycle should be reproducible by another developer or another LLM later.**
 
 The methodology trades up-front specification rigour for short, lean implementation cycles. The center of gravity sits with the consultant, not the developer.
+
+Beyond coding, the same acceptance-driven autonomy applies. For non-coding flows (research, analysis, documentation, configuration), every task is defined with explicit acceptance criteria and the LLM is instructed how to assess its work against those criteria, continuing until they are met. For software flows, the acceptance criteria are operationalized as a test suite and the LLM runs the tests until they pass.
 
 **Primary context: Odoo customization.** Framework constraints (ORM, view system, module structure, standard UX patterns) remove many decisions that would otherwise need to be specified. The principles generalize to other constrained-framework projects.
 
