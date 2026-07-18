@@ -6,7 +6,12 @@ research, and more. Drop into any project to give AI coding agents a consistent,
 structured workflow. Spec-driven development with red/green phases is a key
 supported workflow.
 
-This is part of my working philosophy - I constantly refine and improve on my workflows. As I work on a project I also work on improving these set of files
+> **Philosophy.** This bundle is portable beyond opencode — any AI agent that follows
+> markdown guidance can use these instructions and skills. Project-level
+> `LESSONS_LEARNT.md` files capture what works and what does not, driving continuous
+> improvement back into the workflow. The broader aim is a long-horizon approach to
+> AI-assisted activity: evolving acceptance criteria, workflow patterns, and agent
+> behaviour over time, not just shipping software.
 
 ## What's inside
 
@@ -32,6 +37,13 @@ This symlinks `agents/` to `~/.agents`, `agents/agent/` to
 `~/.config/opencode/agent` (so opencode discovers the bundled agents), and
 `agents/skills/` to `~/.config/opencode/skills` (so the `skill` tool discovers
 the bundled skills). Alternatively, copy the directories manually.
+
+## Documentation
+
+The full methodology is documented in two places:
+
+- [`docs/AI_assisted_development_workflow.md`](docs/AI_assisted_development_workflow.md) — landing page with a top-level overview and status context.
+- [`docs/workflow/README.md`](docs/workflow/README.md) — wiki-style collection with detailed pages on philosophy, principles, workspace layout, specification, test suite, workflow, acceptance, and known gaps.
 
 ## How it works
 

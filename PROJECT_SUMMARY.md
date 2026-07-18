@@ -2,9 +2,11 @@
 
 ## Purpose
 Build a reusable, working `AGENTS.md` to drop into all projects, plus an Odoo-specific
-companion, a set of agents/skills, and a general-purpose conductor agent, so AI coding
-agents can orchestrate multi-step tasks using a consistent workflow (spec-driven
-development is a key supported use case). Deliverables live in `agents/`.
+companion, a set of agents/skills, and a general-purpose conductor agent, so AI
+agents can orchestrate multi-step tasks using a consistent workflow — supporting
+general AI activity, including software development, documentation, configuration,
+research, and project setup (spec-driven development is a key supported use case).
+Deliverables live in `agents/`.
 
 ## Current status
 Working draft complete and internally consistent. No code/app component — this is a
@@ -145,6 +147,9 @@ gitignored at the root.
   `customer-facing/` and versioned `working/`; unversioned workspace-level `local/`
   scratch material; docs freeze tags; 5-step spec methodology; state-table tests;
   multi-layer acceptance; known gaps.
+- `docs/workflow/README.md` — wiki-style collection of detailed pages (philosophy,
+  principles, workspace layout, specification, test suite, workflow, acceptance,
+  known gaps), linked from the landing page above.
 
 ## Design notes / decisions
 - `conductor` agent created to orchestrate multi-step work. Conductor owns the
