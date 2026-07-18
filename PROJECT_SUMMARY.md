@@ -10,8 +10,10 @@ Deliverables live in `agents/`.
 
 ## Current status
 Working draft complete and internally consistent. No code/app component — this is a
-guidance/skill bundle for agents. Session handover files (`HANDOVER*`) are now
-gitignored at the root.
+guidance/skill bundle for agents. The root-level `skills/` directory holds seven
+general skills and six conductor-specific skills (internal orchestration steps).
+Linked skill tables are maintained in README.md, root AGENTS.md, and the deployable agents/AGENTS.md, documenting both categories.
+Session handover files (`HANDOVER*`) are gitignored at the root.
 
 ## Repo layout (`agents/`)
 - `AGENTS.md` — generic, all-projects guidance.
@@ -31,7 +33,7 @@ gitignored at the root.
   entries `openai/gpt-5.6-luna` and `openai/gpt-5.6-terra` use the
   `reasoningEffort: "max"` option under `provider.openrouter.models`.
 - `agent/conductor.md` — opencode agent definition for the `conductor`
-  (orchestration agent). Symlinked to `~/.config/opencode/agent` by
+  (orchestration agent). Classification: Primary. Symlinked to `~/.config/opencode/agent` by
   `tools/install.sh` for auto-discovery. Conductor runs on a better AI model
   than sub-agents and **owns all thinking, planning, and decision-making**
   (determining goals, constraints, scope, task decomposition). It **never**
@@ -52,11 +54,11 @@ gitignored at the root.
   The `verifier` sub-agent handles delegated shell-command verification steps.
   Loop prevention rules prohibit recursive or self-delegation.
 - `agent/committer.md` — opencode agent definition for the `committer` (sub-agent).
-  Inspects the working tree, groups changes by topic into focused commits with
+  Classification: Subagent. Inspects the working tree, groups changes by topic into focused commits with
   descriptive messages, and executes them. Never tags, pushes, or branches unless
   explicitly asked.
 - `agent/reviewer.md` — opencode agent definition for the `reviewer`.
-  `mode: all` (both primary and subagent invocable). Read-only
+  Classification: Both. `mode: all` (both primary and subagent invocable). Read-only
   inspection of work for correctness, style, and completeness. Produces a structured
   review plan with findings (issues, warnings, passes), verdict, and an
   implementation-ready task list: every task specifies exact file path + line,
@@ -68,19 +70,19 @@ gitignored at the root.
   Delegates commands outside its curated read-only allowlist to the `verifier`
   sub-agent.
 - `agent/escalate1.md` — opencode agent definition for `Escalate1`, the first-tier
-  escalation subagent. Called when the primary build agent hits an issue it cannot
+  escalation subagent. Classification: Subagent. Called when the primary build agent hits an issue it cannot
   resolve. Read-only (edit denied; webfetch allowed; bash limited to a curated
   read-only inspection allow-list; task limited to invocations of `verifier` only) —
   diagnoses and produces a task plan for a cheaper model to execute. Delegates
   commands outside its curated allowlist to the `verifier` sub-agent.
 - `agent/escalate2.md` — opencode agent definition for `Escalate2`, the second-tier
-  escalation subagent. Called when Escalate1 cannot resolve an issue. Read-only
+  escalation subagent. Classification: Subagent. Called when Escalate1 cannot resolve an issue. Read-only
   (edit denied; webfetch allowed; bash limited to a curated read-only inspection
   allow-list; task limited to invocations of `verifier` only) — deep-dive diagnosis
   producing a task plan for a cheaper model to execute. Delegates commands outside
   its curated allowlist to the `verifier` sub-agent. Deep reasoning on hard problems.
 - `agent/verifier.md` — opencode agent definition for the `verifier` subagent.
-  `mode: subagent`; `edit: deny`; `task: deny` (flat deny — recursion impossible);
+  Classification: Subagent. `mode: subagent`; `edit: deny`; `task: deny` (flat deny — recursion impossible);
   `bash: allow` (unrestricted — see trust boundary caveat under Design notes).
   Runs exact delegated verification shell commands and reports structured
   PASS/FAIL/BLOCKED evidence (command, exit status, output). Strict prompt

@@ -36,7 +36,7 @@ else
 fi
 
 # Link opencode skills so the `skill` tool discovers them.
-SKILLS_SOURCE_DIR="$SOURCE_DIR/skills"
+SKILLS_SOURCE_DIR="$REPO_ROOT/skills"
 SKILLS_TARGET_DIR="$HOME/.config/opencode/skills"
 
 if [ -L "$SKILLS_TARGET_DIR" ]; then

@@ -13,12 +13,12 @@ Each project using the framework maintains a project-level `LESSONS_LEARNT.md`. 
 ## What's inside
 
 ```
-agents/          Agent instructions and skills (copy/symlink to ~/.agents)
+agents/          Agent instructions and opencode agent definitions (copy/symlink to ~/.agents)
   AGENTS.md        Generic agent guidance for all projects
   AGENTS.odoo.md   Odoo-specific companion (testing, source layout, DB/instances)
   project_context.template.yaml  Template for machine/project-specific config
   agent/           opencode agent definitions (conductor, committer, verifier, reviewer, escalate1, escalate2)
-  skills/          Reusable agent skills (coding-standards, test-scenarios, etc.)
+skills/          Reusable agent skills (symlinked via install to ~/.config/opencode/skills)
 docs/            Methodology documentation
 tools/           Shell scripts and utilities
 ```
@@ -32,7 +32,7 @@ git clone <repo-url>
 
 This symlinks `agents/` to `~/.agents`, `agents/agent/` to
 `~/.config/opencode/agent` (so opencode discovers the bundled agents), and
-`agents/skills/` to `~/.config/opencode/skills` (so the `skill` tool discovers
+`skills/` to `~/.config/opencode/skills` (so the `skill` tool discovers
 the bundled skills). Alternatively, copy the directories manually.
 
 ## Documentation
@@ -136,13 +136,13 @@ General skills are reusable by any agent or user. Conductor-specific skills are 
 
 | Skill | Description |
 |-------|-------------|
-| [`coding-standards`](agents/skills/coding-standards/SKILL.md) | Coding standards when writing or modifying application code. Currently covers logging requirements. |
-| [`handover`](agents/skills/handover/SKILL.md) | Create session-end handover documents for the next chat session to continue. |
-| [`init-project`](agents/skills/init-project/SKILL.md) | Initialize or inspect a project's `project_context.yaml` configuration file. |
-| [`spec-refinement`](agents/skills/spec-refinement/SKILL.md) | Guided session that refines a rough requirement before specification-methodology. |
-| [`specification-methodology`](agents/skills/specification-methodology/SKILL.md) | 5-step spec writing methodology (Models, Roles, Use Cases, Documentation, Review). |
-| [`test-scenarios`](agents/skills/test-scenarios/SKILL.md) | Writing contractual, customer-facing test scenarios. |
-| [`todo-list`](agents/skills/todo-list/SKILL.md) | TDD-based TODO list generator (Red → Green → Commit phases). |
+| [`coding-standards`](skills/coding-standards/SKILL.md) | Coding standards when writing or modifying application code. Currently covers logging requirements. |
+| [`handover`](skills/handover/SKILL.md) | Create session-end handover documents for the next chat session to continue. |
+| [`init-project`](skills/init-project/SKILL.md) | Initialize or inspect a project's `project_context.yaml` configuration file. |
+| [`spec-refinement`](skills/spec-refinement/SKILL.md) | Guided session that refines a rough requirement before specification-methodology. |
+| [`specification-methodology`](skills/specification-methodology/SKILL.md) | 5-step spec writing methodology (Models, Roles, Use Cases, Documentation, Review). |
+| [`test-scenarios`](skills/test-scenarios/SKILL.md) | Writing contractual, customer-facing test scenarios. |
+| [`todo-list`](skills/todo-list/SKILL.md) | TDD-based TODO list generator (Red → Green → Commit phases). |
 
 ### Conductor-specific skills
 
@@ -150,12 +150,12 @@ These are loaded automatically by the conductor agent during its workflow. They 
 
 | Skill | Description |
 |-------|-------------|
-| [`conductor-analyze`](agents/skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis. |
-| [`conductor-code-decomposition`](agents/skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation (uses spec-refinement, specification-methodology, todo-list). |
-| [`conductor-noncode-decomposition`](agents/skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation. |
-| [`conductor-execute`](agents/skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification. |
-| [`conductor-escalate`](agents/skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2). |
-| [`conductor-report`](agents/skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation. |
+| [`conductor-analyze`](skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis. |
+| [`conductor-code-decomposition`](skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation (uses spec-refinement, specification-methodology, todo-list). |
+| [`conductor-noncode-decomposition`](skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation. |
+| [`conductor-execute`](skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification. |
+| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2). |
+| [`conductor-report`](skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation. |
 
 ## Agents
 
@@ -165,7 +165,7 @@ General agents usable directly by the user or as sub-agents. See each agent's de
 |-------|-------------------|--------------|
 | [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. The workflow is split across six conductor-* skills loaded on demand, so the base prompt stays small. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
-| [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Primary + Subagent |
+| [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Both |
 | [`escalate1`](agents/agent/escalate1.md) | First-tier escalation. Read-only diagnosis of build failures + ordered task plan. | Subagent |
 | [`escalate2`](agents/agent/escalate2.md) | Second-tier escalation. Deep-dive diagnosis of hard problems (spec ambiguities, complex logic, cross-cutting refactors). Read-only. | Subagent |
 | [`verifier`](agents/agent/verifier.md) | Runs exact delegated verification commands, reports structured PASS/FAIL/BLOCKED evidence. Never edits files. | Subagent |

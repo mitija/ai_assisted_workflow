@@ -21,22 +21,22 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
     escalate1.md               First-tier escalation agent — read-only diagnosis + task plan
     escalate2.md               Second-tier escalation agent — deep-dive diagnosis + task plan
     verifier.md                Verification agent — runs exact delegated commands, reports PASS/FAIL/BLOCKED
-  skills/
-    coding-standards/SKILL.md  Logging and code quality standards
-    handover/SKILL.md          Create session-end handover documents
-    init-project/SKILL.md      Initialize project_context.yaml
-    spec-refinement/SKILL.md   Refine a rough requirement before specification-methodology
-    specification-methodology/ 5-step spec writing methodology
-    test-scenarios/SKILL.md    Contractual customer-facing test scenarios
-    todo-list/SKILL.md         TDD-based TODO list generator
-    conductor-*/SKILL.md       [Conductor-internal] six phase skills loaded on demand by the conductor
   .gitignore                   Ignores project_context.yaml and *.ini credentials
+skills/                        Reusable agent skills (symlinked via install to ~/.config/opencode/skills)
+  coding-standards/SKILL.md    Logging and code quality standards
+  handover/SKILL.md            Create session-end handover documents
+  init-project/SKILL.md        Initialize project_context.yaml
+  spec-refinement/SKILL.md     Refine a rough requirement before specification-methodology
+  specification-methodology/   5-step spec writing methodology
+  test-scenarios/SKILL.md      Contractual customer-facing test scenarios
+  todo-list/SKILL.md           TDD-based TODO list generator
+  conductor-*/SKILL.md         [Conductor-internal] six phase skills loaded on demand by the conductor
 opencode.json                  Per-agent model assignments (merged with global ~/.config/opencode/opencode.json)
 docs/
   AI_assisted_development_workflow.md  The methodology these files encode
   workflow/                  Detailed wiki-style collection (specification, workflow, acceptance, etc.)
 tools/
-  install.sh                   Symlinks agents/ to ~/.agents, agents/agent/ to ~/.config/opencode/agent, and agents/skills/ to ~/.config/opencode/skills
+  install.sh                   Symlinks agents/ to ~/.agents, agents/agent/ to ~/.config/opencode/agent, and skills/ to ~/.config/opencode/skills
 ```
 
 ## Skills
@@ -47,13 +47,13 @@ General skills are reusable by any agent or user. Conductor-specific skills are 
 
 | Skill | When to load |
 |---|---|
-| [`coding-standards`](agents/skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
-| [`handover`](agents/skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
-| [`init-project`](agents/skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
-| [`spec-refinement`](agents/skills/spec-refinement/SKILL.md) | A rough/ambiguous requirement needs refining before specification-methodology |
-| [`specification-methodology`](agents/skills/specification-methodology/SKILL.md) | Creating or writing software specifications |
-| [`test-scenarios`](agents/skills/test-scenarios/SKILL.md) | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
-| [`todo-list`](agents/skills/todo-list/SKILL.md) | Generating a TDD-based TODO list for entry-level programmers |
+| [`coding-standards`](skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
+| [`handover`](skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
+| [`init-project`](skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
+| [`spec-refinement`](skills/spec-refinement/SKILL.md) | A rough/ambiguous requirement needs refining before specification-methodology |
+| [`specification-methodology`](skills/specification-methodology/SKILL.md) | Creating or writing software specifications |
+| [`test-scenarios`](skills/test-scenarios/SKILL.md) | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
+| [`todo-list`](skills/todo-list/SKILL.md) | Generating a TDD-based TODO list for entry-level programmers |
 
 ### Conductor-specific skills
 
@@ -61,12 +61,12 @@ These are loaded automatically by the conductor agent during its workflow. They 
 
 | Skill | When to load |
 |---|---|
-| [`conductor-analyze`](agents/skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis |
-| [`conductor-code-decomposition`](agents/skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation |
-| [`conductor-noncode-decomposition`](agents/skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation |
-| [`conductor-execute`](agents/skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification |
-| [`conductor-escalate`](agents/skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
-| [`conductor-report`](agents/skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation |
+| [`conductor-analyze`](skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis |
+| [`conductor-code-decomposition`](skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation |
+| [`conductor-noncode-decomposition`](skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation |
+| [`conductor-execute`](skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification |
+| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
+| [`conductor-report`](skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation |
 
 ## Agents
 
@@ -74,7 +74,7 @@ These are loaded automatically by the conductor agent during its workflow. They 
 |---|---|---|
 | [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
-| [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Primary + Subagent |
+| [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Both |
 | [`escalate1`](agents/agent/escalate1.md) | First-tier escalation. Read-only diagnosis + task plan. | Subagent |
 | [`escalate2`](agents/agent/escalate2.md) | Second-tier escalation. Deep-dive diagnosis + task plan. Read-only. | Subagent |
 | [`verifier`](agents/agent/verifier.md) | Runs exact delegated commands, reports PASS/FAIL/BLOCKED. Never edits files. | Subagent |
@@ -88,7 +88,7 @@ This repo has no application code. A "task" here is editing one or more of:
 - `agents/AGENTS.md` or `agents/AGENTS.odoo.md`
 - `agents/project_context.template.yaml`
 - An agent definition under `agents/agent/`
-- A skill file under `agents/skills/`
+- A skill file under `skills/`
 - `docs/AI_assisted_development_workflow.md`
 - Project tooling (`tools/`, `README.md`, this file)
 
@@ -102,7 +102,7 @@ changes, check the other two.
   embedded template in `init-project/SKILL.md` and any field descriptions in
   `agents/AGENTS.md`.
 - If `agents/AGENTS.md` references a skill, that skill must exist under
-  `agents/skills/`.
+  `skills/`.
 - If a skill is added or removed, update both `agents/AGENTS.md` (skills table)
   and `README.md` (skills table).
 

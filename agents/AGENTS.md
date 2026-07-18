@@ -2,10 +2,9 @@
 
 This file provides guidance to AI agents when working with code in this repository.
 
-## Spec-Driven Workflow (how we work)
-This project follows a spec-driven, AI-assisted methodology. The full description
-lives in `AI_assisted_development_workflow.md`; the rules below are what an agent
-must honour when implementing.
+## Supported Spec-Driven Coding Workflow
+
+This workflow is one mature, supported capability within the [broader Agentic Framework for Long-Horizon AI Work](../docs/AI_assisted_development_workflow.md). The framework also supports non-coding long-horizon work — documentation, research, analysis, planning, configuration, and project setup — and current improvement effort prioritises those areas. The rules below govern the spec-driven coding path.
 
 The project workspace is intentionally one level above the git repositories. Treat
 the workspace root as the operational project folder, not as a single git repo:
@@ -136,13 +135,13 @@ General skills are reusable by any agent or user. Conductor-specific skills are 
 
 | Skill | When to load |
 |---|---|
-| [`coding-standards`](skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
-| [`handover`](skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
-| [`init-project`](skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
-| [`spec-refinement`](skills/spec-refinement/SKILL.md) | A rough/ambiguous requirement needs refining before specification-methodology |
-| [`specification-methodology`](skills/specification-methodology/SKILL.md) | Creating or writing software specifications |
-| [`test-scenarios`](skills/test-scenarios/SKILL.md) | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
-| [`todo-list`](skills/todo-list/SKILL.md) | Generating a TDD-based TODO list for entry-level programmers |
+| [`coding-standards`](../skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
+| [`handover`](../skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
+| [`init-project`](../skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
+| [`spec-refinement`](../skills/spec-refinement/SKILL.md) | A rough/ambiguous requirement needs refining before specification-methodology |
+| [`specification-methodology`](../skills/specification-methodology/SKILL.md) | Creating or writing software specifications |
+| [`test-scenarios`](../skills/test-scenarios/SKILL.md) | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
+| [`todo-list`](../skills/todo-list/SKILL.md) | Generating a TDD-based TODO list for entry-level programmers |
 
 ### Conductor-specific skills
 
@@ -150,12 +149,12 @@ These are loaded automatically by the conductor agent during its workflow. They 
 
 | Skill | When to load |
 |---|---|
-| [`conductor-analyze`](skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis |
-| [`conductor-code-decomposition`](skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation |
-| [`conductor-noncode-decomposition`](skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation |
-| [`conductor-execute`](skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification |
-| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
-| [`conductor-report`](skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation |
+| [`conductor-analyze`](../skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis |
+| [`conductor-code-decomposition`](../skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation |
+| [`conductor-noncode-decomposition`](../skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation |
+| [`conductor-execute`](../skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification |
+| [`conductor-escalate`](../skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
+| [`conductor-report`](../skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation |
 
 ## Agents
 
@@ -163,7 +162,7 @@ These are loaded automatically by the conductor agent during its workflow. They 
 |---|---|---|
 | [`conductor`](agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
 | [`committer`](agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
-| [`reviewer`](agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Primary + Subagent |
+| [`reviewer`](agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Both |
 | [`escalate1`](agent/escalate1.md) | First-tier escalation. Read-only diagnosis + task plan. | Subagent |
 | [`escalate2`](agent/escalate2.md) | Second-tier escalation. Deep-dive diagnosis + task plan. Read-only. | Subagent |
 | [`verifier`](agent/verifier.md) | Runs exact delegated commands, reports PASS/FAIL/BLOCKED. Never edits files. | Subagent |

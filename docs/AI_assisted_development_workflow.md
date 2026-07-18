@@ -8,6 +8,8 @@
 
 This document is the landing page for a wiki-style collection. The detailed content lives under [`docs/workflow/README.md`](workflow/README.md).
 
+Specification-driven coding is a relatively mature, well-tested capability within this framework. Current framework improvement prioritises non-coding long-horizon work — documentation, research, analysis, planning, and configuration — where the same structured decomposition and verification principles apply. The [philosophy page](workflow/philosophy.md) remains the canonical expanded explanation of the overall approach.
+
 Two failure modes drive this methodology:
 
 - **Spec ambiguity → assumption-driven defects.** The developer fills gaps with assumptions; the consultant rejects the result based on intent that was never written down. The cost is paid in iterations, which are now the dominant cost of software delivery.

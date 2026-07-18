@@ -27,7 +27,7 @@ requirement, skip `spec-refinement` and proceed.
 Use the `explore` sub-agent to check whether a TODOxx.md file already exists in the workspace (typically under `docs/working/`).
 
 - **If one exists**: use it directly — do not regenerate. Map its TDs onto the task graph in step 3.
-- **If none exists**: spawn a `general` sub-agent to generate the `TODOxx.md`. Give the sub-agent the **absolute path** to the todo-list skill instructions (`~/.agents/skills/todo-list/SKILL.md`, reached via the symlink from `~/.config/opencode/skills/todo-list/SKILL.md`) and instruct it to follow that discipline and write the file to `docs/working/TODOxx.md`. Do not load the skill into your own context — the sub-agent owns the generation; you only review the result.
+- **If none exists**: spawn a `general` sub-agent to generate the `TODOxx.md`. Give the sub-agent the **absolute path** to the todo-list skill instructions (`~/.config/opencode/skills/todo-list/SKILL.md`) and instruct it to follow that discipline and write the file to `docs/working/TODOxx.md`. Do not load the skill into your own context — the sub-agent owns the generation; you only review the result.
 
 ### 2. Produce the task graph
 
