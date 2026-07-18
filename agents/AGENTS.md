@@ -129,16 +129,41 @@ permission prompts and keeps the workflow autonomous.
 - Never use Bash with pipes (`|`) or redirections (`2>&1`, `>`) to read/search files.
 
 ## Skills
-- `handover` — create a self-contained `HANDOVER-xx.md` at session end so the next
-  chat can continue without access to the current conversation.
-- `coding-standards` — follow when writing or modifying application code
-  (currently covers logging requirements). Load whenever you add or change code
-  that runs as an app, script, or service.
-- `spec-refinement` — load before `specification-methodology` when an initial
-  requirement is rough or ambiguous. Runs a guided, one-question-at-a-time
-  session that refines the high-level requirement until the entities, their
-  relationships, the main ways they are manipulated, and the key business rules
-  are clear — without expanding into the full spec.
-- `test-scenarios` — follow when authoring or reviewing the contractual,
-  customer-facing `<epic>_TESTS.md` scenarios. Load when writing or updating
-  specification-level test scenarios (not developer-only implementation tests).
+
+General skills are reusable by any agent or user. Conductor-specific skills are internal orchestration steps loaded automatically by the conductor during its workflow.
+
+### General skills
+
+| Skill | When to load |
+|---|---|
+| [`coding-standards`](skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
+| [`handover`](skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
+| [`init-project`](skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
+| [`spec-refinement`](skills/spec-refinement/SKILL.md) | A rough/ambiguous requirement needs refining before specification-methodology |
+| [`specification-methodology`](skills/specification-methodology/SKILL.md) | Creating or writing software specifications |
+| [`test-scenarios`](skills/test-scenarios/SKILL.md) | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
+| [`todo-list`](skills/todo-list/SKILL.md) | Generating a TDD-based TODO list for entry-level programmers |
+
+### Conductor-specific skills
+
+These are loaded automatically by the conductor agent during its workflow. They are not meant to be loaded directly by users or general agents.
+
+| Skill | When to load |
+|---|---|
+| [`conductor-analyze`](skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis |
+| [`conductor-code-decomposition`](skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation |
+| [`conductor-noncode-decomposition`](skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation |
+| [`conductor-execute`](skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification |
+| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
+| [`conductor-report`](skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation |
+
+## Agents
+
+| Agent | Role / Description | Invocable as |
+|---|---|---|
+| [`conductor`](agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
+| [`committer`](agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
+| [`reviewer`](agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Primary + Subagent |
+| [`escalate1`](agent/escalate1.md) | First-tier escalation. Read-only diagnosis + task plan. | Subagent |
+| [`escalate2`](agent/escalate2.md) | Second-tier escalation. Deep-dive diagnosis + task plan. Read-only. | Subagent |
+| [`verifier`](agent/verifier.md) | Runs exact delegated commands, reports PASS/FAIL/BLOCKED. Never edits files. | Subagent |

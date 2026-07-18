@@ -130,34 +130,45 @@ autonomously by default.
 
 ## Skills
 
+General skills are reusable by any agent or user. Conductor-specific skills are internal orchestration steps loaded automatically by the conductor during its workflow.
+
+### General skills
+
 | Skill | Description |
 |-------|-------------|
-| `coding-standards` | Logging and code quality standards |
-| `handover` | Create session-end handover documents for the next chat |
-| `init-project` | Initialize or inspect a project's `project_context.yaml` configuration file |
-| `spec-refinement` | Guided session that refines a rough requirement before specification-methodology |
-| `specification-methodology` | 5-step spec writing (Models, Roles, Use Cases, Documentation, Review) |
-| `test-scenarios` | Writing contractual, customer-facing test scenarios |
-| `todo-list` | TDD-based TODO list generator (Red → Green → Commit phases) |
-| `conductor-analyze` | [Conductor-internal] Phase 1 — goal/scope/constraints analysis |
-| `conductor-code-decomposition` | [Conductor-internal] Phase 2 — code-work task graph generation (uses spec-refinement, specification-methodology, todo-list) |
-| `conductor-noncode-decomposition` | [Conductor-internal] Phase 2 — non-code task graph generation |
-| `conductor-execute` | [Conductor-internal] Phase 3 — topological-round execution and verification |
-| `conductor-escalate` | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
-| `conductor-report` | [Conductor-internal] Phase 5 — final report generation |
+| [`coding-standards`](agents/skills/coding-standards/SKILL.md) | Coding standards when writing or modifying application code. Currently covers logging requirements. |
+| [`handover`](agents/skills/handover/SKILL.md) | Create session-end handover documents for the next chat session to continue. |
+| [`init-project`](agents/skills/init-project/SKILL.md) | Initialize or inspect a project's `project_context.yaml` configuration file. |
+| [`spec-refinement`](agents/skills/spec-refinement/SKILL.md) | Guided session that refines a rough requirement before specification-methodology. |
+| [`specification-methodology`](agents/skills/specification-methodology/SKILL.md) | 5-step spec writing methodology (Models, Roles, Use Cases, Documentation, Review). |
+| [`test-scenarios`](agents/skills/test-scenarios/SKILL.md) | Writing contractual, customer-facing test scenarios. |
+| [`todo-list`](agents/skills/todo-list/SKILL.md) | TDD-based TODO list generator (Red → Green → Commit phases). |
 
-> **Note:** Skills prefixed with `conductor-` are loaded automatically by the conductor agent during its workflow. They are not meant to be loaded directly by users or general agents.
+### Conductor-specific skills
+
+These are loaded automatically by the conductor agent during its workflow. They are not meant to be loaded directly by users or general agents.
+
+| Skill | Description |
+|-------|-------------|
+| [`conductor-analyze`](agents/skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis. |
+| [`conductor-code-decomposition`](agents/skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation (uses spec-refinement, specification-methodology, todo-list). |
+| [`conductor-noncode-decomposition`](agents/skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation. |
+| [`conductor-execute`](agents/skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification. |
+| [`conductor-escalate`](agents/skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2). |
+| [`conductor-report`](agents/skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation. |
 
 ## Agents
 
-| Agent | Description |
-|-------|-------------|
-| `conductor` | Plans and orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. The workflow is split across six conductor-* skills loaded on demand (analyze, code-decomposition, noncode-decomposition, execute, escalate, report) so the base prompt stays small and only relevant phase instructions are loaded. Interactive by default for ambiguity resolution; autonomous when requested. |
-| `committer` | Inspects staged/unstaged changes, groups them by topic, and makes one or more focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. |
-| `reviewer` | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings, verdict, and an implementation-ready task list where every task specifies exact file path + line, concrete change, rationale, dependencies, and a verify command with expected result. Prohibits vague/deferred wording; unresolved ambiguities are reported as blockers rather than left for the implementer. Never edits files or runs anything beyond a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo). |
-| `escalate1` | First-tier escalation. Diagnoses failures the normal build agent cannot resolve and produces an ordered task plan for a cheaper model to execute. Read-only — never edits files; may run a curated set of read-only inspection commands (git status/show/log/diff/blame, grep, ls, echo) to gather diagnostic context. |
-| `escalate2` | Second-tier escalation. Deep-dive diagnosis on hard problems — spec ambiguities, complex logic errors, cross-cutting refactors. Produces a task plan for a cheaper model to execute. Read-only. Called when Escalate1 cannot resolve. |
-| `verifier` | Runs exact delegated verification commands and reports structured PASS/FAIL/BLOCKED evidence. Never edits files, never invokes sub-agents (task: deny prevents recursion). `bash: allow` — unrestricted by design; delegating agents must provide only trusted commands (see PROJECT_SUMMARY.md trust boundary notes). Use for any verification step that runs a shell command — delegated to by Reviewer, Escalate1, or Escalate2 for commands outside their curated read-only allowlists. |
+General agents usable directly by the user or as sub-agents. See each agent's definition for detailed invocation rules.
+
+| Agent | Role / Description | Invocable as |
+|-------|-------------------|--------------|
+| [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. The workflow is split across six conductor-* skills loaded on demand, so the base prompt stays small. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
+| [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
+| [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Primary + Subagent |
+| [`escalate1`](agents/agent/escalate1.md) | First-tier escalation. Read-only diagnosis of build failures + ordered task plan. | Subagent |
+| [`escalate2`](agents/agent/escalate2.md) | Second-tier escalation. Deep-dive diagnosis of hard problems (spec ambiguities, complex logic, cross-cutting refactors). Read-only. | Subagent |
+| [`verifier`](agents/agent/verifier.md) | Runs exact delegated verification commands, reports structured PASS/FAIL/BLOCKED evidence. Never edits files. | Subagent |
 
 ## License
 
