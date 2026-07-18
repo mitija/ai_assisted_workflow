@@ -6,12 +6,9 @@ research, and more. Drop into any project to give AI coding agents a consistent,
 structured workflow. Spec-driven development with red/green phases is a key
 supported workflow.
 
-> **Philosophy.** This bundle is portable beyond opencode — any AI agent that follows
-> markdown guidance can use these instructions and skills. Project-level
-> `LESSONS_LEARNT.md` files capture what works and what does not, driving continuous
-> improvement back into the workflow. The broader aim is a long-horizon approach to
-> AI-assisted activity: evolving acceptance criteria, workflow patterns, and agent
-> behaviour over time, not just shipping software.
+## Continuous improvement
+
+Each project using the framework maintains a project-level `LESSONS_LEARNT.md`. Observations about what worked or did not work feed back into skills, agents, workflow documents, and future framework revisions. See [`docs/workflow/philosophy.md`](docs/workflow/philosophy.md) for the fuller rationale.
 
 ## What's inside
 

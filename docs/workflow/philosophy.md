@@ -39,6 +39,12 @@ The methodology's scope is broader than software development alone. It aims to p
 
 This broader scope is partly aspirational: current practice focuses on code implementation, but the architecture of the workflow — spec-driven, test-validated, acceptance-gated — is designed to generalize.
 
+## Current goals
+
+Coding-project support is relatively mature, especially specification-driven coding work (the spec → test → implement cycle). The current priority is validating and improving the framework for non-coding projects — including documentation, research, analysis, planning, configuration, and other long-horizon AI activities.
+
+Improvements to the framework should be judged by reliable autonomous completion against explicit acceptance criteria across both coding and non-coding work.
+
 ## Navigation
 
 - [Workflow index](README.md)

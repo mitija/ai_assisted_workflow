@@ -1,4 +1,4 @@
-# Spec-Driven, AI-Assisted Development Workflow
+# Agentic Framework for Long-Horizon AI Work
 
 **Status:** Working but evolving. Used on real projects, primarily Odoo customization.
 

@@ -1,6 +1,6 @@
 # Workflow Documentation
 
-This directory contains the detailed documentation for the Spec-Driven, AI-Assisted Development Workflow. The [landing page](../AI_assisted_development_workflow.md) provides a top-level overview and status context.
+This directory contains the detailed documentation for the **Agentic Framework for Long-Horizon AI Work**. Spec-driven development is a mature, supported workflow within this broader framework — it is not the whole scope. The [landing page](../AI_assisted_development_workflow.md) provides a top-level overview and status context.
 
 ## Contents
 
