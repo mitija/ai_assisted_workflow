@@ -110,8 +110,6 @@ overall status.
 The conductor runs in **interactive mode** by default (it consults the user when
 it encounters ambiguity) and switches to **autonomous mode** when requested.
 
-
-
 ### Spec-driven development (supported workflow)
 
 A key use case of the conductor is spec-driven feature implementation. In this
