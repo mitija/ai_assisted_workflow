@@ -3,8 +3,8 @@
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Consultant (with AI)                                           │
-│  1. Refine the requirement (§4.0), then draft/update SPEC and   │
-│     TESTS in docs repo (§4.1)                                   │
+│  1. Refine the requirement ([specification.md](specification.md)), then draft/update SPEC and   │
+│     TESTS in docs repo ([specification.md](specification.md))                                   │
 │  2. Customer reviews and validates (via docs repo access)       │
 │  3. Commit + tag docs when ready (e.g. spec-260513)             │
 │  4. Notify developer                                            │
@@ -17,7 +17,7 @@
 │  6. Raise any questions; if genuine → cycle returns to step 1   │
 │  7. Implement against spec + tests                              │
 │  8. Record the docs tag implemented in source-side traceability │
-│  9. Deliver per §6.3                                            │
+│  9. Deliver per [Developer Deliverables](#developer-deliverables)                              │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -64,4 +64,5 @@ Required at the end of each cycle:
 ## Navigation
 
 - [Workflow index](README.md)
+- [Acceptance](acceptance.md)
 - [Landing page](../AI_assisted_development_workflow.md)

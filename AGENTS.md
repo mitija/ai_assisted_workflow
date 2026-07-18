@@ -34,6 +34,7 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
 opencode.json                  Per-agent model assignments (merged with global ~/.config/opencode/opencode.json)
 docs/
   AI_assisted_development_workflow.md  The methodology these files encode
+  workflow/                  Detailed wiki-style collection (specification, workflow, acceptance, etc.)
 tools/
   install.sh                   Symlinks agents/ to ~/.agents, agents/agent/ to ~/.config/opencode/agent, and agents/skills/ to ~/.config/opencode/skills
 ```

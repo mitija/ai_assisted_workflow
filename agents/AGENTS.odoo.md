@@ -40,7 +40,7 @@ The modules maintained in this project are listed under `odoo.modules` in
 
 ## Acceptance: behavioural / UI-UX demo
 Beyond automated tests and spec-conformance review, Odoo work is accepted via a
-behavioural demo on the dev server (see `AI_assisted_development_workflow.md` §7).
+behavioural demo on the dev server (see [docs/workflow/acceptance.md](../docs/workflow/acceptance.md)).
 For Odoo this demo also covers **UI/UX conformance** — views, flows, and standard
 UX patterns — which is usually thin in the spec and not fully captured in tests.
 So:
