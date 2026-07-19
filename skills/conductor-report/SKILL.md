@@ -1,11 +1,11 @@
 ---
 name: conductor-report
-description: Phase 5 of the conductor workflow. Produces the final conductor report — a Markdown file in docs/working/ with the goal, mode, status, task results, and ambiguities. Delegated to a general sub-agent.
+description: Phase 6 of the conductor workflow. Produces the final conductor report — a Markdown file in docs/working/ with the goal, mode, status, task results, and ambiguities. Delegated to a general sub-agent.
 ---
 
 # Conductor: Report
 
-This skill guides the conductor's **Phase 5 — Report**. The conductor should load this skill when the task graph is exhausted (either all tasks completed successfully or the run was aborted after escalation).
+This skill guides the conductor's **Phase 6 — Report**. The conductor should load this skill when the task graph is exhausted (either all tasks completed successfully or the run was aborted after escalation).
 
 ## Instructions
 

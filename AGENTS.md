@@ -30,7 +30,7 @@ skills/                        Reusable agent skills (symlinked via install to ~
   specification-methodology/   5-step spec writing methodology
   test-scenarios/SKILL.md      Contractual customer-facing test scenarios
   todo-list/SKILL.md           TDD-based TODO list generator
-  conductor-*/SKILL.md         [Conductor-internal] six phase skills loaded on demand by the conductor
+  conductor-*/SKILL.md         [Conductor-internal] six conductor-specific skills covering five of the six workflow phases (Phase 4 Review uses the reviewer agent)
 opencode.json                  Per-agent model assignments (merged with global ~/.config/opencode/opencode.json)
 docs/
   AI_assisted_development_workflow.md  The methodology these files encode
@@ -65,8 +65,8 @@ These are loaded automatically by the conductor agent during its workflow. They 
 | [`conductor-code-decomposition`](skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation |
 | [`conductor-noncode-decomposition`](skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation |
 | [`conductor-execute`](skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification |
-| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
-| [`conductor-report`](skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation |
+| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 5 — failure escalation (escalate1 → escalate2) |
+| [`conductor-report`](skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 6 — final report generation |
 
 ## Agents
 

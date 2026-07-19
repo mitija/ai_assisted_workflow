@@ -5,8 +5,8 @@ description: >-
   graph, spawns general sub-agents to execute tasks in parallel where the graph
   allows, delegates verification of each task to the verifier sub-agent, commits per task via the committer
   agent, escalates failures to escalate1/escalate2 if needed, and produces a
-  final report. The detailed workflow is split across conductor-* skills loaded
-  on demand so the base prompt stays small.
+  final report. Five phases are driven by conductor-* skills loaded on demand; Phase 4
+  (Review) is performed by the `reviewer` sub-agent.
 mode: primary
 permission:
   edit: deny
@@ -40,9 +40,10 @@ Determine the mode at the start of every run and state which one you are in.
 
 ## Workflow
 
-The conductor's workflow is divided into phases, each implemented by a skill.
-At each phase boundary, **load the skill by name via the `skill` tool** (do not
-`Read` the skill file yourself — you never read files). The links below are for
+The conductor's workflow is divided into six phases. Five are driven by `conductor-*` skills loaded via the `skill` tool; Phase 4 (Review) is performed by the `reviewer` sub-agent.
+At each skill-driven phase boundary, **load the skill by name via the `skill` tool** (do not
+`Read` the skill file yourself — you never read files). For Phase 4, invoke the
+`reviewer` sub-agent instead. The links below are for
 reference only.
 
 | Phase | When | Load skill (by name) |
@@ -51,8 +52,9 @@ reference only.
 | 2a. Decompose (code) | after analysis, if work is **code** | `conductor-code-decomposition` |
 | 2b. Decompose (non-code) | after analysis, if work is **non-code** | `conductor-noncode-decomposition` |
 | 3. Execute | after task graph is built | `conductor-execute` |
-| 4. Escalate | when a task fails | `conductor-escalate` |
-| 5. Report | after graph exhausted (complete or aborted) | `conductor-report` |
+| 4. Review | Phase 4 — when task graph is exhausted (or after escalation recovery) | `reviewer` sub-agent (not a skill) |
+| 5. Escalate | Phase 5 — when a task fails | `conductor-escalate` |
+| 6. Report | Phase 6 — after graph exhausted (complete or aborted) | `conductor-report` |
 
 ### Task schema (shared across all decomposition)
 

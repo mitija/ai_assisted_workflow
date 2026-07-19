@@ -3,8 +3,8 @@
 A reusable set of agent instructions, skills, and project templates for
 AI-assisted, multi-step task orchestration — code, documentation, configuration,
 research, and more. Drop into any project to give AI coding agents a consistent,
-structured workflow. Spec-driven development with red/green phases is a key
-supported workflow.
+structured workflow. Its stated goal is to enable long-horizon autonomous agentic flows.
+Spec-driven development with red/green phases is a key supported workflow.
 
 ## Continuous improvement
 
@@ -59,7 +59,7 @@ The full methodology is documented in two places:
 
 The **conductor** agent orchestrates any multi-step task — code implementation,
 documentation, configuration, research, project setup, and more. Its workflow is
-split across five phases, each loaded from a `conductor-*` skill on demand:
+split across six phases:
 
 ### Phase 1 — Analyze
 
@@ -86,22 +86,25 @@ The `conductor-execute` skill guides topological-round execution: ready tasks
 are spawned in parallel via `general` sub-agents, each task is verified with
 appropriate checks (e.g. lint, typecheck, tests, build) on completion —
 delegated to the `verifier` sub-agent for shell-command verification steps,
-and passing tasks are committed via the
-`committer` sub-agent. After the graph is exhausted, a **higher-level review**
-is performed by the `reviewer` sub-agent: it audits all completed work against
-the original goal, specification, and acceptance criteria, producing findings
-classified as critical, blocking, warning, or suggestion. Critical or blocking
-findings trigger a remediation loop that repeats review until no critical or
-blocking findings remain, while warnings and suggestions are assessed by the
-conductor and do not trigger another reviewer invocation on their own.
+and passing tasks are committed via the `committer` sub-agent.
 
-### Phase 4 — Escalate on failure
+### Phase 4 — Review
+
+After the task graph is exhausted, a **higher-level review** is performed by
+the `reviewer` sub-agent: it audits all completed work against the original
+goal, specification, and acceptance criteria, producing findings classified as
+critical, blocking, warning, or suggestion. Critical or blocking findings
+trigger a remediation loop that repeats review until no critical or blocking
+findings remain, while warnings and suggestions are assessed by the conductor
+and do not trigger another reviewer invocation on their own.
+
+### Phase 5 — Escalate on failure
 
 If a task fails verification, the `conductor-escalate` skill spawns `escalate1`
 (first-tier, read-only diagnosis + task plan) and, if needed, `escalate2`
 (second-tier, deep-dive) before continuing or aborting.
 
-### Phase 5 — Report
+### Phase 6 — Report
 
 The `conductor-report` skill writes a full report to `docs/working/` covering
 every task, its verification result, reviewer findings and resolution, and the
@@ -126,7 +129,7 @@ workflow, the specification is written interactively before the conductor runs:
 The conductor then runs its general flow against the frozen spec. It loads the
 spec docs at the current tag, determines what to implement — for example, by
 comparing against the previous implementation tag — and drives development
-through the five phases above. Verification runs the contractual tests as part
+through the six phases above. Verification runs the contractual tests as part
 of every task round.
 
 The user typically touches the process at two points: writing/refining the spec
@@ -159,8 +162,8 @@ These are loaded automatically by the conductor agent during its workflow. They 
 | [`conductor-code-decomposition`](skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation (uses spec-refinement, specification-methodology, todo-list). |
 | [`conductor-noncode-decomposition`](skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation. |
 | [`conductor-execute`](skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification. |
-| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2). |
-| [`conductor-report`](skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation. |
+| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 5 — failure escalation (escalate1 → escalate2). |
+| [`conductor-report`](skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 6 — final report generation. |
 
 ## Agents
 
@@ -168,7 +171,7 @@ General agents usable directly by the user or as sub-agents. See each agent's de
 
 | Agent | Role / Description | Invocable as |
 |-------|-------------------|--------------|
-| [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. The workflow is split across six conductor-* skills loaded on demand, so the base prompt stays small. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
+| [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. The workflow is split across six phases; five are driven by conductor-* skills loaded on demand, while Phase 4 (Review) is performed by the reviewer agent. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
 | [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Both |
 | [`escalate1`](agents/agent/escalate1.md) | First-tier escalation. Read-only diagnosis of build failures + ordered task plan. | Subagent |

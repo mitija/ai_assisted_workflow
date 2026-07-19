@@ -1,11 +1,11 @@
 ---
 name: conductor-escalate
-description: Phase 4 of the conductor workflow. Handles task failures — stops new work, records outcomes, delegates diagnosis to escalate1 then escalate2, creates remedial tasks from their plans or aborts. Routes to conductor-report on abort or recovery.
+description: Phase 5 of the conductor workflow. Handles task failures — stops new work, records outcomes, delegates diagnosis to escalate1 then escalate2, creates remedial tasks from their plans or aborts. On successful recovery, resumes execution. On unrecoverable abort, applies mandatory final review rules then proceeds to reporting.
 ---
 
 # Conductor: Escalate
 
-This skill guides the conductor's **Phase 4 — Escalate on failure**. The conductor should load this skill when a task fails to execute or fails verification during the execution phase.
+This skill guides the conductor's **Phase 5 — Escalate on failure**. The conductor should load this skill when a task fails to execute or fails verification during the execution phase.
 
 ## Instructions
 
@@ -46,8 +46,10 @@ Repeat step 2 with escalate2's plan.
 
 ### 4. Abort
 
-- **If escalate2 also returns no plan or its tasks fail**: proceed to the report phase.
-- Load the [`conductor-report`](../conductor-report/SKILL.md) skill via the `skill` tool to write the final report with the abort status.
+- **If escalate2 also returns no plan or its tasks fail**: proceed to the final review gate.
+- **Mandatory final review.** Before writing the report, invoke the `reviewer` sub-agent. Provide it with the complete task graph, verification outcomes, repository diff, and commit history. The reviewer audits the full state of the work, not just the failed task.
+- **Remediation gate.** If the reviewer returns critical/blocking findings, create remediation tasks from those findings and re-enter execution (load [`conductor-execute`](../conductor-execute/SKILL.md) via the `skill` tool). After remediation is complete, re-invoke the `reviewer` to re-review. Repeat until no critical/blocking findings remain.
+- **Proceed to reporting.** Only after the reviewer returns no critical or blocking findings, load the [`conductor-report`](../conductor-report/SKILL.md) skill via the `skill` tool to write the final report with the abort status.
 
 ### Interactive mode
 

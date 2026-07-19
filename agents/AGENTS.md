@@ -145,7 +145,7 @@ General skills are reusable by any agent or user. Conductor-specific skills are 
 
 ### Conductor-specific skills
 
-These are loaded automatically by the conductor agent during its workflow. They are not meant to be loaded directly by users or general agents.
+These are loaded automatically by the conductor agent during its workflow. They are not meant to be loaded directly by users or general agents. The workflow has six phases: Phase 1 Analyze, Phase 2 Decomposition, Phase 3 Execute, Phase 4 Review, Phase 5 Escalate, Phase 6 Report. Phase 4 Review is performed by the `reviewer` agent; the other five phases are represented by the conductor-specific skills below.
 
 | Skill | When to load |
 |---|---|
@@ -153,8 +153,8 @@ These are loaded automatically by the conductor agent during its workflow. They 
 | [`conductor-code-decomposition`](../skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation |
 | [`conductor-noncode-decomposition`](../skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation |
 | [`conductor-execute`](../skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification |
-| [`conductor-escalate`](../skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 4 — failure escalation (escalate1 → escalate2) |
-| [`conductor-report`](../skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 5 — final report generation |
+| [`conductor-escalate`](../skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 5 — failure escalation (escalate1 → escalate2) |
+| [`conductor-report`](../skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 6 — final report generation |
 
 ## Agents
 

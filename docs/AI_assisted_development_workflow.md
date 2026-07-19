@@ -1,6 +1,6 @@
 # Agentic Framework for Long-Horizon AI Work
 
-**Status:** Working but evolving. Used on real projects, primarily Odoo-related work but not limited to Odoo.
+**Status:** Production ready, still evolving. Used on real projects, primarily Odoo-related work but not limited to Odoo.
 
 **Audience:** Senior developers, expanding to people who want to run long-horizon AI tasks. Comments, questions, and suggestions are explicitly welcome — this document is shared for feedback as much as for collaboration.
 
@@ -18,6 +18,10 @@ Two failure modes drive this methodology:
 The thesis:
 
 > **If the specification is precise enough and the test suite is exhaustive enough, an LLM-assisted developer should be able to produce conforming software in hours, not days — and the cycle should be reproducible by another developer or another LLM later.**
+
+Then by extension:
+
+> **The same principle extends to non-coding projects, where the contract is explicit acceptance criteria rather than a software specification plus test suite.**
 
 The methodology trades up-front specification rigour for short, lean implementation cycles. The center of gravity sits with the consultant, not the developer.
 

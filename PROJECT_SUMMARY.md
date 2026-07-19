@@ -2,16 +2,17 @@
 
 ## Purpose
 Build a reusable, working `AGENTS.md` to drop into all projects, plus an Odoo-specific
-companion, a set of agents/skills, and a general-purpose conductor agent, so AI
-agents can orchestrate multi-step tasks using a consistent workflow — supporting
-general AI activity, including software development, documentation, configuration,
-research, and project setup (spec-driven development is a key supported use case).
+companion, a set of agents/skills, and a general-purpose conductor agent, so AI agents can orchestrate multi-step tasks and long-horizon autonomous agentic flows
+using a consistent workflow — supporting general AI activity,
+including software development, documentation, configuration, research, and
+project setup (spec-driven development is a key supported use case).
+The framework is production-ready but still evolving, and applies beyond Odoo.
 Deliverables live in `agents/`.
 
 ## Current status
-Working draft complete and internally consistent. No code/app component — this is a
-guidance/skill bundle for agents. The root-level `skills/` directory holds seven
-general skills and six conductor-specific skills (internal orchestration steps).
+Production-ready but still evolving, and internally consistent. No code/app component — this is a
+guidance/skill bundle for agents. The root-level `skills/` directory holds seven general skills
+and six conductor-specific skills (internal orchestration steps).
 Linked skill tables are maintained in README.md, root AGENTS.md, and the deployable agents/AGENTS.md, documenting both categories.
 Session handover files (`HANDOVER*`) are gitignored at the root.
 
@@ -38,9 +39,12 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   than sub-agents and **owns all thinking, planning, and decision-making**
   (determining goals, constraints, scope, task decomposition). It **never**
   reads/writes files, edits code, or runs commands itself — those mechanical
-  actions are delegated to sub-agents. The detailed workflow is split across
-  six `conductor-*` skills in `skills/` (analyze, code-decomposition,
-  noncode-decomposition, execute, escalate, report) loaded on demand so the
+  actions are delegated to sub-agents. The detailed workflow has six phases:
+  Phase 1 Analyze (`conductor-analyze`), Phase 2 Code/Noncode Decomposition
+  (`conductor-code-decomposition` / `conductor-noncode-decomposition`),
+  Phase 3 Execute (`conductor-execute`), Phase 4 Review (via `reviewer` agent),
+  Phase 5 Escalate (`conductor-escalate`), Phase 6 Report (`conductor-report`).
+  Phase instructions are loaded on demand so the
   base prompt stays small. Interactive mode (default) is a dialogue with the
   user for ambiguity resolution; autonomous mode only when requested.
   Decomposes work into a dependency-aware task graph, uses `explore` sub-agents
@@ -164,9 +168,10 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
 - The conductor's detailed workflow was **split out of the agent file into six
   conductor-* skills** (`conductor-analyze`, `conductor-code-decomposition`,
   `conductor-noncode-decomposition`, `conductor-execute`, `conductor-escalate`,
-  `conductor-report`) to reduce the base prompt size, segregate code-work from
-  non-code-work flows, and load phase instructions on demand rather than loading
-  everything at every turn.
+  `conductor-report`), covering five of the six workflow phases (Phase 4 Review
+  is handled by the `reviewer` agent, not a conductor-* skill), to reduce the base prompt size, segregate
+  code-work from non-code-work flows, and load phase instructions on demand
+  rather than loading everything at every turn.
 - `committer` agent created to own the commit workflow: inspects the working tree,
   groups changes by topic into focused commits with descriptive messages, and executes
   them. Never pushes/tags/branches unless asked. Agent definition lives in
