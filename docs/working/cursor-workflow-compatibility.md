@@ -149,14 +149,23 @@ Key mapping:
 
 **Caveats:**
 - **Nesting:** Cursor supports bounded sub-agent nesting: the main agent and its direct
-  sub-agents may launch child sub-agents, but a sub-agent launched by another sub-agent
-  cannot launch deeper levels (see https://cursor.com/docs/subagents.md). This means the
+   sub-agents may launch child sub-agents, but a sub-agent launched by another sub-agent
+   cannot launch deeper levels (see https://cursor.com/docs/subagents.md). This means the
    conductor can spawn a reviewer that invokes a verifier, but the verifier cannot spawn
-   its own sub-agents. The repository's `reviewer.md` already includes `permission.task: {"*": deny, verifier: allow}`
-   and `permission.edit: deny` — a Cursor port would enforce `readonly: true` on the reviewer
-   but cannot technically reproduce the task-delegation allowlist; it relies on prompt instructions
-   to prevent the reviewer from delegating to any agent other than the verifier.
-   Leaf agents (verifier, escalate1, escalate2) are single-depth by design.
+   its own sub-agents. The repository's delegation graph is:
+   - `conductor` may invoke `reviewer`, `verifier`, `escalate1`, `escalate2`, `general`,
+     `committer`, `explore`
+   - `reviewer`, `escalate1`, and `escalate2` may each invoke only `verifier`
+     (for commands outside their curated read-only command set)
+   - `verifier` cannot invoke any sub-agent
+   Cursor's bounded nesting permits the one-child `verifier` calls from reviewer/escalate1/escalate2
+   and blocks verifier from creating another level. The `reviewer.md` agent already includes
+   `permission.task: {"*": deny, verifier: allow}` and `permission.edit: deny` —
+   a Cursor port would enforce `readonly: true` on the reviewer but cannot technically
+   reproduce the task-delegation allowlist; it relies on prompt instructions to prevent the
+   reviewer from delegating to any agent other than the verifier. Escalate1 and escalate2
+   follow the same pattern — they delegate read-only commands they cannot run to the verifier,
+   but cannot invoke any other sub-agent.
 - **Context isolation:** Each sub-agent invocation starts a fresh context; handover information
   (task prompt, expected outcome, verification criteria) must be included explicitly.
 - **Parallelism:** Independent ready tasks can run concurrently, but each requires explicit
@@ -198,7 +207,7 @@ subject to current model availability.
 |---|---|---|
 | conductor | `openrouter/openai/gpt-5.6-luna` | `gpt-5.6-sol` or `inherit` |
 | reviewer | `openrouter/openai/gpt-5.6-luna` | Same as conductor |
-| escalate2 | `openrouter/openai/gpt-5.6-terra` | `gpt-5.6-terra` or `claude-opus-4-8` |
+| escalate2 | OpenCode/OpenRouter source ID (from opencode.json) | `claude-opus-4-8`, `gpt-5.6-sol`, or `inherit` |
 | committer | `openrouter/deepseek/deepseek-v4-flash` | `composer-2` or `inherit` |
 | general | `openrouter/deepseek/deepseek-v4-flash` | Same as committer |
 | verifier | `openrouter/deepseek/deepseek-v4-flash` | Same as committer |
@@ -240,7 +249,7 @@ workflow rules, root `AGENTS.md` suffices.
 | Provider routing (OpenRouter, custom API) | **Not available** | Cursor manages its own model provider infrastructure. |
 | Tool-level permission system (bash/edit/task) | **Not available** | Only `readonly: true` at agent level. |
 | `mode: primary/subagent/all` taxonomy | **Not available** | Invocation by explicit name or automation trigger. |
-| Sub-agent nesting (recursive depth) | **Bounded** — main agent and direct sub-agents may launch child sub-agents; deeper recursion is blocked | Conductor can delegate to reviewer, which can invoke verifier — but verifier cannot spawn further agents. Repository safeguards (readonly, no task permission on leaf agents) are compatible. |
+| Sub-agent nesting (recursive depth) | **Bounded** — main agent and direct sub-agents may launch child sub-agents; deeper recursion is blocked | Conductor can delegate to reviewer, escalate1, or escalate2, which may each invoke only verifier — but verifier cannot spawn further agents. The repository's prompt-based safeguards (reviewer, escalate1, escalate2 delegate only to verifier; verifier never invokes sub-agents) are compatible with Cursor's bounded nesting model. |
 | Dynamic skill loading via `skill` tool | **Partial** — same file format, same directory structure, different invocation mechanics (`/skill-name` vs `skill` tool) | Workflow logic must reference the Cursor invocation pattern. |
 
 ---
@@ -343,10 +352,10 @@ workflow rules, root `AGENTS.md` suffices.
    prompt-enforced only.
 2. **Provider routing** — Cursor uses its own model infrastructure. You cannot route through
    OpenRouter or specify custom API endpoints.
-3. **Sub-agent nesting** — The conductor can delegate to a reviewer that invokes a verifier
-   (two-level nesting), but deeper recursion is blocked. The repository's prompt-based
-   safeguards on leaf agents (verifier, escalate1, escalate2) prevent them from spawning
-   further agents; this is compatible with Cursor's bounded nesting model.
+3. **Sub-agent nesting** — The conductor can delegate to reviewer, escalate1, or escalate2,
+   which may each invoke only verifier (two-level nesting), but deeper recursion is blocked.
+   The repository's prompt-based safeguards (reviewer/escalate1/escalate2 delegate only to
+   verifier; verifier never invokes sub-agents) are compatible with Cursor's bounded nesting model.
 4. **Discovery/installation semantics** — OpenCode's `~/.config/opencode/agent` file-based
    discovery differs from Cursor's project-local `.cursor/agents/`. The repo's symlink-based
    install script is OpenCode-specific; a Cursor counterpart is a straightforward addition.
