@@ -152,10 +152,13 @@ Paths outside the project root that a project legitimately needs may include:
 
 Paths are discovered via:
 - `project_context.yaml` — external `source.*`, `scripts.*`, or other path values.
-- Environment variables — `$HOME`, `$PROJECTS`, or other variables used in config.
-- Config-file inspection — `.ini`, `.cfg`, `.env` files that reference absolute paths.
-- The project's own dependencies — `git submodule`, `git worktree`, `npm link` targets.
+- Project configuration files — `.ini`, `.cfg`, `.env`, and equivalent config files that reference absolute paths.
+- Environment variables — values such as `$HOME`, `$PROJECTS`, or other variables used in config, resolved after expansion.
+- Git-linked directories — `git submodule`, `git worktree` locations.
+- Dependency-link targets — `npm link` or equivalent symlinked dependency directories.
 - User declaration — the user explicitly naming a required external path.
+
+Broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`, `~/Projects/**`, or a parent workspace directory are **rejected** and must never be presented as authorization candidates; only concrete project-specific paths are eligible.
 
 ### Conductor startup preflight (autonomous mode)
 
@@ -174,9 +177,19 @@ that:
 6. **Proceeds** only after the boundary is confirmed and the config is updated.
 
 If a new legitimate external path is discovered during execution (e.g. a sub-agent
-encounters a needed path), the conductor pauses, presents it to the user for
-confirmation, updates `opencode.json`, and resumes. Unrelated or clearly illegitimate
-paths must **not** be added — they remain at the default "ask" policy.
+encounters a needed path), the conductor must apply the **mid-execution discovery
+sequence**:
+
+1. **Pause** the affected task immediately.
+2. **Classify and explain** — identify the concrete project-specific path and why it is needed.
+3. **Ask** the user for approval to add the path to `permission.external_directory`. Present one path at a time.
+4. **Wait** for the user's answer before continuing.
+5. **If approved**: delegate editing `opencode.json` to a `general` sub-agent with exact instructions to add `"<path>/**": "allow"`.
+6. **Validate** that the updated `opencode.json` is valid JSON and the path was persisted correctly.
+7. **Resume** execution only after persistence is confirmed.
+8. **If denied or the path is unrelated** to the project: do not add it. Leave it at the default "ask" policy. Do not resume with broad access or re-present the same path.
+
+Do **not** update `opencode.json` before receiving user approval. Unrelated or clearly illegitimate paths must **not** be added — they remain at the default "ask" policy.
 
 Interactive mode does not require a formal preflight — the conductor can ask about
 external access as part of the normal ambiguity-resolution dialogue.

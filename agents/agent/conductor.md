@@ -51,19 +51,44 @@ normal dialogue.
 2. **Scan** `project_context.yaml` for absolute paths outside the project root
    (Odoo source dirs, script paths, config paths — anywhere an absolute path is
    referenced).
-3. **Compare** the discovered external paths against the authorized entries.
-4. **If any legitimate external path is missing authorization:**
+3. **Extend scanning** to also discover paths from:
+   - Project config files — `.ini`, `.cfg`, `.env`, and equivalent config files.
+   - Environment-variable references — `$HOME`, `$PROJECTS`, or other variables
+     used in config, resolved after expansion.
+   - Git-linked directories — `git submodule`, `git worktree` locations.
+   - Dependency-link targets — `npm link` or equivalent symlinked dependency
+     directories.
+   - User declaration — any path the user explicitly stated is required.
+4. **Filter** — reject broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`,
+   `~/Projects/**`, or a parent workspace directory. Only concrete project-specific
+   paths are eligible as authorization candidates.
+5. **Compare** the discovered external paths against the authorized entries.
+6. **If any legitimate external path is missing authorization:**
    - In **autonomous mode**: **stop** and present the missing paths to the user.
      Ask for confirmation to add each one. Only proceed after all are resolved.
    - Record the outcome.
-5. **Persist** approved paths by delegating to the `general` sub-agent with clear
+7. **Persist** approved paths by delegating to the `general` sub-agent with clear
    edit instructions for `opencode.json`: add the glob pattern under
    `permission.external_directory` as `"<path>/**": "allow"`.
-6. **Proceed** to Phase 1 only after the boundary is confirmed.
+8. **Validate** that the updated `opencode.json` is valid JSON and the path was
+   persisted correctly.
+9. **Proceed** to Phase 1 only after the boundary is confirmed and persistence
+   is validated.
 
 If a new legitimate external path is discovered **during** execution (Phase 3),
-the conductor must pause that task, surface it to the user, update
-`opencode.json`, and resume. Never silently allow an unauthorized external path.
+the conductor must apply the **mid-execution discovery sequence**:
+
+1. **Pause** the affected task immediately.
+2. **Classify and explain** — identify the concrete project-specific path and explain why it is needed.
+3. **Ask the user** for approval to add the path to `permission.external_directory`. Present one path at a time.
+4. **do not update before approval** — do not modify `opencode.json` until the user gives explicit consent.
+5. **Wait** for the user's answer before continuing.
+6. **If approved**: delegate editing `opencode.json` to a `general` sub-agent with exact instructions to add `"<path>/**": "allow"`.
+7. **Validate** that the updated `opencode.json` is valid JSON and the path was persisted correctly.
+8. **Resume** execution only after persistence is confirmed.
+9. **If denied or the path is unrelated** to the project: do not add it. Leave it at the default "ask" policy. Do not resume with broad access or re-present the same path.
+
+Do **not** update `opencode.json` before receiving user approval. Never silently allow an unauthorized external path.
 
 > **Never** authorize broad patterns like `~/Projects/**` or `~/**`. Only
 > concrete, project-specific external paths.

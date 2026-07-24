@@ -127,6 +127,20 @@ commands:
   typecheck:                        # e.g. "mypy ."
   format:                           # e.g. "ruff format ."
   test:                             # e.g. "pytest"
+
+# ----------------------------------------------------------------------------
+# Filesystem boundary (informational — mirrors opencode.json permissions).
+# These are paths outside the project root that this project legitimately needs.
+# The authoritative access rules live in the project's opencode.json under
+# `permission.external_directory`. This section documents what they are and why.
+# Agents use this during the permission preflight to detect missing authorizations.
+# ----------------------------------------------------------------------------
+# filesystem:
+# external_paths:
+#     - path: /path/to/odoo/source
+#       reason: "Odoo runtime for development server"
+#     - path: /path/to/shared/lib
+#       reason: "Sibling monorepo workspace"
 ```
 
 If this is an Odoo project (detected by the presence of `odoo_config.ini` or
@@ -198,14 +212,25 @@ After `project_context.yaml` is complete, check for and initialize the
 4. **Scan** the newly-written `project_context.yaml` for absolute paths outside
    the project root (e.g. Odoo `source.base`, `source.enterprise`, `scripts.*`
    paths, or any `commands.*` that reference external tools by absolute path).
-5. **Present** any discovered external paths to the user, one at a time, using
+   Extend scanning to also discover paths from:
+   - Project config files — `.ini`, `.cfg`, `.env`, and equivalent config files.
+   - Environment-variable references — `$HOME`, `$PROJECTS`, or other variables
+     used in config, resolved after expansion.
+   - Git-linked directories — `git submodule`, `git worktree` locations.
+   - Dependency-link targets — `npm link` or equivalent symlinked dependency
+     directories.
+   - User declaration — any path the user explicitly stated is required.
+5. **Filter** — reject broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`,
+   `~/Projects/**`, or a parent workspace directory. Only concrete project-specific
+   paths are eligible as authorization candidates.
+6. **Present** any discovered external paths to the user, one at a time, using
    the `Question` tool. For each:
    - Show the path and why it was discovered.
    - Ask whether to add it to `permission.external_directory` as an `"allow"`.
    - If approved, edit it into the JSON block using the glob pattern
      `"<path>/**"` (e.g. `"/opt/odoo/17/**"`).
    - If denied, do not add it.
-6. **Confirm** the final JSON is valid and `permission.external_directory`
+7. **Validate** the final JSON is valid and `permission.external_directory`
    contains only the approved paths.
 
 > **Never** add broad patterns like `~/Projects/**` or `~/**`. Only concrete,

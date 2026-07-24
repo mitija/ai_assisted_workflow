@@ -43,7 +43,7 @@ commands:
 # Agents use this during the permission preflight to detect missing authorizations.
 # ----------------------------------------------------------------------------
 # filesystem:
-#   external_paths:
+# external_paths:
 #     - path: /path/to/odoo/source
 #       reason: "Odoo runtime for development server"
 #     - path: /path/to/shared/lib

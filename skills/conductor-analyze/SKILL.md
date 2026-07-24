@@ -23,11 +23,22 @@ conductor prompt, run it now:
 
 1. Delegate reading `opencode.json` and `project_context.yaml` to the `explore`
    sub-agent to find all absolute paths outside the project root.
-2. Compare against the authorized `permission.external_directory` entries.
-3. If any unapproved external paths are needed, **stop** and surface them to the
+2. Extend scanning to also discover paths from:
+   - Project config files — `.ini`, `.cfg`, `.env`, and equivalent config files.
+   - Environment-variable references — `$HOME`, `$PROJECTS`, or other variables
+     used in config, resolved after expansion.
+   - Git-linked directories — `git submodule`, `git worktree` locations.
+   - Dependency-link targets — `npm link` or equivalent symlinked dependency
+     directories.
+   - User declaration — any path explicitly stated.
+3. Filter — reject broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`,
+   `~/Projects/**`, or a parent workspace directory. Only concrete project-specific
+   paths are eligible as authorization candidates.
+4. Compare against the authorized `permission.external_directory` entries.
+5. If any unapproved external paths are needed, **stop** and surface them to the
    user. Do not proceed until the user confirms which paths to add and
-   `opencode.json` is updated.
-4. For interactive mode, handle external-path questions as part of the normal
+   `opencode.json` is updated and validated.
+6. For interactive mode, handle external-path questions as part of the normal
    ambiguity-resolution dialogue (step 5).
 
 ### 2. Determine work type
