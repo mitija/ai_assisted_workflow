@@ -8,11 +8,10 @@ the date above. Official Cursor documentation is referenced at:
 - https://docs.cursor.com/agent (agent features, rules, subagents, skills)
 - https://docs.cursor.com/agent/models (model selection and pricing)
 - https://www.cursor.com/features (product overview)
-- https://cursor.com/docs/rules.md
-- https://cursor.com/docs/subagents.md
-- https://cursor.com/docs/skills.md
-- https://cursor.com/docs/models-and-pricing.md
-- https://docs.cursor.com/cloud-agents
+- https://docs.cursor.com/agent/rules (rules reference)
+- https://docs.cursor.com/agent/subagents (subagent behavior and nesting)
+- https://docs.cursor.com/agent/skills (skills reference)
+- https://docs.cursor.com/cloud-agent (cloud agents)
 
 **Methodology:** Repository inspection (agent definitions, skill files, config, install scripts)
 compared against current Cursor documentation. Where features depend on plan tier, version, or
@@ -70,13 +69,14 @@ This repository root `AGENTS.md` remains repository maintainer guidance and is a
 
 ### 3.1 Agent definitions (OpenCode YAML frontmatter → `.cursor/agents/*.md`)
 
-**Files affected:** `agents/agent/*.md` (7 files)
+**Files affected:** `agents/agent/*.md` (6 files: conductor, committer, reviewer, verifier, escalate1,
+escalate2 — `general` and `explore` are referenced/configured roles without files in `agents/agent/`)
 
 OpenCode discovers agents from `~/.config/opencode/agent/` by parsing YAML frontmatter. Cursor
 discovers agents from `.cursor/agents/*.md` (custom subagents feature). The prompt body is
 preserved; OpenCode-specific frontmatter fields are translated per the table below.
 
-**Translation per file:**
+**Translation per file (6 files):**
 
 | OpenCode file | Cursor file | Frontmatter map | Notes |
 |---|---|---|---|
@@ -86,7 +86,7 @@ preserved; OpenCode-specific frontmatter fields are translated per the table bel
 | `verifier.md` (96 lines) | `.cursor/agents/verifier.md` | `mode: subagent` → no mode field. `permission.edit: deny, permission.task: deny, permission.bash: allow` → `readonly: true` (partial). | Strict PASS/FAIL/BLOCKED protocol preserved in prompt body. |
 | `escalate1.md` (96 lines) | `.cursor/agents/escalate1.md` | Same as reviewer: `permission.edit: deny` → `readonly: true`. Bash allowlist → omitted. | Prompt body preserved. |
 | `escalate2.md` (105 lines) | `.cursor/agents/escalate2.md` | Same as reviewer: `permission.edit: deny` → `readonly: true`. Bash allowlist → omitted. | Prompt body preserved. |
-| `explore.md` / `general.md` (roles, not files) | `.cursor/agents/general.md`, `.cursor/agents/explore.md` | No existing OpenCode files for these roles — create if separate agent definitions are wanted. | Alternatively use the default Cursor Agent for general tasks. |
+
 
 **Cursor `name`/`description` fields:** Add a `name` (short label) and `description`
 (one-liner) to the frontmatter of each `.cursor/agents/*.md` for `@` and `/` autocompletion.
@@ -150,14 +150,15 @@ Key mapping:
 **Caveats:**
 - **Nesting:** Cursor supports bounded sub-agent nesting: the main agent and its direct
    sub-agents may launch child sub-agents, but a sub-agent launched by another sub-agent
-   cannot launch deeper levels (see https://cursor.com/docs/subagents.md). This means the
-   conductor can spawn a reviewer that invokes a verifier, but the verifier cannot spawn
-   its own sub-agents. The repository's delegation graph is:
-   - `conductor` may invoke `reviewer`, `verifier`, `escalate1`, `escalate2`, `general`,
-     `committer`, `explore`
-   - `reviewer`, `escalate1`, and `escalate2` may each invoke only `verifier`
+   cannot launch deeper levels (see https://docs.cursor.com/agent/subagents). This means the
+   conductor can spawn sub-agents, but a sub-agent of a sub-agent is blocked. The repository's
+   delegation graph is:
+   - `conductor` references/invokes `general`, `explore`, `committer` and the defined agents
+     (`reviewer`, `verifier`, `escalate1`, `escalate2`)
+   - `reviewer`, `escalate1`, and `escalate2` explicitly allow delegation only to `verifier`
      (for commands outside their curated read-only command set)
-   - `verifier` cannot invoke any sub-agent
+   - `verifier` technically denies task delegation (`permission.task: deny`)
+   - `committer` is terminal by prompt convention but lacks an explicit task-deny permission
    Cursor's bounded nesting permits the one-child `verifier` calls from reviewer/escalate1/escalate2
    and blocks verifier from creating another level. The `reviewer.md` agent already includes
    `permission.task: {"*": deny, verifier: allow}` and `permission.edit: deny` —
@@ -355,7 +356,8 @@ workflow rules, root `AGENTS.md` suffices.
 3. **Sub-agent nesting** — The conductor can delegate to reviewer, escalate1, or escalate2,
    which may each invoke only verifier (two-level nesting), but deeper recursion is blocked.
    The repository's prompt-based safeguards (reviewer/escalate1/escalate2 delegate only to
-   verifier; verifier never invokes sub-agents) are compatible with Cursor's bounded nesting model.
+   verifier; verifier technically denies task delegation; committer is terminal by prompt
+   convention) are compatible with Cursor's bounded nesting model.
 4. **Discovery/installation semantics** — OpenCode's `~/.config/opencode/agent` file-based
    discovery differs from Cursor's project-local `.cursor/agents/`. The repo's symlink-based
    install script is OpenCode-specific; a Cursor counterpart is a straightforward addition.
