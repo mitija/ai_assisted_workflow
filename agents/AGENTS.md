@@ -158,6 +158,11 @@ Paths are discovered via:
 - Dependency-link targets — `npm link` or equivalent symlinked dependency directories.
 - User declaration — the user explicitly naming a required external path.
 
+Before comparing or authorizing a discovered path, require environment-variable
+and tilde expansion, normalization of `.`/`..`, resolution to an absolute
+path, and symlink canonicalization. Only then classify it as inside the project
+root, a broad parent/workspace path, or an eligible concrete external path.
+
 Broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`, `~/Projects/**`, or a parent workspace directory are **rejected** and must never be presented as authorization candidates; only concrete project-specific paths are eligible.
 
 ### Conductor startup preflight (autonomous mode)
@@ -169,12 +174,15 @@ that:
    external directories.
 2. **Scans** `project_context.yaml` and other project config files for absolute
    paths that fall outside the project root.
-3. **Identifies** any legitimate project-specific external paths that are not yet
+3. **Normalizes** — for each discovered path, perform environment-variable and
+   tilde expansion, normalize `.`/`..`, resolve to an absolute path, and
+   canonicalize symlinks before classifying it.
+4. **Identifies** any legitimate project-specific external paths that are not yet
    in `permission.external_directory`.
-4. **Confirms** with the user — presents the proposed additions and asks for approval.
-5. **Persists** the approved paths by editing `opencode.json`'s
+5. **Confirms** with the user — presents the proposed additions and asks for approval.
+6. **Persists** the approved paths by editing `opencode.json`'s
    `permission.external_directory` block.
-6. **Proceeds** only after the boundary is confirmed and the config is updated.
+7. **Proceeds** only after the boundary is confirmed and the config is updated.
 
 If a new legitimate external path is discovered during execution (e.g. a sub-agent
 encounters a needed path), the conductor must apply the **mid-execution discovery

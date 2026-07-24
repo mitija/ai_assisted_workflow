@@ -102,31 +102,42 @@ every value you discovered in Step 1. Leave a field blank (empty value) only
 when it genuinely cannot be inferred — do **not** ask the user for it yet.
 
 ```yaml
-# project_context.yaml
-# Project-specific paths and commands for AI agents.
-# Never hard-code these values in code or docs.
+# project_context.template.yaml
+#
+# Copy this file to `project_context.yaml` and fill in the values for your
+# local machine / project. `project_context.yaml` should be gitignored.
+#
+# Agents read this file at the start of a session to discover project-specific
+# paths, credentials, and commands. Never hard-code these values in code or docs.
 
 project:
-  name:                             # Human-readable project name
-  description:                      # One-line description
+  name:                  # Human-readable project name, e.g. "Gulli Foods barcode suite"
+  description:           # One-line description of what this project is
 
+# Where the code and docs live. Adjust to match this project's layout.
 layout:
-  source_dir:                       # e.g. "src"
-  docs_dir:                         # e.g. "docs"
-  summary_file: PROJECT_SUMMARY.md
+  source_dir:            # Directory holding the source code, e.g. "src" or "odoo-sco-pca"
+  docs_dir:              # Directory holding project docs, e.g. "docs"
+  summary_file: PROJECT_SUMMARY.md   # File holding current project state (no history)
 
+# Spec-driven workflow: where the specification and tests live (see
+# AI_assisted_development_workflow.md). Specs/tests are usually in a separate,
+# tagged documentation repo. Agents read these before implementing.
 spec:
-  docs_repo:        ./docs
-  customer_facing_dir: ./docs/customer-facing
-  current_tag:                      # Spec freeze tag, e.g. "spec-260513"
+  docs_repo:             ./docs                   # Path or URL of the documentation repo
+  customer_facing_dir:   ./docs/customer-facing   # Dir holding <epic>_SPEC.md and <epic>_TESTS.md
+  current_tag:           # Spec freeze tag to implement against, e.g. "spec-260513"
 
+# Generic build / quality commands. Fill in for non-Odoo projects, or in addition
+# to the Odoo section below. Agents run these for build/lint/typecheck/format and
+# before declaring a task done. (Odoo tests use odoo.scripts.run_tests instead.)
 commands:
-  install:                          # e.g. "npm install" / "pip install -e ."
-  build:                            # e.g. "npm run build"
-  lint:                             # e.g. "ruff check ."
-  typecheck:                        # e.g. "mypy ."
-  format:                           # e.g. "ruff format ."
-  test:                             # e.g. "pytest"
+  install:               # e.g. "npm install" / "pip install -e ."
+  build:                 # e.g. "npm run build"
+  lint:                  # e.g. "ruff check ." / "npm run lint"
+  typecheck:             # e.g. "mypy ." / "tsc --noEmit"
+  format:                # e.g. "ruff format ." / "prettier -w ."
+  test:                  # generic test command (Odoo uses odoo.scripts.run_tests)
 
 # ----------------------------------------------------------------------------
 # Filesystem boundary (informational — mirrors opencode.json permissions).
@@ -141,29 +152,41 @@ commands:
 #       reason: "Odoo runtime for development server"
 #     - path: /path/to/shared/lib
 #       reason: "Sibling monorepo workspace"
-```
 
-If this is an Odoo project (detected by the presence of `odoo_config.ini` or
-Odoo shell scripts), append the Odoo block:
-
-```yaml
-# ---------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 # Odoo-specific section. Remove this whole block for non-Odoo projects.
-# ---------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 odoo:
-  version:                          # e.g. "17"
+  version:               # e.g. "17"
+
+  # Odoo source code (read-only reference)
   source:
-    base:                           # Odoo base source path
-    enterprise:                     # Enterprise source path (or blank)
+    base:                # Base Odoo source, e.g. "/path/to/odoo/17/odoo"
+    enterprise:          # Enterprise source, e.g. "/path/to/odoo/17/enterprise"
+
+  # Executable / scripts
   scripts:
-    start:                          # Odoo launcher wrapper path
-    run_tests:                      # Test wrapper path
-    config_ini:                     # Path to odoo_config.ini (gitignored)
+    start:               # Odoo launcher wrapper, e.g. "/path/to/odoo/17/start_odoo17.sh"
+    run_tests:           # Test wrapper (drops/recreates DB), e.g. "/path/to/odoo/17/run_tests.sh"
+    # Connection config for the local dev/test database. All DB credentials
+    # (host, port, user, password, dbname) come from this file — do not
+    # duplicate them here.
+    config_ini:          # e.g. "scripts/odoo_config.ini"  (gitignored)
+
+  # Remote QA instance reachable via XMLRPC for data checks (optional).
+  # All connection details (URL, credentials) are read from config_ini below.
+  qa_instance:
+    config_ini:          # e.g. "scripts/odoo-qa.ini"  (gitignored)
+
+  # Modules maintained in this project (optional, list as needed)
   modules:
-    # - name: my_module
-    #   path: my_addons/my_module
-    #   depends: [base, stock]
+    # - name: gullifood_stock_barcode
+    #   path: odoo-gulli-foods/gullifood_stock_barcode
+    #   depends: [stock_barcode, stock_barcode_mrp, product_multiple_barcodes]
 ```
+
+The template includes both the generic project sections and the Odoo-specific
+section. For non-Odoo projects, remove the entire `odoo:` block.
 
 ---
 
@@ -220,18 +243,21 @@ After `project_context.yaml` is complete, check for and initialize the
    - Dependency-link targets — `npm link` or equivalent symlinked dependency
      directories.
    - User declaration — any path the user explicitly stated is required.
-5. **Filter** — reject broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`,
-   `~/Projects/**`, or a parent workspace directory. Only concrete project-specific
-   paths are eligible as authorization candidates.
-6. **Present** any discovered external paths to the user, one at a time, using
-   the `Question` tool. For each:
-   - Show the path and why it was discovered.
-   - Ask whether to add it to `permission.external_directory` as an `"allow"`.
-   - If approved, edit it into the JSON block using the glob pattern
-     `"<path>/**"` (e.g. `"/opt/odoo/17/**"`).
-   - If denied, do not add it.
-7. **Validate** the final JSON is valid and `permission.external_directory`
-   contains only the approved paths.
+5. **Normalize** — for each discovered path, perform environment-variable and
+    tilde expansion, normalize `.`/`..`, resolve to an absolute path, and
+    canonicalize symlinks before classifying it.
+ 6. **Filter** — reject broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`,
+    `~/Projects/**`, or a parent workspace directory. Only concrete project-specific
+    paths are eligible as authorization candidates.
+ 7. **Present** any discovered external paths to the user, one at a time, using
+    the `Question` tool. For each:
+    - Show the path and why it was discovered.
+    - Ask whether to add it to `permission.external_directory` as an `"allow"`.
+    - If approved, edit it into the JSON block using the glob pattern
+      `"<path>/**"` (e.g. `"/opt/odoo/17/**"`).
+    - If denied, do not add it.
+ 8. **Validate** the final JSON is valid and `permission.external_directory`
+    contains only the approved paths.
 
 > **Never** add broad patterns like `~/Projects/**` or `~/**`. Only concrete,
 > project-specific external paths are permitted.

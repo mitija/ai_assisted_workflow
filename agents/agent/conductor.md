@@ -59,21 +59,24 @@ normal dialogue.
    - Dependency-link targets — `npm link` or equivalent symlinked dependency
      directories.
    - User declaration — any path the user explicitly stated is required.
-4. **Filter** — reject broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`,
+4. **Normalize** — for each discovered path, perform environment-variable and
+   tilde expansion, normalize `.`/`..`, resolve to an absolute path, and
+   canonicalize symlinks before classifying it.
+5. **Filter** — reject broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`,
    `~/Projects/**`, or a parent workspace directory. Only concrete project-specific
    paths are eligible as authorization candidates.
-5. **Compare** the discovered external paths against the authorized entries.
-6. **If any legitimate external path is missing authorization:**
+6. **Compare** the discovered external paths against the authorized entries.
+7. **If any legitimate external path is missing authorization:**
    - In **autonomous mode**: **stop** and present the missing paths to the user.
      Ask for confirmation to add each one. Only proceed after all are resolved.
    - Record the outcome.
-7. **Persist** approved paths by delegating to the `general` sub-agent with clear
+8. **Persist** approved paths by delegating to the `general` sub-agent with clear
    edit instructions for `opencode.json`: add the glob pattern under
    `permission.external_directory` as `"<path>/**": "allow"`.
-8. **Validate** that the updated `opencode.json` is valid JSON and the path was
+9. **Validate** that the updated `opencode.json` is valid JSON and the path was
    persisted correctly.
-9. **Proceed** to Phase 1 only after the boundary is confirmed and persistence
-   is validated.
+10. **Proceed** to Phase 1 only after the boundary is confirmed and persistence
+    is validated.
 
 If a new legitimate external path is discovered **during** execution (Phase 3),
 the conductor must apply the **mid-execution discovery sequence**:
