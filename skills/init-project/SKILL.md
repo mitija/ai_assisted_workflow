@@ -176,7 +176,44 @@ After each answer, immediately write it into the file with `Edit`.
 
 ---
 
-## Step 5 — Verify and report
+## Step 5 — Initialize filesystem boundary in opencode.json
+
+After `project_context.yaml` is complete, check for and initialize the
+`permission.external_directory` block in the project's `opencode.json`:
+
+1. **Locate** `opencode.json` at the project root via `Glob("opencode.json")` or
+   `Glob(".opencode/opencode.json")`.
+2. **Read** the file and check whether a `permission.external_directory` key
+   exists. If it does but is empty or missing project-root-relevant paths, note
+   it for the preflight.
+3. **If the key is missing**, add an empty `permission.external_directory`
+   block to `opencode.json`:
+   ```json
+   "permission": {
+     "external_directory": {
+     }
+   }
+   ```
+   Merge it into the existing JSON structure — preserve all existing keys.
+4. **Scan** the newly-written `project_context.yaml` for absolute paths outside
+   the project root (e.g. Odoo `source.base`, `source.enterprise`, `scripts.*`
+   paths, or any `commands.*` that reference external tools by absolute path).
+5. **Present** any discovered external paths to the user, one at a time, using
+   the `Question` tool. For each:
+   - Show the path and why it was discovered.
+   - Ask whether to add it to `permission.external_directory` as an `"allow"`.
+   - If approved, edit it into the JSON block using the glob pattern
+     `"<path>/**"` (e.g. `"/opt/odoo/17/**"`).
+   - If denied, do not add it.
+6. **Confirm** the final JSON is valid and `permission.external_directory`
+   contains only the approved paths.
+
+> **Never** add broad patterns like `~/Projects/**` or `~/**`. Only concrete,
+> project-specific external paths are permitted.
+
+---
+
+## Step 6 — Verify and report
 
 - Read the final file; confirm no required field is empty.
 - Confirm valid YAML (no obvious quoting/syntax errors).

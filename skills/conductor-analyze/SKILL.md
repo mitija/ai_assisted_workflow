@@ -16,6 +16,20 @@ You (the conductor) own the analysis. Do the reasoning yourself — only delegat
 - What is the user's goal? State it back to yourself.
 - What does "done" look like? What deliverables or outcomes signal completion?
 
+### 1b. Confirm filesystem boundary (autonomous mode only)
+
+If running in autonomous mode and the preflight was not already executed by the
+conductor prompt, run it now:
+
+1. Delegate reading `opencode.json` and `project_context.yaml` to the `explore`
+   sub-agent to find all absolute paths outside the project root.
+2. Compare against the authorized `permission.external_directory` entries.
+3. If any unapproved external paths are needed, **stop** and surface them to the
+   user. Do not proceed until the user confirms which paths to add and
+   `opencode.json` is updated.
+4. For interactive mode, handle external-path questions as part of the normal
+   ambiguity-resolution dialogue (step 5).
+
 ### 2. Determine work type
 
 Classify the work as one of:

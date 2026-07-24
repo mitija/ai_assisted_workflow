@@ -116,6 +116,71 @@ credentials — as secret. Never print, echo, or copy these values into chat out
 logs, source code, commits, or the development report. Reference them by their
 config key, not their literal value.
 
+## Filesystem Boundary & External Access
+
+### Default boundary
+
+The **project root** (the workspace directory containing `project_context.yaml`, e.g.
+`~/Projects/project_name`) is the default filesystem boundary. All read/write operations
+are expected to stay within this root. Access to directories outside the root requires
+explicit permission via OpenCode's `permission.external_directory` rules.
+
+### Where permissions live
+
+OpenCode's external-directory permissions are stored in the project-level
+`opencode.json` under `permission.external_directory` as a record of
+`"<path-glob>": "allow"` entries. Broad patterns such as `~/Projects/**` or `~/**`
+must never be added — only concrete, project-specific external paths are permitted.
+
+The `permission.external_directory` block is **generated and maintained by the agent
+workflow**, not by hand. Agents add entries only through the documented preflight
+process (see Conductor startup preflight below).
+
+### Legitimate external paths
+
+Paths outside the project root that a project legitimately needs may include:
+
+- **Sibling repositories** — shared libraries, monorepo workspaces, or config repos
+  adjacent to this project.
+- **Generated assets** — build outputs, compiled artifacts, or cached data stored
+  outside the project tree.
+- **Services / runtimes** — language runtimes, databases, Odoo source trees, or
+  other service directories required for development or testing.
+- **Environment-specific files** — shared `/etc/` config, system-wide credential
+  stores referenced by config files.
+- **Explicit user requirement** — any path the user directly states is needed.
+
+Paths are discovered via:
+- `project_context.yaml` — external `source.*`, `scripts.*`, or other path values.
+- Environment variables — `$HOME`, `$PROJECTS`, or other variables used in config.
+- Config-file inspection — `.ini`, `.cfg`, `.env` files that reference absolute paths.
+- The project's own dependencies — `git submodule`, `git worktree`, `npm link` targets.
+- User declaration — the user explicitly naming a required external path.
+
+### Conductor startup preflight (autonomous mode)
+
+Before beginning autonomous execution, the conductor must run a **permission preflight**
+that:
+
+1. **Reads** `opencode.json` at the project root to determine currently authorized
+   external directories.
+2. **Scans** `project_context.yaml` and other project config files for absolute
+   paths that fall outside the project root.
+3. **Identifies** any legitimate project-specific external paths that are not yet
+   in `permission.external_directory`.
+4. **Confirms** with the user — presents the proposed additions and asks for approval.
+5. **Persists** the approved paths by editing `opencode.json`'s
+   `permission.external_directory` block.
+6. **Proceeds** only after the boundary is confirmed and the config is updated.
+
+If a new legitimate external path is discovered during execution (e.g. a sub-agent
+encounters a needed path), the conductor pauses, presents it to the user for
+confirmation, updates `opencode.json`, and resumes. Unrelated or clearly illegitimate
+paths must **not** be added — they remain at the default "ask" policy.
+
+Interactive mode does not require a formal preflight — the conductor can ask about
+external access as part of the normal ambiguity-resolution dialogue.
+
 ## Communication & Output
 - Keep responses concise and skimmable; lead with the answer, not the process.
 - When referring to code, use `file_path:line` references so the user can navigate

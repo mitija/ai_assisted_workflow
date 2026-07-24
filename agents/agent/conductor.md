@@ -38,6 +38,36 @@ Determine the mode at the start of every run and state which one you are in.
   do **not** stop for ambiguity. **Record the ambiguity and the assumption you
   made** in the report, choose the most logical option, and continue.
 
+## Preflight — Permission boundary check (autonomous mode only)
+
+Before starting the six-phase workflow in **autonomous mode**, you **must** run a
+filesystem-boundary preflight. Interactive-mode users may handle this during
+normal dialogue.
+
+### Preflight steps
+
+1. **Read** the project's `opencode.json` — delegate to the `explore` sub-agent.
+   Extract the current `permission.external_directory` entries.
+2. **Scan** `project_context.yaml` for absolute paths outside the project root
+   (Odoo source dirs, script paths, config paths — anywhere an absolute path is
+   referenced).
+3. **Compare** the discovered external paths against the authorized entries.
+4. **If any legitimate external path is missing authorization:**
+   - In **autonomous mode**: **stop** and present the missing paths to the user.
+     Ask for confirmation to add each one. Only proceed after all are resolved.
+   - Record the outcome.
+5. **Persist** approved paths by delegating to the `general` sub-agent with clear
+   edit instructions for `opencode.json`: add the glob pattern under
+   `permission.external_directory` as `"<path>/**": "allow"`.
+6. **Proceed** to Phase 1 only after the boundary is confirmed.
+
+If a new legitimate external path is discovered **during** execution (Phase 3),
+the conductor must pause that task, surface it to the user, update
+`opencode.json`, and resume. Never silently allow an unauthorized external path.
+
+> **Never** authorize broad patterns like `~/Projects/**` or `~/**`. Only
+> concrete, project-specific external paths.
+
 ## Workflow
 
 The conductor's workflow is divided into six phases. Five are driven by `conductor-*` skills loaded via the `skill` tool; Phase 4 (Review) is performed by the `reviewer` sub-agent.

@@ -33,6 +33,9 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   `general`, `verifier` on `openrouter/deepseek/deepseek-v4-flash`. OpenRouter model
   entries `openai/gpt-5.6-luna` and `openai/gpt-5.6-terra` use the
   `reasoningEffort: "max"` option under `provider.openrouter.models`.
+  Also includes `permission.external_directory` — the authoritative list of
+  approved external paths outside the project root, generated and maintained
+  by the agent preflight workflow. Currently empty; paths are added per-project.
 - `agent/conductor.md` — opencode agent definition for the `conductor`
   (orchestration agent). Classification: Primary. Symlinked to `~/.config/opencode/agent` by
   `tools/install.sh` for auto-discovery. Conductor runs on a better AI model
@@ -133,6 +136,15 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   sample files synced).
 - Project config via `project_context.yaml` (lives in the project folder, one level
   above the `docs` and `src` repos); maintain `PROJECT_SUMMARY.md`.
+- **Filesystem Boundary & External Access**: project root is the default boundary;
+  external directories require `permission.external_directory` entries in the
+  project `opencode.json`. Broad patterns (`~/Projects/**`, `~/**`) prohibited.
+  Conductor autonomous mode requires a permission preflight before execution:
+  scans `project_context.yaml` and config for absolute external paths, compares
+  against authorized entries, asks user for confirmation, persists approved paths
+  in `opencode.json`. New legitimate paths discovered during execution follow the
+  same update path. Only project-specific paths are added; unrelated paths remain
+  at default "ask" policy.
 - Working conventions (don't code unless asked, use subagents, minimal diff, blocker
   protocol — never weaken/skip/mock contractual tests, never create git tags, keep
   samples in sync).
@@ -165,6 +177,15 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   dialogue with the user. Agent definition lives in
   `agent/conductor.md` (file-based opencode agent, symlinked to
   `~/.config/opencode/agent`).
+- Prior to autonomous-mode execution, the conductor runs a **permission preflight**
+  that scans `project_context.yaml` and config for absolute external paths, compares
+  against `permission.external_directory` in `opencode.json`, and requires user
+  confirmation before adding new paths. This prevents silent external access and
+  ensures broad parent/home patterns are never authorized.
+- The project-level `opencode.json` is the single source of truth for
+  external-directory permissions. Paths are added as `"<path>/**": "allow"` entries
+  and only for concrete, project-specific locations. Broad patterns are prohibited
+  by documented policy.
 - The conductor's detailed workflow was **split out of the agent file into six
   conductor-* skills** (`conductor-analyze`, `conductor-code-decomposition`,
   `conductor-noncode-decomposition`, `conductor-execute`, `conductor-escalate`,
