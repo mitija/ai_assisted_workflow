@@ -12,7 +12,7 @@ the date above. Official Cursor documentation is referenced at:
 - https://cursor.com/docs/subagents.md
 - https://cursor.com/docs/skills.md
 - https://cursor.com/docs/models-and-pricing.md
-- https://cursor.com/docs/cloud-agent.md
+- https://docs.cursor.com/cloud-agents
 
 **Methodology:** Repository inspection (agent definitions, skill files, config, install scripts)
 compared against current Cursor documentation. Where features depend on plan tier, version, or
@@ -57,7 +57,8 @@ landing page, changelog, and forum.
 
 | Component | Portability | Notes |
 |---|---|---|
-| **Root `AGENTS.md`** (workflow rules, conventions, DoD) | **Direct** | Drop into project root. Cursor respects root `AGENTS.md` and/or `.cursor/rules/*.mdc` with valid frontmatter. File-based discovery reads `.cursor/rules/*.mdc`; plain `.md` files inside `.cursor/rules/` are ignored. A symlink or copy from `agents/AGENTS.md` to the project root works directly. |
+| **Root `AGENTS.md`** (workflow rules, conventions, DoD) | **Direct** | Drop into project root. Cursor respects root `AGENTS.md` and/or `.cursor/rules/*.mdc` with valid frontmatter. File-based discovery reads `.cursor/rules/*.mdc`; plain `.md` files inside `.cursor/rules/` are ignored. `agents/AGENTS.md` is deployable project guidance; copy/adapt it into the target project root.
+This repository root `AGENTS.md` remains repository maintainer guidance and is a separate file. |
 | **General skills** (`coding-standards`, `handover`, `init-project`, `specification-methodology`, `test-scenarios`, `todo-list`) | **Direct** (as Cursor Agent Skills) | Each maps to `.cursor/skills/<name>/SKILL.md`. Retain canonical OpenCode skills under `skills/`; add symlinks or copies to `.cursor/skills/` for Cursor. |
 | **`project_context.template.yaml`** | **Direct** | YAML config readable by any Cursor agent. |
 | **Methodology documentation** (`docs/`, `docs/workflow/`) | **Direct** | Plain markdown, fully portable. |
@@ -147,9 +148,15 @@ Key mapping:
 | `reviewer` delegates to `verifier` for commands outside its allowlist | Reviewer invokes `/verifier` for commands it cannot run (no permission-gating, but prompt-based). |
 
 **Caveats:**
-- **Nesting:** Cursor does not support sub-agents recursively invoking sub-agents the way
-  OpenCode does (reviewer → verifier). Each agent runs in its own context and cannot spawn
-  further agents from within. The conductor owns all delegation; leaf agents are single-depth.
+- **Nesting:** Cursor supports bounded sub-agent nesting: the main agent and its direct
+  sub-agents may launch child sub-agents, but a sub-agent launched by another sub-agent
+  cannot launch deeper levels (see https://cursor.com/docs/subagents.md). This means the
+   conductor can spawn a reviewer that invokes a verifier, but the verifier cannot spawn
+   its own sub-agents. The repository's `reviewer.md` already includes `permission.task: {"*": deny, verifier: allow}`
+   and `permission.edit: deny` — a Cursor port would enforce `readonly: true` on the reviewer
+   but cannot technically reproduce the task-delegation allowlist; it relies on prompt instructions
+   to prevent the reviewer from delegating to any agent other than the verifier.
+   Leaf agents (verifier, escalate1, escalate2) are single-depth by design.
 - **Context isolation:** Each sub-agent invocation starts a fresh context; handover information
   (task prompt, expected outcome, verification criteria) must be included explicitly.
 - **Parallelism:** Independent ready tasks can run concurrently, but each requires explicit
@@ -159,7 +166,7 @@ Key mapping:
 **Overall verdict:** The conductor's core architectural pattern — "you own the thinking,
 delegate mechanical work" — is preservable. The phase structure, task graph execution,
 verification, escalation chain, and review all map to distinct sub-agent definitions.
-The main adjustments are explicit context handover and the single-depth sub-agent limit.
+The main adjustments are explicit context handover and the bounded (two-level) sub-agent depth.
 
 ### 3.4 Permission system
 
@@ -181,8 +188,9 @@ not per-command allowlists.
 
 OpenCode's `agent: { conductor: { model: "openrouter/openai/gpt-5.6-luna" }, ... }` assigns
 different models per role. Cursor supports per-agent `model` in `.cursor/agents/*.md`
-frontmatter using Cursor-specific model IDs (e.g. `gpt-5.6-sol`, `opus-4.8`, `deepseek-v4`,
-`inherit` for the session default).
+frontmatter using illustrative Cursor model IDs (e.g. `claude-opus-4-8`, `composer-2`,
+`gpt-5.6-sol`, `inherit` for the session default). These examples are illustrative and
+subject to current model availability.
 
 **Mapping:**
 
@@ -190,11 +198,11 @@ frontmatter using Cursor-specific model IDs (e.g. `gpt-5.6-sol`, `opus-4.8`, `de
 |---|---|---|
 | conductor | `openrouter/openai/gpt-5.6-luna` | `gpt-5.6-sol` or `inherit` |
 | reviewer | `openrouter/openai/gpt-5.6-luna` | Same as conductor |
-| escalate2 | `openrouter/openai/gpt-5.6-terra` | `gpt-5.6-terra` or `opus-4.8` |
-| committer | `openrouter/deepseek/deepseek-v4-flash` | `deepseek-v4` or `inherit` |
-| general | `openrouter/deepseek/deepseek-v4-flash` | Same |
-| verifier | `openrouter/deepseek/deepseek-v4-flash` | Same |
-| explore | `openrouter/deepseek/deepseek-v4-flash` | Same |
+| escalate2 | `openrouter/openai/gpt-5.6-terra` | `gpt-5.6-terra` or `claude-opus-4-8` |
+| committer | `openrouter/deepseek/deepseek-v4-flash` | `composer-2` or `inherit` |
+| general | `openrouter/deepseek/deepseek-v4-flash` | Same as committer |
+| verifier | `openrouter/deepseek/deepseek-v4-flash` | Same as committer |
+| explore | `openrouter/deepseek/deepseek-v4-flash` | Same as committer |
 
 **Caveats:**
 - Cursor model IDs differ from OpenRouter IDs. Exact names depend on the current Cursor model
@@ -232,7 +240,7 @@ workflow rules, root `AGENTS.md` suffices.
 | Provider routing (OpenRouter, custom API) | **Not available** | Cursor manages its own model provider infrastructure. |
 | Tool-level permission system (bash/edit/task) | **Not available** | Only `readonly: true` at agent level. |
 | `mode: primary/subagent/all` taxonomy | **Not available** | Invocation by explicit name or automation trigger. |
-| Sub-agent nesting (recursive depth) | **Not supported** | Sub-agents cannot spawn sub-agents. Conductor manages all delegation depth-1. |
+| Sub-agent nesting (recursive depth) | **Bounded** — main agent and direct sub-agents may launch child sub-agents; deeper recursion is blocked | Conductor can delegate to reviewer, which can invoke verifier — but verifier cannot spawn further agents. Repository safeguards (readonly, no task permission on leaf agents) are compatible. |
 | Dynamic skill loading via `skill` tool | **Partial** — same file format, same directory structure, different invocation mechanics (`/skill-name` vs `skill` tool) | Workflow logic must reference the Cursor invocation pattern. |
 
 ---
@@ -269,10 +277,15 @@ workflow rules, root `AGENTS.md` suffices.
 
 ### Phase 4 — Cursor-specific install documentation
 
-1. Extend `tools/install.sh` or add a Cursor counterpart (`tools/install-cursor.sh`) that:
-   - Symlinks or copies `.cursor/agents/` and `.cursor/skills/` into a shared config.
-   - Does not modify or remove existing OpenCode install logic.
-2. Optionally add `.cursor/rules/*.mdc` files for Odoo-specific or stack-specific rules.
+1. For the target project, commit `.cursor/agents/` and `.cursor/skills/` directly into the
+   project repository. These are project-local, not shared.
+2. For optional user-wide links that span multiple projects, use `~/.cursor/agents/` and
+   `~/.cursor/skills/` (symlinks or copies). The existing OpenCode installation remains under
+   `~/.config/opencode/` and is not affected.
+3. Do not create a single ambiguous shared target — the install script or documentation should
+   make the project-local vs user-wide scope explicit.
+4. The existing `tools/install.sh` is retained for OpenCode-only setups.
+5. Optionally add `.cursor/rules/*.mdc` files for Odoo-specific or stack-specific rules.
 
 ### Phase 5 — Conductor architecture adaptation
 
@@ -290,7 +303,7 @@ workflow rules, root `AGENTS.md` suffices.
 
 | File | Action | Notes |
 |---|---|---|
-| `agents/AGENTS.md` | **Port directly** | Already at project root via symlink/copy. |
+| `agents/AGENTS.md` | **Copy/adapt into target project root** | This repository's `agents/AGENTS.md` is deployable project guidance; copy/adapt it into the target project root `AGENTS.md`. The repository root `AGENTS.md` is separate maintainer guidance and stays unchanged. |
 | `agents/agent/conductor.md` | **Create `.cursor/agents/conductor.md`** | Translate frontmatter. Update phase instructions for Cursor invocation patterns. |
 | `agents/agent/committer.md` | **Create `.cursor/agents/committer.md`** | Translate frontmatter. Prompt body directly portable. |
 | `agents/agent/reviewer.md` | **Create `.cursor/agents/reviewer.md`** | Translate frontmatter. Add `readonly: true`. |
@@ -319,7 +332,7 @@ workflow rules, root `AGENTS.md` suffices.
 | **Parallel execution of independent tasks** | **Supported** — via background sub-agents |
 | **Command/tool permission allowlists** | **Not available** — no Cursor equivalent; prompt-enforced |
 | **Provider routing (OpenRouter, custom API)** | **Not available** — Cursor manages its own provider infrastructure |
-| **Sub-agent nesting (recursive delegation)** | **Not supported** — sub-agents cannot spawn sub-agents |
+| **Sub-agent nesting (recursive delegation)** | **Bounded (two-level)** — main agent and direct sub-agents may each launch child sub-agents; deeper levels are blocked |
 | **`opencode.json` per-role config** | **Not applicable** — model assignments migrate to `.cursor/agents/*.md` frontmatter; provider config is a Cursor infrastructure concern |
 | **`tools/install.sh`** | **Retain for OpenCode** — add Cursor install path alongside, do not replace |
 
@@ -330,12 +343,14 @@ workflow rules, root `AGENTS.md` suffices.
    prompt-enforced only.
 2. **Provider routing** — Cursor uses its own model infrastructure. You cannot route through
    OpenRouter or specify custom API endpoints.
-3. **Sub-agent nesting** — The conductor must delegate at depth 1; sub-agents cannot
-   recursively invoke their own sub-agents.
+3. **Sub-agent nesting** — The conductor can delegate to a reviewer that invokes a verifier
+   (two-level nesting), but deeper recursion is blocked. The repository's prompt-based
+   safeguards on leaf agents (verifier, escalate1, escalate2) prevent them from spawning
+   further agents; this is compatible with Cursor's bounded nesting model.
 4. **Discovery/installation semantics** — OpenCode's `~/.config/opencode/agent` file-based
    discovery differs from Cursor's project-local `.cursor/agents/`. The repo's symlink-based
    install script is OpenCode-specific; a Cursor counterpart is a straightforward addition.
 
 The conductor architecture — "one premium model directs work, delegates tasks to differentiated
-sub-agents" — is substantially preservable on Cursor. The gaps are in permission enforcement,
-provider choice, and nesting depth, not in the orchestration model itself.
+sub-agents" — is substantially preservable on Cursor. The gaps are in permission enforcement and
+provider choice, not in the orchestration model itself.
