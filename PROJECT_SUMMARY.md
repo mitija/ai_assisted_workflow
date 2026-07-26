@@ -11,7 +11,7 @@ Deliverables live in `agents/`.
 
 ## Current status
 Production-ready but still evolving, and internally consistent. No code/app component — this is a
-guidance/skill bundle for agents. The root-level `skills/` directory holds seven general skills
+guidance/skill bundle for agents. The root-level `skills/` directory holds ten general skills
 and six conductor-specific skills (internal orchestration steps).
 Linked skill tables are maintained in README.md, root AGENTS.md, and the deployable agents/AGENTS.md, documenting both categories.
 Session handover files (`HANDOVER*`) are gitignored at the root.
@@ -27,16 +27,29 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
 - `opencode.json` — project-level per-agent model assignments (merged with global config).
-  Current assignments: `conductor`, `reviewer`, `escalate1`, `plan` run on
-  `openrouter/openai/gpt-5.6-luna`; `escalate2` on
-  `openrouter/openai/gpt-5.6-terra`; `committer`, `build`, `explore`,
+  Current assignments: `analyst`, `conductor`, `reviewer`, `escalate1`, `escalate2` run on
+  `openrouter/openai/gpt-5.6-sol`; `committer` on
+  `openrouter/deepseek/deepseek-v4-flash`; `plan`, `build`, `explore`,
   `general`, `verifier` on `openrouter/deepseek/deepseek-v4-flash`. OpenRouter model
-  entries `openai/gpt-5.6-luna` and `openai/gpt-5.6-terra` use the
+  entry `openai/gpt-5.6-sol` uses the
   `reasoningEffort: "max"` option under `provider.openrouter.models`.
   Also includes `permission.external_directory` — the authoritative list of
   approved external paths outside the project root, generated and maintained
   by the agent preflight workflow. Currently empty; paths are added per-project.
-- `agent/conductor.md` — opencode agent definition for the `conductor`
+- `agent/analyst.md` — opencode agent definition for the `analyst`
+  (functional contract owner). Classification: Both (`mode: all`). Transforms high-level
+  human intent into a complete, defensible functional contract — requirements, business rules,
+  success criteria, traceability, documentation, and wireframes. Operates in autonomous or
+  guided mode. Orchestrates four lifecycle phases via analyst-* skills loaded on demand:
+  Phase 1 Intake (`analyst-intake`), Phase 2 Discovery (`analyst-discovery`),
+  Phase 3 Review (`analyst-review`), Phase 4 Baseline (`analyst-baseline`).
+  Escalates only Class C/D decisions (material business, security, scope, or blocking);
+  resolves Class A/B decisions autonomously. Governed by provenance requirements —
+  every requirement is labelled by origin (explicitly-requested, inferred-context,
+  domain-practice, etc.) and never silently presented as human-requested. Never implements
+  application code. Permission: `edit: allow`, `task: allow`, `bash` limited to read-only
+  inspection commands (`git status`, `git log`, `git diff`, `grep`, `ls`).
+- `agent/conductor.md` — ...
   (orchestration agent). Classification: Primary. Symlinked to `~/.config/opencode/agent` by
   `tools/install.sh` for auto-discovery. Conductor runs on a better AI model
   than sub-agents and **owns all thinking, planning, and decision-making**
@@ -98,17 +111,14 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   absent, ambiguous, or requires approval. May be invoked by `reviewer`,
   `escalate1`, or `escalate2` for commands outside their curated read-only
   allowlists.
+- `skills/analyst-intake/SKILL.md` — Phase 1 of the analyst workflow. Conducts initial high-level Q&A with the human to establish the problem, intended users, functional outcome, high-level success criteria, important constraints, explicit exclusions, major preferences, known integrations, and selected operating mode. Produces the objective brief. Determines whether sufficient analysis already exists or full discovery is needed.
+- `skills/analyst-discovery/SKILL.md` — Phase 2 of the analyst workflow. Transforms the confirmed objective brief into a complete, defensible functional contract through a structured 20-step discovery process. Evidence-first — inspects existing material before asking. Resolves non-blocking decisions autonomously, escalates consequential ones. Produces requirements, business rules, success criteria, verification definitions, wireframes, and intended documentation.
+- `skills/analyst-review/SKILL.md` — Phase 3 of the analyst workflow. Performs the requirements quality gate — checking every requirement for necessity, clarity, singularity, consistency, feasibility, testability, traceability, implementation independence, priority, visible assumptions, and scope. In guided mode, produces the functional validation package for human review and propagates all feedback across affected artefacts.
+- `skills/analyst-baseline/SKILL.md` — Phase 4 of the analyst workflow. Establishes and maintains the requirements baseline with stable identifiers, traceability, and consistency across the project lifecycle. Supports implementation (interpretation, change evaluation, scope protection), verification (evidence mapping), and completion (final documentation baseline). Maintains traceability from objective through high-level criteria, requirements, detailed criteria, verification, and evidence.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/handover/SKILL.md` — creates self-contained HANDOVER-xx.md at session end.
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
   with inferred defaults; asks the user only for what cannot be discovered.
-- `skills/spec-refinement/SKILL.md` — guided, one-question-at-a-time session that runs
-  *before* `specification-methodology`. Refines a rough/high-level requirement into a
-  precise, unambiguous freeform narrative at `docs/working/refined-requirements.md`,
-  clarifying entities, relationships, core manipulation intent, and key business rules
-  (and terminology) — deliberately non-exhaustive: defers full CRUD, roles, field types,
-  and exception flows to the full spec. Dynamic questioning (no fixed phases), always
-  offers a recommended answer, updates the narrative inline.
 - `skills/specification-methodology/SKILL.md` — 5-step spec writing (Models, Roles,
   Use Cases identification, Use Cases documentation, Review). Produces wiki-style
   `spec/` directory with individual files per model (`models/`, global/shared) and
@@ -151,7 +161,7 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
 - Security & Secrets: treat config values (esp. credentials) as secret; never emit them.
 - Communication & Output: concise responses, `file_path:line` references.
 - Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).
-- Skills: `coding-standards`, `handover`, `init-project`, `spec-refinement`, `specification-methodology`, `test-scenarios`, `todo-list`.
+- Skills: `analyst-intake`, `analyst-discovery`, `analyst-review`, `analyst-baseline`, `coding-standards`, `handover`, `init-project`, `specification-methodology`, `test-scenarios`, `todo-list`.
 
 ## What `AGENTS.md` (workspace root) covers
 - Meta-guidance for working on this repo itself.
@@ -219,6 +229,29 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   agent-run with human validation at each step and a "Wiki Integrity" check.
   Large-scope projects may split use cases under `epics/<epic>/` (one
   `<epic>_TESTS.md` each) while the data model stays global.
+- `analyst` agent created as the dedicated functional contract owner. Operates in
+  autonomous or guided mode with four lifecycle phases driven by analyst-* skills.
+  Governed by provenance requirements: every requirement carries an origin label
+  (explicitly-requested, inferred-context, domain-practice, etc.) and is never
+  silently presented as human-requested. Escalates only Class C/D (material)
+  decisions; resolves Class A/B autonomously.
+- `analyst-intake` skill (Phase 1): high-level Q&A producing a confirmed objective
+  brief. `analyst-discovery` skill (Phase 2): 20-step evidence-first discovery
+  process producing requirements, business rules, success criteria, verification
+  definitions, wireframes, and intended documentation. `analyst-review` skill
+  (Phase 3): requirements quality gate checking 11 per-requirement and 7 whole-set
+  criteria; guided mode produces a functional validation package. `analyst-baseline`
+  skill (Phase 4): stable identifiers, traceability (OBJ → HC → FR/BR → SC →
+  VER), consistency maintenance across the full lifecycle.
+- `spec-refinement` skill was removed and replaced by the analyst methodology.
+  The `specification-methodology` skill remains as a general-purpose spec authoring
+  tool, but is no longer a conductor-phase prerequisite — spec writing is the
+  analyst's responsibility when detailed requirements are needed.
+- The conductor's Phase 1 (Analyze) now includes an analyst readiness gate:
+  before proceeding to decomposition, the conductor must confirm a sufficient
+  functional analysis baseline exists. If not, it delegates to the analyst
+  sub-agent. The conductor owns the decision to delegate, the alignment check,
+  and acceptance of the baseline — not detailed elicitation.
 
 ## Planned / open
 - Consider an `agents/AGENTS.md` note on non-functional requirements (workflow §8.8 gap).

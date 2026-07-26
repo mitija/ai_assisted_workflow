@@ -224,10 +224,13 @@ General skills are reusable by any agent or user. Conductor-specific skills are 
 
 | Skill | When to load |
 |---|---|
+| [`analyst-baseline`](../skills/analyst-baseline/SKILL.md) | Phase 4 — requirements baseline and traceability |
+| [`analyst-discovery`](../skills/analyst-discovery/SKILL.md) | Phase 2 — structured discovery process |
+| [`analyst-intake`](../skills/analyst-intake/SKILL.md) | Phase 1 — objective brief and intake Q&A |
+| [`analyst-review`](../skills/analyst-review/SKILL.md) | Phase 3 — requirements quality gate and validation |
 | [`coding-standards`](../skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
 | [`handover`](../skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
 | [`init-project`](../skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
-| [`spec-refinement`](../skills/spec-refinement/SKILL.md) | A rough/ambiguous requirement needs refining before specification-methodology |
 | [`specification-methodology`](../skills/specification-methodology/SKILL.md) | Creating or writing software specifications |
 | [`test-scenarios`](../skills/test-scenarios/SKILL.md) | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
 | [`todo-list`](../skills/todo-list/SKILL.md) | Generating a TDD-based TODO list for entry-level programmers |
@@ -249,6 +252,7 @@ These are loaded automatically by the conductor agent during its workflow. They 
 
 | Agent | Role / Description | Invocable as |
 |---|---|---|
+| [`analyst`](agent/analyst.md) | Transforms high-level human intent into a complete, defensible functional contract. Owns requirements, business rules, success criteria, traceability, documentation, and wireframes. Operates in autonomous or guided mode. Orchestrates four lifecycle phases via analyst-* skills. Never implements code. | Both |
 | [`conductor`](agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
 | [`committer`](agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
 | [`reviewer`](agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Both |

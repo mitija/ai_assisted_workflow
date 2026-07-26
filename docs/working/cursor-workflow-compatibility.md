@@ -100,7 +100,7 @@ agents to prevent edits, and rely on prompt instructions for finer-grained comma
 
 ### 3.2 Skill loading mechanism
 
-**Files affected:** `skills/conductor-*/SKILL.md` (6 files), `skills/<general>/*/SKILL.md` (7 files)
+**Files affected:** `skills/conductor-*/SKILL.md` (6 files), `skills/<general>/*/SKILL.md` (10 files)
 
 OpenCode's `skill` tool injects skill instructions into the conversation dynamically. Cursor's
 Agent Skills feature (`/skill-name` in chat or always-on configuration) provides the equivalent
@@ -116,10 +116,13 @@ mechanism using `.cursor/skills/<name>/SKILL.md` with `name`/`description` front
 | `conductor-execute/SKILL.md` | `.cursor/skills/conductor-execute/SKILL.md` | Same. Adapt parallel-spawning instructions for Cursor sub-agent model. |
 | `conductor-escalate/SKILL.md` | `.cursor/skills/conductor-escalate/SKILL.md` | Same. |
 | `conductor-report/SKILL.md` | `.cursor/skills/conductor-report/SKILL.md` | Same. |
+| `analyst-intake/SKILL.md` | `.cursor/skills/analyst-intake/SKILL.md` | Same. |
+| `analyst-discovery/SKILL.md` | `.cursor/skills/analyst-discovery/SKILL.md` | Same. |
+| `analyst-review/SKILL.md` | `.cursor/skills/analyst-review/SKILL.md` | Same. |
+| `analyst-baseline/SKILL.md` | `.cursor/skills/analyst-baseline/SKILL.md` | Same. |
 | `coding-standards/SKILL.md` | `.cursor/skills/coding-standards/SKILL.md` | General skill — available via `/coding-standards`. |
 | `handover/SKILL.md` | `.cursor/skills/handover/SKILL.md` | Same. |
 | `init-project/SKILL.md` | `.cursor/skills/init-project/SKILL.md` | Same. |
-| `spec-refinement/SKILL.md` | `.cursor/skills/spec-refinement/SKILL.md` | Same. |
 | `specification-methodology/SKILL.md` | `.cursor/skills/specification-methodology/SKILL.md` | Same. |
 | `test-scenarios/SKILL.md` | `.cursor/skills/test-scenarios/SKILL.md` | Same. |
 | `todo-list/SKILL.md` | `.cursor/skills/todo-list/SKILL.md` | Same. |
