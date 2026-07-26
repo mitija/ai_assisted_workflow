@@ -49,8 +49,15 @@ local/
 local/tmp/
 ```
 
-Use `Bash("mkdir -p ...")` for each missing directory. Do **not** create them
-if the project already has a different layout.
+If the standard directories already exist (i.e. the project uses the standard
+layout) but `local/tmp/` is missing, create only `local/tmp/`:
+
+```
+local/tmp/
+```
+
+Use `Bash("mkdir -p ...")` for each missing directory. Do **not** create the
+standard skeleton or `local/tmp/` if the project already has a different layout.
 
 The `local/tmp/` directory is the project-local location for temporary files;
 prefer it over system `/tmp` for project work.
