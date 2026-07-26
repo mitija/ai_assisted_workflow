@@ -16,6 +16,19 @@ You (the conductor) own the analysis. Do the reasoning yourself — only delegat
 - What is the user's goal? State it back to yourself.
 - What does "done" look like? What deliverables or outcomes signal completion?
 
+### 1a. Determine and record modes
+
+Determine both `interaction_mode` and `analysis_mode`:
+
+- **interaction_mode**: interactive (default) or autonomous (explicitly requested).
+  Controls ambiguity-resolution behaviour throughout the run.
+- **analysis_mode**: guided or autonomous. Controls the analyst's human-in-the-loop
+  policy during functional analysis. If the analyst will be invoked, the analyst
+  confirms or selects the analysis_mode during its intake phase. If existing
+  analysis suffices, record the analysis_mode from context.
+
+State both modes and record them. The report phase receives both values.
+
 ### 1b. Confirm filesystem boundary (autonomous mode only)
 
 If running in autonomous mode and the preflight was not already executed by the
@@ -81,8 +94,8 @@ sufficient functional analysis already exists to proceed to decomposition.
 **Sufficiency criteria** — the minimum required before decomposition can begin:
 
 1. An **objective brief** exists (or can be confirmed from the user's request
-   directly) that captures the functional objective, high-level success
-   criteria, constraints, scope boundaries, and selected operating mode.
+   directly) that captures the functional objective, high-level
+   criteria, constraints, scope boundaries, and selected analysis_mode.
 2. **Functional requirements** are defined with clear statements and
    traceability to the objective.
 3. **Detailed success criteria and verification methods** exist for every
@@ -97,13 +110,19 @@ If these criteria are met, the analysis is sufficient. Proceed to step 6.
 
 If these criteria are **not** met, delegate to the **`analyst` sub-agent**:
 
-1. Spawn the analyst with the current objective, context, and operating mode.
-2. In **interactive mode**: the analyst will conduct its initial intake Q&A
-   with the human.
-3. In **autonomous mode**: the analyst proceeds with intake, discovery,
-   review, and baseline (pausing only for Class C/D decisions).
-4. The analyst runs its four lifecycle phases (intake → discovery → review →
-   baseline) autonomously.
+1. Spawn the analyst with the current objective, context, and analysis_mode.
+2. The analyst conducts intake using the provided analysis_mode, selects and
+   records it, then proceeds through its single four-phase sequence:
+   intake → discovery → review → baseline.
+3. **In guided `analysis_mode`:**
+   - The analyst pauses for objective-brief confirmation during intake.
+   - Only blocking Class C and all Class D decisions interrupt earlier phases
+     (intake, discovery). Non-blocking Class C decisions proceed without pausing.
+   - One consolidated functional validation gate runs during analyst-review.
+4. **In autonomous `analysis_mode`:**
+   - The analyst does **not** make Class C or Class D decisions independently.
+     Both Class C and D stop and ask immediately, per the current analyst policy.
+   - The objective brief confirmation remains mandatory.
 5. After the analyst completes, **read its output** (objective brief,
    requirements baseline, traceability) via the `explore` sub-agent.
 

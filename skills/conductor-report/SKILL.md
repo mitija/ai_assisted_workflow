@@ -16,11 +16,15 @@ You (the conductor) have all the data in memory from the completed run. Do **not
 Collect the following into a structured form you can pass to the `general` sub-agent:
 
 - **Goal** — the original request / what was supposed to be done.
-- **Mode** — interactive or autonomous. If autonomous, the list of ambiguities encountered and assumptions made.
-- **Overall status** — `complete` (graph fully executed) or `aborted` (escalation exhausted).
+- **interaction_mode** — interactive or autonomous.
+- **analysis_mode** — guided or autonomous (from the analyze phase).
+- **Overall status** — `complete` (graph fully executed), `partial` (executed with deferred items or rejected human outcome), or `aborted` (escalation exhausted).
 - **Task count** — how many tasks completed successfully vs. total tasks in the graph.
 - **Per-task detail**, for each task in graph order: id, description, dependencies, the full prompt given to the executor, the verification performed and its result (pass/fail), the commit made (if any), and final status (passed / failed / not-started).
 - **Review rounds**: for each reviewer invocation, record the round number, the reviewer's findings (counts per severity and key observations), and the conductor's resolution (remedial tasks created, suggestions implemented or advisory, any re-review outcome).
+- **Analyst traceability gate** — gate status (`passed`, `passed with gaps`, or `not passed`), evidence mapping summary, limitations list, documentation discrepancies.
+- **Functional-outcome check** — overall result (`pass`, `partial`, `gap`), per-criterion detail with evidence references.
+- **Final human outcome** — decision (approved, rejected, accepted with caveats), caveats text.
 
 ### 2. Delegate report writing
 
@@ -38,10 +42,11 @@ The report must contain:
 # Conductor Report — <YYYYMMDD-HHMM>
 
 **Goal:** <what was supposed to be done>
-**Mode:** interactive | autonomous
-**Status:** complete | aborted
+**Interaction mode:** interactive | autonomous
+**Analysis mode:** guided | autonomous
+**Status:** complete | partial | aborted
 **Tasks completed:** X / Y
-**Ambiguities** (autonomous mode only):
+**Ambiguities** (autonomous interaction mode only):
 - <ambiguity> → assumed <assumption>
 
 ## Task Details
@@ -54,7 +59,21 @@ The report must contain:
 
 For each task, also include the full prompt that was given to the executor (below the table or in an appendix).
 
-### 4. Review section
+### 4. Analyst traceability gate section
+
+After the task details, include an analyst traceability gate section:
+
+```markdown
+## Analyst Traceability Gate
+
+**Gate status:** passed | passed with gaps | not passed
+
+<if not passed or passed with gaps: description of limitations, deferred criteria, documentation discrepancies>
+
+**Evidence mapping:** <summary of test → requirement → criteria traceability>
+```
+
+### 5. Review section
 
 After the task details, include a review section:
 
@@ -72,6 +91,27 @@ review had non-blocking warnings or suggestions, note them explicitly — do not
 claim "No tasks" means no findings of any kind. Distinguish between "no
 critical/blocking findings" and a completely clean review.
 
-### 5. Final summary
+### 6. Outcome sections
+
+After the review section, include functional outcome and final human outcome:
+
+```markdown
+## Functional Outcome Check
+
+**Overall result:** pass | partial | gap
+
+| Criterion | Result | Evidence |
+|-----------|--------|----------|
+| <criterion 1> | pass | <test/verification ref> |
+| <criterion 2> | partial | <test/verification ref, known gap> |
+
+## Final Human Outcome
+
+**Decision:** approved | rejected | accepted with caveats
+
+<if caveats: description>
+```
+
+### 7. Final summary
 
 After the report is written, give the user a concise summary and the report's path.
