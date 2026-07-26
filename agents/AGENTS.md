@@ -30,29 +30,57 @@ that are tagged when ready, while `working/` contains versioned project
 documentation work. Do not treat unversioned workspace-level `local/` material as
 contractual.
 
-- **The spec is the contract.** If behaviour is not in the spec or the tests, it
-  is not required. Do not invent requirements.
-- **Never fill gaps with assumptions.** A genuine ambiguity is a blocker: stop and
-  ask the user rather than guessing. Ask **one question at a time** and wait for the
-  answer before asking the next, so the user can think each through. For a complex
-  question, **unpack it first** — state the ambiguity, why it matters, the options and
-  their trade-offs, and your recommendation — then ask. Do not batch unrelated
-  questions into a single dump. Do not work ahead of an unresolved blocker; building
-  against an open question only produces rework.
-- **No mid-flight spec changes.** If a question reveals a real gap, the spec/tests
-  are updated and re-tagged first; then implement against the new tag. Do not edit
-  customer-facing spec/test docs yourself unless explicitly asked.
+### Phase-specific rules
+
+These rules distinguish the two phases of work — analysis (drafting the
+functional contract) and implementation (building against a frozen baseline).
+
+#### During analysis
+
+The analyst owns the functional contract: authoring requirements, business
+rules, success criteria, documentation, and wireframes. The analyst may:
+
+- Derive **Class A** (explicitly stated) and **Class B** (logically entailed)
+  requirements and decisions, provided each carries explicit provenance, a
+  confidence assessment, rationale, and impact analysis.
+- Make **Class C** (design-domain judgement) and **Class D** (trivial/tooling)
+  decisions autonomously following the analyst decision policy.
+- Author and maintain all functional documentation under `docs/working/` and
+  prepare artefacts for `docs/customer-facing/` before a tag freeze.
+
+The analyst must never implement code.
+
+#### During implementation (against a frozen baseline)
+
+Implementation agents work against an immutable tagged baseline:
+
+- **The spec is the contract.** If behaviour is not in the spec or the tests,
+  it is not required. Do not invent requirements. Do not fill functional gaps
+  or silently alter the contract.
+- **Stop on real ambiguity.** A genuine ambiguity that affects implementation
+  is a blocker: stop and ask the user rather than guessing. Ask **one question
+  at a time** and wait for the answer before asking the next. For a complex
+  question, **unpack it first** — state the ambiguity, why it matters, the
+  options and their trade-offs, and your recommendation — then ask. Do not
+  batch unrelated questions into a single dump. Do not work ahead of an
+  unresolved blocker; building against an open question only produces rework.
+- **No silent doc edits.** Implementation agents cannot silently edit
+  `docs/customer-facing/` spec/test documents. The analyst owns authoring and
+  maintaining functional documentation. If implementation reveals a gap that
+  changes contractual behaviour, follow the discovery sequence (see
+  analyst-baseline skill).
 - **Tests are executable spec, and tests win.** Every business rule is a
   specification-level, contractual test scenario in `<epic>_TESTS.md` (see the
   `test-scenarios` skill for the format). Derive automated tests from these
   scenarios. If the spec and the tests disagree, the tests are authoritative —
-  flag the discrepancy to the user. Any extra tests you add during implementation
-  to strengthen the build are non-contractual and separate from these.
-- **Work against the docs tag.** Specs and tests live in a separate documentation
-  repo, tagged at each freeze (e.g. `spec-260513`). Read the current spec and
-  TESTS docs at that tag before implementing. Their location is in
-  `project_context.yaml`. Record the docs tag used for implementation so the
-  source repo can always be traced back to the exact specification state.
+  flag the discrepancy to the user. Any extra tests you add during
+  implementation to strengthen the build are non-contractual and separate from
+  these.
+- **Work against the docs tag.** Specs and tests live in a separate
+  documentation repo, tagged at each freeze (e.g. `spec-260513`). Read the
+  current spec and TESTS docs at that tag before implementing. Their location
+  is in `project_context.yaml`. Record the docs tag used for implementation so
+  the source repo can always be traced back to the exact specification state.
 
 ### Implementation deliverables
 At the end of a cycle, produce:

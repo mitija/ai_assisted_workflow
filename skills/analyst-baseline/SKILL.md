@@ -109,6 +109,25 @@ The analyst:
   requirements
 - Maintains traceability between approved intent and implementation
 
+##### Discovery that changes frozen contractual behaviour
+
+When an implementation agent identifies a genuine gap or discovery that would
+change the frozen contractual behaviour in `docs/customer-facing/`, the
+following sequence is mandatory:
+
+1. **Stop implementation.** The implementation agent must stop and report the
+   finding rather than working around it or silently altering behaviour.
+2. **Analyst updates requirements.** The analyst updates the affected
+   requirements, specification, and contractual tests in `docs/working/`,
+   propagating traceability through the full chain (OBJ → HC → FR/BR/NFR → SC
+   → VER).
+3. **Human reviews and tags.** The human reviews the updated artefacts. When
+   satisfied, the human creates a new docs tag (e.g. `spec-260714`). **AI
+   never creates tags.**
+4. **Implementation resumes against new tag.** Implementation resumes only
+   against the new tag. The implementation agent re-reads the current spec and
+   tests at the new tag before continuing.
+
 ### During verification
 
 The analyst ensures:
