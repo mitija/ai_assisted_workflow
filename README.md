@@ -59,7 +59,11 @@ the start of each session.
   weaker or less standardized verification paths.
 - The framework is production-ready for its core use case but remains evolving;
   tooling, git fluency, environment setup, and the analyst/conductor split impose
-  adoption costs.
+   adoption costs.
+  Reduce adoption cost incrementally: start with `project_context.yaml` and the
+  conductor for bounded tasks, introduce the analyst baseline and traceability for
+  consequential or ambiguous work, then add frozen specifications and contractual
+  tests as code flows mature. Trivial tasks do not require the full process.
 
 ## What the repository contains
 
@@ -87,7 +91,7 @@ tools/           Installation scripts and utilities
 General skills are reusable by any agent or user. Conductor-specific skills are
 loaded automatically by the conductor during its workflow.
 
-### General skills
+### Analyst lifecycle skills
 
 | Skill | Description |
 |---|---|
@@ -95,6 +99,11 @@ loaded automatically by the conductor during its workflow.
 | [`analyst-discovery`](skills/analyst-discovery/SKILL.md) | Phase 2: evidence-first functional-contract discovery. |
 | [`analyst-review`](skills/analyst-review/SKILL.md) | Phase 3: requirements quality gate and guided validation package. |
 | [`analyst-baseline`](skills/analyst-baseline/SKILL.md) | Phase 4: stable IDs, traceability, and evidence mapping. |
+
+### Other general skills
+
+| Skill | Description |
+|---|---|
 | [`coding-standards`](skills/coding-standards/SKILL.md) | Standards for application code, currently logging. |
 | [`handover`](skills/handover/SKILL.md) | Create session-end handover documents. |
 | [`init-project`](skills/init-project/SKILL.md) | Initialize or inspect `project_context.yaml`. |
