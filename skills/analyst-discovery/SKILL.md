@@ -133,7 +133,7 @@ OPS-xxx, or DOC-xxx).
 For every requirement, record:
 
 - **Provenance** — how it was derived (explicitly-requested, inferred-context,
-  inherited, domain-practice, design-decision, risk-control)
+  inherited, domain-practice, design-decision, risk-control, unresolved)
 - **Confidence** — high/medium/low assessment
 - **Rationale** — why this requirement exists
 - **Impact** — cost, scope, or risk impact if missing
@@ -151,7 +151,9 @@ From the Q&A, domain research, and entity models, extract:
 - authorisation rules (who can do what)
 - sequencing rules (what must happen before what)
 
-Record each as BR-xxx with the rule statement, rationale, and source.
+Record each as BR-xxx with the rule statement, rationale, source, and exactly one
+canonical provenance label (explicitly-requested, inferred-context, inherited,
+domain-practice, design-decision, risk-control, unresolved).
 
 ### Step 9 — Analyse exceptions, failures, recovery and edge cases
 
@@ -308,12 +310,13 @@ Fix any issues found. Record findings.
 
 Consolidate everything into a coherent baseline:
 
-- Requirements (functional, business rules, non-functional) with stable
-  identifiers, statements, rationale, provenance, and priority
+- Requirements (functional FR, business rules BR, non-functional NFR,
+  operational OPS, documentation DOC) with stable identifiers, statements,
+  rationale, provenance, and priority
 - Detailed success criteria with high-level criterion mappings
 - Verification methods
-- Traceability links: objective → high-level criterion → requirement →
-  detailed criterion → verification method
+- Traceability links: objective → high-level criterion → requirement
+  (FR/BR/NFR/OPS/DOC) → detailed criterion → verification method
 - Assumptions, decisions (with rationale), risks, known limitations
 - Intended documentation
 - Wireframes (where applicable)
@@ -322,7 +325,8 @@ Consolidate everything into a coherent baseline:
 
 The complete requirements baseline, ready for the quality gate (Phase 3). All
 artefacts are internally consistent and traceable. The baseline explicitly
-includes functional, non-functional, operational, and documentation requirements,
+includes functional (FR), business rules (BR), non-functional (NFR),
+operational (OPS), and documentation (DOC) requirements,
 each with provenance, confidence, rationale, impact, success criteria,
 verification, and traceability. Non-applicable categories are documented with
 rationale.
@@ -330,10 +334,12 @@ rationale.
 ## Quality checklist
 
 - [ ] All 20 steps completed (skipped steps documented with rationale)
-- [ ] Every requirement has a provenance label
+- [ ] Every requirement (FR/NFR/OPS/DOC) has a provenance label
+- [ ] Every business rule (BR) has a provenance label
 - [ ] Every requirement has at least one detailed success criterion
 - [ ] Every detailed success criterion maps to a high-level criterion
 - [ ] Every mandatory requirement has a verification method
+- [ ] Provenance and traceability are verified for requirements and business rules across all five classes (FR/BR/NFR/OPS/DOC)
 - [ ] All Class A/B decisions resolved and recorded; Class B flagged for validation package in guided mode
 - [ ] All Class C decisions handled per mode (asked immediately in autonomous; deferred to validation package or asked immediately in guided)
 - [ ] All Class D decisions stopped and asked immediately in both modes

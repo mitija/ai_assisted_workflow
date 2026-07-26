@@ -260,7 +260,7 @@ Sections exceeding 40 lines extract to standalone files. All five steps run
    definitions, wireframes, and intended documentation. `analyst-review` skill
   (Phase 3): requirements quality gate checking 11 per-requirement and 7 whole-set
   criteria; guided mode produces a functional validation package. `analyst-baseline`
-skill (Phase 4): stable identifiers, traceability (OBJ → HC → FR/BR → SC →
+skill (Phase 4): stable identifiers, traceability (OBJ → HC → FR/BR/NFR/OPS/DOC → SC →
 VER), consistency maintenance across the full lifecycle, and a documentation/traceability gate
     after verification/evidence mapping. The gate returns only passed or not passed (documentation
     domain); it does not produce a complete/partial/aborted verdict. That overall status is
