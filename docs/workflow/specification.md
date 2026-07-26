@@ -9,7 +9,7 @@ Requirements are no longer produced through a human-driven refinement interview.
 3. **Review** — structured quality gate against per-requirement and whole-set criteria. In guided mode, produces a functional validation package for human review. Propagates feedback across all artefacts.
 4. **Baseline** — establishes traceability with stable identifiers (OBJ-xxx, HC-xxx, FR-xxx, BR-xxx, NFR-xxx, OPS-xxx, SC-xxx, VER-xxx, DOC-xxx, DEC-xxx, RISK-xxx). Maintains consistency across all functional artefacts throughout implementation, verification, and completion.
 
-Every requirement records its provenance — explicitly requested, inferred from context, inherited from standards, derived from domain practice, selected as a design decision, or required as a risk control. The governing rule: **never silently present an inferred requirement as though it was explicitly requested by the human.**
+Every requirement and important business rule records its provenance — exactly one of: explicitly-requested, inferred-context, inherited, domain-practice, design-decision, risk-control, unresolved. Provenance is distinct from Class A-D decision impact. The governing rule: **never silently present an inferred requirement as though it was explicitly requested by the human.**
 
 For full details of the analyst's process, see the [analyst agent definition](../../agents/agent/analyst.md) and the four `analyst-*` skills (intake, discovery, review, baseline).
 

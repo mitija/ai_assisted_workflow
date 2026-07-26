@@ -48,9 +48,9 @@ Class A-D decisions are impact-based (A=minor/reversible, B=low-impact functiona
    provenance system. Class C handling is mode-dependent: ask immediately in autonomous
    mode; defer non-blocking to the guided validation package. Class D always stops and
    asks immediately. Class A/B resolved autonomously. Governed by provenance —
-   every requirement carries exactly one label (explicitly-requested, inferred-context,
-   inherited, domain-practice, design-decision, risk-control, unresolved) and is never
-   silently presented as human-requested. Analysis mode (autonomous/guided) is an
+every requirement and important business rule carries exactly one label (explicitly-requested, inferred-context,
+    inherited, domain-practice, design-decision, risk-control, unresolved) and is never
+    silently presented as human-requested. Analysis mode (autonomous/guided) is an
    independent value selected at intake, distinct from the conductor's interaction
    style or implementation autonomy. Never implements
   application code. Permission: `edit: allow`, `task: allow`, `bash` limited to read-only
@@ -247,10 +247,10 @@ Sections exceeding 40 lines extract to standalone files. All five steps run
    C=material/consequential, D=blocking/high-risk) and distinct from the seven-value
    provenance system. Class C handling is mode-dependent (ask immediately in autonomous;
    defer non-blocking to guided validation package); Class D always stops and asks
-   immediately; Class A/B resolved autonomously. Provenance is a separate concept —
-   every requirement carries exactly one label (explicitly-requested, inferred-context,
-   inherited, domain-practice, design-decision, risk-control, or unresolved) and is
-   never silently presented as human-requested. Analysis mode is an independent value
+immediately; Class A/B resolved autonomously. Provenance is a separate concept —
+    every requirement and important business rule carries exactly one label (explicitly-requested, inferred-context,
+    inherited, domain-practice, design-decision, risk-control, or unresolved) and is
+    never silently presented as human-requested. Analysis mode is an independent value
    selected at intake, distinct from the conductor's interaction style or implementation
    autonomy.
 - `analyst-intake` skill (Phase 1): high-level Q&A producing a confirmed objective

@@ -55,7 +55,7 @@ rules, success criteria, documentation, and wireframes. The analyst may:
 The analyst must never implement code.
 
 Requirement provenance is a separate seven-value concept, not Class A-D.
-Every requirement carries exactly one provenance label:
+Every requirement and important business rule carries exactly one provenance label:
 explicitly-requested, inferred-context, inherited, domain-practice,
 design-decision, risk-control, or unresolved. Never present an inferred
 requirement as though it was explicitly requested.
