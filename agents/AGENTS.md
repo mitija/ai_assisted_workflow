@@ -40,15 +40,25 @@ functional contract) and implementation (building against a frozen baseline).
 The analyst owns the functional contract: authoring requirements, business
 rules, success criteria, documentation, and wireframes. The analyst may:
 
-- Derive **Class A** (explicitly stated) and **Class B** (logically entailed)
-  requirements and decisions, provided each carries explicit provenance, a
-  confidence assessment, rationale, and impact analysis.
-- Make **Class C** (design-domain judgement) and **Class D** (trivial/tooling)
-  decisions autonomously following the analyst decision policy.
+- Resolve **Class A** (explicit or entailed low-risk factual) decisions
+  autonomously with provenance and rationale.
+- Resolve **Class B** (low-impact functional) decisions autonomously with
+  provenance and guided-package visibility.
+- Handle **Class C** (material/consequential) decisions: in autonomous mode
+  ask immediately; in guided mode defer non-blocking to the validation
+  package and ask blocking ones immediately.
+- Handle **Class D** (blocking/high-risk) decisions: always stop and ask
+  immediately, never decide autonomously.
 - Author and maintain all functional documentation under `docs/working/` and
   prepare artefacts for `docs/customer-facing/` before a tag freeze.
 
 The analyst must never implement code.
+
+Requirement provenance is a separate seven-value concept, not Class A-D.
+Every requirement carries exactly one provenance label:
+explicitly-requested, inferred-context, inherited, domain-practice,
+design-decision, risk-control, or unresolved. Never present an inferred
+requirement as though it was explicitly requested.
 
 #### During implementation (against a frozen baseline)
 
@@ -58,17 +68,18 @@ Implementation agents work against an immutable tagged baseline:
   it is not required. Do not invent requirements. Do not fill functional gaps
   or silently alter the contract.
 - **Stop on real ambiguity.** A genuine ambiguity that affects implementation
-  is a blocker: stop and ask the user rather than guessing. Ask **one question
-  at a time** and wait for the answer before asking the next. For a complex
-  question, **unpack it first** — state the ambiguity, why it matters, the
-  options and their trade-offs, and your recommendation — then ask. Do not
+  is a blocker: stop and route to the analyst for functional interpretation rather than
+  guessing. When the analyst escalates a question to the human, ask **one
+  question at a time** and wait for the answer before asking the next. For a
+  complex question, **unpack it first** — state the ambiguity, why it matters,
+  the options and their trade-offs, and your recommendation — then ask. Do not
   batch unrelated questions into a single dump. Do not work ahead of an
   unresolved blocker; building against an open question only produces rework.
 - **No silent doc edits.** Implementation agents cannot silently edit
   `docs/customer-facing/` spec/test documents. The analyst owns authoring and
   maintaining functional documentation. If implementation reveals a gap that
-  changes contractual behaviour, follow the discovery sequence (see
-  analyst-baseline skill).
+  changes contractual behaviour, follow the analyst-baseline discovery sequence
+  and require a new human-created docs tag.
 - **Tests are executable spec, and tests win.** Every business rule is a
   specification-level, contractual test scenario in `<epic>_TESTS.md` (see the
   `test-scenarios` skill for the format). Derive automated tests from these
