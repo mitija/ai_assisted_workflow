@@ -140,8 +140,9 @@ spec:
   current_tag:           # Spec freeze tag to implement against, e.g. "spec-260513"
 
 # Generic build / quality commands. Fill in for non-Odoo projects, or in addition
-# to the Odoo section below. Agents run these for build/lint/typecheck/format and
-# before declaring a task done. (Odoo tests use odoo.scripts.run_tests instead.)
+# to the Odoo section below. Agents use configured commands rather than guessing
+# or inventing them, and run each applicable check before completion. (Odoo tests
+# use odoo.scripts.run_tests instead.)
 commands:
   install:               # e.g. "npm install" / "pip install -e ."
   build:                 # e.g. "npm run build"

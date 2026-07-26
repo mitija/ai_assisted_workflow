@@ -1,10 +1,11 @@
-# AGENTS.md
+# Agent Guidance for Long-Horizon Work
 
-This file provides guidance to AI agents when working with code in this repository.
-
-## Supported Spec-Driven Coding Workflow
-
-This workflow is one mature, supported capability within the [broader Agentic Framework for Long-Horizon AI Work](../docs/AI_assisted_development_workflow.md). The framework also supports non-coding long-horizon work — documentation, research, analysis, planning, configuration, and project setup — and current improvement effort prioritises those areas. The rules below govern the spec-driven coding path.
+This file provides generic guidance for AI agents conducting long-horizon work in a
+target-project workspace. It covers coding and non-coding work — including
+documentation, research, analysis, planning, configuration, and project setup.
+Spec-driven coding is the mature supported path within the [broader Agentic
+Framework for Long-Horizon AI Work](../docs/AI_assisted_development_workflow.md);
+the rules below apply proportionately to either path.
 
 The project workspace is intentionally one level above the git repositories. Treat
 the workspace root as the operational project folder, not as a single git repo:
@@ -29,6 +30,28 @@ Within `docs`, `customer-facing/` contains the contractual spec/test artifacts
 that are tagged when ready, while `working/` contains versioned project
 documentation work. Do not treat unversioned workspace-level `local/` material as
 contractual.
+
+### Role and lifecycle ownership
+
+- The **human** owns intent, priorities, consequential decisions, and final
+  judgement of whether the functional outcome is acceptable.
+- The **analyst** owns the functional contract and evidence model across its full
+  lifecycle: intake, discovery, review, and baseline. This includes requirements,
+  business rules, success criteria, verification definitions, traceability,
+  documentation, wireframes, and evidence mapping.
+- The **conductor** owns delivery orchestration across six phases: Analyze,
+  Decomposition, Execute, Review, Escalate, and Report. The conductor does not
+  replace the analyst's functional ownership or the human's approval gates.
+
+`analysis_mode` and `interaction_mode` are independent values. `analysis_mode`
+(`autonomous` or `guided`) governs the analyst's functional-contract lifecycle and
+human validation policy. `interaction_mode` (`autonomous` or `interactive`)
+governs whether the conductor pauses for ambiguity during delivery. Record both;
+never infer one from the other. Autonomous operation does not bypass mandatory
+human gates: objective confirmation, required functional validation, Class C/D
+decisions, external-permission approval, final review, or final human judgement
+remain blocking where applicable. A genuine blocker always stops the affected
+work; do not guess, weaken tests, or work ahead of unresolved interpretation.
 
 ### Phase-specific rules
 
@@ -60,7 +83,7 @@ explicitly-requested, inferred-context, inherited, domain-practice,
 design-decision, risk-control, or unresolved. Never present an inferred
 requirement as though it was explicitly requested.
 
-#### During implementation (against a frozen baseline)
+#### During implementation (coding against a frozen baseline)
 
 Implementation agents work against an immutable tagged baseline:
 
@@ -93,31 +116,43 @@ Implementation agents work against an immutable tagged baseline:
   is in `project_context.yaml`. Record the docs tag used for implementation so
   the source repo can always be traced back to the exact specification state.
 
-### Implementation deliverables
-At the end of a cycle, produce:
-1. Source code, committed against the docs tag.
-2. An automated test suite covering every state-table row and every cross-cutting
-   invariant in scope.
-3. A short development report: summary of work tied to use cases/test scenarios,
-   a test-coverage statement (what's covered, what isn't, why), any spec deviations
-   (normally zero), and notable design decisions not dictated by the spec.
+### Delivery evidence
+
+For **spec-driven coding**, implement against the immutable docs tag and produce
+the source changes, automated tests for the contractual scenarios and invariants
+in scope, and a development report tied to the requirements, use cases, evidence,
+coverage, deviations, and design decisions. Commit/tag actions follow the project
+workflow; this guidance never authorizes an agent to create a tag.
+
+For **non-code work**, use the explicit acceptance criteria and evidence defined
+for that work. Produce the applicable artefacts, verification results, traceability,
+and outcome report. Do not impose source-code, automated-test, docs-tag, or commit
+deliverables where they do not apply.
 
 ## Build, Lint & Verify
 Build, lint, typecheck, format, and generic test commands live in the `commands:`
 section of `project_context.yaml` (the Odoo test wrapper is separate — see
-@AGENTS.odoo.md). Use those commands rather than guessing them.
-- Run lint, typecheck, and build before considering a task done. Do not introduce
-  new lint or type errors.
-- Only auto-format or auto-fix files you are already changing. Do not reformat or
-  re-fix files that are otherwise outside the scope of your change.
+@AGENTS.odoo.md). Use configured commands rather than guessing or inventing them.
+Run each applicable check before completion; if a check is not applicable, record
+why. Do not introduce new lint or type errors. Only auto-format or auto-fix files
+already being changed; do not reformat or re-fix unrelated files.
 
 ## Definition of Done
-Before reporting a task complete, confirm all of the following:
-- Every in-scope automated test passes (each state-table row and every cross-cutting
-  invariant in scope).
-- Lint, typecheck, and build are clean.
-- The development report is written (see Implementation deliverables).
-- Test-doc and config-sample files are in sync (see Working Conventions).
+Before reporting a task complete, confirm, as applicable:
+- The analyst completion gate is satisfied: the functional baseline, quality gate,
+  traceability, and required documentation are complete.
+- Every in-scope automated test and contractual scenario passes, including each
+  state-table row and cross-cutting invariant; non-code acceptance evidence is
+  complete instead.
+- Applicable configured build, lint, typecheck, format, and test checks are clean,
+  with any non-applicable checks explicitly recorded.
+- Evidence maps the outcome to the requirements and success criteria, and any
+  deviations, assumptions, risks, or coverage gaps are reported.
+- The mandatory reviewer audit is complete and its findings are resolved or
+  explicitly accepted through the appropriate gate.
+- A functional-outcome assessment is recorded, and the human has made final
+  judgement where the work requires it.
+- Required reports and test-doc/config-sample artefacts are in sync.
 
 ## Stack-Specific Guidance
 For Odoo projects, also follow the rules in @AGENTS.odoo.md (testing, source
@@ -270,9 +305,9 @@ General skills are reusable by any agent or user. Conductor-specific skills are 
 | [`coding-standards`](../skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
 | [`handover`](../skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
 | [`init-project`](../skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
-| [`specification-methodology`](../skills/specification-methodology/SKILL.md) | Creating or writing software specifications |
+| [`specification-methodology`](../skills/specification-methodology/SKILL.md) | Optional post-baseline structuring of an existing functional contract into specification artefacts |
 | [`test-scenarios`](../skills/test-scenarios/SKILL.md) | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
-| [`todo-list`](../skills/todo-list/SKILL.md) | Generating a TDD-based TODO list for entry-level programmers |
+| [`todo-list`](../skills/todo-list/SKILL.md) | Optional TDD-oriented decomposition for coding work when a task list is useful |
 
 ### Conductor-specific skills
 
@@ -280,12 +315,12 @@ These are loaded automatically by the conductor agent during its workflow. They 
 
 | Skill | When to load |
 |---|---|
-| [`conductor-analyze`](../skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis |
-| [`conductor-code-decomposition`](../skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation |
-| [`conductor-noncode-decomposition`](../skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation |
-| [`conductor-execute`](../skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification |
-| [`conductor-escalate`](../skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 5 — failure escalation (escalate1 → escalate2) |
-| [`conductor-report`](../skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 6 — final report generation |
+| [`conductor-analyze`](../skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — establish modes, goal, scope, constraints, permissions, and analyst readiness |
+| [`conductor-code-decomposition`](../skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — dependency-aware task graph for coding against a frozen baseline |
+| [`conductor-noncode-decomposition`](../skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — dependency-aware task graph for non-code acceptance/evidence work |
+| [`conductor-execute`](../skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — execute graph tasks and delegate applicable verification |
+| [`conductor-escalate`](../skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 5 — diagnose blockers, create remedial tasks, and resume or abort safely |
+| [`conductor-report`](../skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 6 — report task results, evidence, ambiguities, and functional outcome |
 
 ## Agents
 
