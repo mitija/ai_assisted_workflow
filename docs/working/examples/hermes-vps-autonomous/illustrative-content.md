@@ -59,7 +59,7 @@ non-reproducible. A one-command rebuild is required.
 
 **High-level success criteria:**
 - HC-001: A Discord message to Hermes receives a useful response.
-- HC-002: A clean VPS can be fully provisioned with a single Ansible run.
+- HC-002: Following loss or failure of the VPS, a clean supported replacement VPS becomes operational within 30 minutes using one Ansible playbook command and no manual host changes.
 - HC-003: Only the configured Discord user can interact with Hermes; credentials are stored securely; secrets and Discord user content are absent from the repository and normal logs; network exposure is restricted to SSH and outbound HTTPS.
 - HC-004: Routine operational tasks (log management, secret rotation) are automated; documentation supports ongoing maintenance.
 
@@ -135,7 +135,7 @@ security practices, and Hetzner Ubuntu 24.04 setup guides (webfetch used).
 | FR-002 | The system shall expose Hermes via a Discord bot using slash commands. | explicitly-requested |
 | FR-003 | The system shall authenticate Discord API interactions using a bot token. | inferred-context |
 | FR-012 | The Ansible playbook shall install all dependencies (Python, system packages, Hermes binary). | explicitly-requested |
-| FR-004 | One `ansible-playbook` command shall fully configure a clean, supported VPS from initial state to operational Hermes service. | explicitly-requested |
+| FR-004 | Following loss or failure of the VPS, one Ansible playbook command shall fully configure a clean supported replacement VPS from initial state to operational Hermes service within 30 minutes, with no manual host changes. | explicitly-requested |
 | NFR-001 | The system shall reject Discord interactions from unauthorised users. | risk-control |
 | NFR-002 | The system shall restart Hermes automatically after unexpected failure. | domain-practice |
 | NFR-003 | The Ansible playbook shall be idempotent — running it multiple times produces the same result. | domain-practice |
@@ -239,8 +239,8 @@ during provisioning. The human must secure the `.vault_pass` file separately.
 | SC-001 | A Discord slash command `/ask What is the capital of France?` receives a relevant response within 30 seconds | HC-001 | VER-001 |
 | SC-002 | An unauthorised Discord user receives no response to any command | HC-001, HC-003 | VER-002 |
 | SC-003 | After unexpected Hermes process termination, the service becomes active again within 60 seconds without manual intervention | HC-001 | VER-003 |
-| SC-004 | A complete replacement drill (clean VPS to operational Hermes) completes in under 30 minutes; `ansible-playbook playbook.yml` exits 0; no manual host configuration changes are required. | HC-002 | VER-004 |
-| SC-005 | Running `ansible-playbook playbook.yml` twice produces identical changed=0 output on the second run | HC-002 | VER-005 |
+| SC-004 | Following loss or failure of the VPS, a complete replacement drill (clean supported replacement VPS to operational Hermes) completes within 30 minutes using one command; `ansible-playbook -i hosts playbook.yml --ask-vault-pass` exits 0; no manual host changes are required. | HC-002 | VER-004 |
+| SC-005 | Running `ansible-playbook -i hosts playbook.yml --ask-vault-pass` twice produces identical changed=0 output on the second run | HC-002 | VER-005 |
 | SC-006 | No exact active plaintext credential values appear in tracked-file contents or in normal logs (`journalctl -u hermes`). | HC-003 | VER-006 |
 | SC-007 | UFW status shows only OpenSSH and outbound HTTPS as allowed | HC-003 | VER-007 |
 | SC-008 | Log files older than 14 days are compressed and logs older than 30 days are absent from /var/log/hermes/ | HC-004 | VER-008 |
@@ -264,7 +264,7 @@ during provisioning. The human must secure the `.vault_pass` file separately.
 | VER-001 | Manual test | Send Discord command, observe response | Response received within 30s |
 | VER-002 | Manual test | Inspect configured `authorised_user_id`; send same command from configured account and from a different Discord account | Response received only for the configured account; no response for any other account; Hermes logs "unauthorised" |
 | VER-003 | Automated recovery test | Force repeated Hermes process terminations; record timestamps of each restart | Restart intervals conform to 5s (±2s), 15s (±3s), 30s (±5s), 60s (±10s), then every 60s (±10s); final recovery within 60s of last termination |
-| VER-004 | Timed recovery drill | Perform a complete replacement drill: provision a clean supported VPS; run `ansible-playbook playbook.yml` as the single command; measure wall-clock time from start to health-endpoint 200; inspect Hermes binary and declared Python/system dependencies; assert systemd unit exists and is enabled; rotate vault token, re-run playbook, confirm authentication with replacement token | Total wall-clock ≤30 min; one command; exit 0; binary, Python deps, system pkgs present; systemd unit enabled; playbook separate design goal ≤10 min; replacement token authenticates successfully |
+| VER-004 | Timed recovery drill | Following loss or failure of the VPS, perform a complete replacement drill: provision a clean supported replacement VPS; run `ansible-playbook -i hosts playbook.yml --ask-vault-pass` as the single command with no manual host changes; measure wall-clock time from start to health-endpoint 200; inspect Hermes binary and declared Python/system dependencies; assert systemd unit exists and is enabled; rotate vault token, re-run playbook, confirm authentication with replacement token | Total wall-clock ≤30 min; one command; exit 0; no manual host changes; binary, Python deps, system pkgs present; systemd unit enabled; playbook separate design goal ≤10 min; replacement token authenticates successfully |
 | VER-005 | Automated (CI) | Run playbook twice, compare changed counts | Second run: 0 changed |
 | VER-006 | Automated script | Perform both authorised and unauthorised interactions with unique markers; scan contents of files from `git ls-files` and `journalctl -u hermes` for exact token values, markers, and user IDs; run high-confidence repo secret scan; check vault file owner and mode | Zero matches/findings in repo and logs; vault file owned by root with mode 0400 or stricter |
 | VER-007 | Automated (CI) | Run `ufw status verbose` on provisioned VM | Only OpenSSH + outbound HTTPS |
@@ -390,13 +390,13 @@ OBJ-001  Deploy maintainable Hermes on VPS, Discord-accessible, Ansible-automate
     DOC-001  Configuration/ops documentation
       SC-019  Documentation covers all keys/ops   → VER-010  Document review
 
-HC-002  One-command clean VPS provisioning
+HC-002  After VPS loss/failure, clean supported replacement VPS operational within 30 min via one Ansible playbook command, no manual host changes
      FR-001  systemd deployment
         SC-014  systemd unit present/enabled  → VER-004  CI run
      FR-012  Install all dependencies
        SC-013  Binary, Python deps, system pkgs  → VER-004  CI run
-     FR-004  One-command clean VPS provisioning
-       SC-004  Replacement drill <30 min, exit 0, no manual config  → VER-004  Timed recovery drill
+     FR-004  After VPS loss/failure, replacement VPS operational within 30 min via one command, no manual host changes
+       SC-004  After VPS loss/failure, replacement drill ≤30 min, exit 0, no manual host changes  → VER-004  Timed recovery drill
      NFR-003  Idempotent playbook
        SC-005  Second run: 0 changed         → VER-005  CI idempotency check
      NFR-004  Playbook completes in <10 min
