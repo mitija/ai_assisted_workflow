@@ -129,16 +129,17 @@ security practices, and Hetzner Ubuntu 24.04 setup guides (webfetch used).
 ### Step 7 — Generate candidate requirements
 
 | ID | Statement | Provenance |
-|---|---|---|---|
+|---|---|---|
 | FR-001 | The system shall deploy Hermes as a systemd service on Ubuntu 24.04. | domain-practice |
 | FR-002 | The system shall expose Hermes via a Discord bot using slash commands. | explicitly-requested |
 | FR-003 | The system shall authenticate Discord API interactions using a bot token. | inferred-context |
 | FR-012 | The Ansible playbook shall install all dependencies (Python, system packages, Hermes binary). | explicitly-requested |
 | NFR-001 | The system shall reject Discord interactions from unauthorised users. | risk-control |
 | NFR-002 | The system shall restart Hermes automatically after unexpected failure. | domain-practice |
-| NFR-003 | The Ansible playbook shall be idempotent — running it multiple times produces the same result. | explicitly-requested |
+| NFR-003 | The Ansible playbook shall be idempotent — running it multiple times produces the same result. | domain-practice |
 | NFR-004 | The Ansible playbook shall complete in under 10 minutes on a clean CX22. | design-decision |
 | NFR-005 | The system shall store the Discord bot token in a secure location, not in the playbook repository. | explicitly-requested |
+| NFR-006 | Normal logs shall not retain Discord message content or Discord user IDs. | risk-control |
 | OPS-001 | The system shall rotate Hermes and system logs to prevent disk exhaustion. | domain-practice |
 | OPS-002 | The system shall expose Hermes health via a local HTTP health endpoint. | design-decision |
 | OPS-003 | The Ansible playbook shall configure the Uncomplicated Firewall (UFW) to allow only SSH and outbound HTTPS. | risk-control |
@@ -150,7 +151,7 @@ security practices, and Hetzner Ubuntu 24.04 setup guides (webfetch used).
 | Category | Applies | Reference(s) | Rationale |
 |---|---|---|---|
 | Security | Yes | NFR-001, NFR-005, OPS-003 | User authorisation, secret storage, and firewall rules are the three security controls in scope |
-| Privacy | Not applicable | — | Single-user personal deployment; no PII collected by design |
+| Privacy | Yes | NFR-006 | Normal logs must not retain Discord message content or Discord user IDs |
 | Accessibility | Not applicable | — | No custom UI; interaction is via Discord's existing interface |
 | Performance | Yes | NFR-004 | Playbook completion time under 10 minutes on CX22 is a bounded performance target |
 | Availability | Yes | NFR-002, OPS-002 | Auto-restart and health endpoint provide basic availability management |
@@ -159,7 +160,7 @@ security practices, and Hetzner Ubuntu 24.04 setup guides (webfetch used).
 | Maintainability | Yes | NFR-003, DOC-001 | Idempotent playbook ensures consistent state; documentation enables future maintenance |
 | Deployment | Yes | FR-001, FR-012, OPS-003 | systemd deployment, dependency installation, and UFW configuration are the deployment concerns |
 | Configuration | Yes | DOC-001 | Configuration keys and change effects are documented per DOC-001 |
-| Backup/Recovery | Not applicable | — | No automated backup requirement exists; manual procedure is documented in operations guide only |
+| Backup/Recovery | Yes | FR-012, DOC-001 | Clean rebuild (FR-012) and documented backup/recovery (DOC-001) are in scope |
 | Regulatory/Compliance | Not applicable | — | Personal use; no regulatory regime applies |
 | Support/Operations | Yes | OPS-001, OPS-004 | Log rotation and token rotation cover the primary operational lifecycle tasks |
 
@@ -235,23 +236,24 @@ during provisioning. The human must secure the `.vault_pass` file separately.
 |---|---|---|---|
 | SC-001 | A Discord slash command `/ask What is the capital of France?` receives a relevant response within 30 seconds | HC-001 | VER-001 |
 | SC-002 | An unauthorised Discord user receives no response to any command | HC-001, HC-003 | VER-002 |
-| SC-003 | After `systemctl stop hermes`, the service becomes active again within 60 seconds without manual intervention | HC-001 | VER-003 |
+| SC-003 | After unexpected Hermes process termination, the service becomes active again within 60 seconds without manual intervention | HC-001 | VER-003 |
 | SC-004 | `ansible-playbook playbook.yml` on a clean CX22 completes with exit code 0 | HC-002 | VER-004 |
 | SC-005 | Running `ansible-playbook playbook.yml` twice produces identical changed=0 output on the second run | HC-002 | VER-005 |
 | SC-006 | No secrets appear in `git ls-files` or in `journalctl -u hermes` output | HC-003 | VER-006 |
 | SC-007 | UFW status shows only OpenSSH and outbound HTTPS as allowed | HC-003 | VER-007 |
-| SC-008 | Log files older than 30 days are absent from /var/log/hermes/ | HC-002 | VER-008 |
+| SC-008 | Log files older than 14 days are compressed and logs older than 30 days are absent from /var/log/hermes/ | HC-002 | VER-008 |
 | SC-009 | The health endpoint returns HTTP 200 within 5 seconds of Hermes starting | HC-001 | VER-009 |
-| SC-010 | The health endpoint returns HTTP 503 when Hermes is stopped | HC-001 | VER-003 |
+| SC-010 | The health endpoint returns HTTP 503 when Hermes is running but degraded (e.g., crash loop or dependency failure) | HC-001 | VER-009 |
 | SC-011 | Ansible playbook completes in under 10 minutes (measured) | HC-002 | VER-004 |
 | SC-012 | Hermes config file contains the authorised user ID | HC-001 | VER-002 |
-| SC-013 | Hermes binary is installed to /usr/local/bin/hermes | HC-002 | VER-004 |
+| SC-013 | Hermes binary, required Python dependencies, and required system packages are installed | HC-002 | VER-004 |
 | SC-014 | systemd unit file is present and enabled | HC-002 | VER-004 |
-| SC-015 | Hermes restarts with exponential backoff after crash (5s, 15s, 30s, 60s) | HC-001 | VER-003 |
+| SC-015 | Hermes restarts with exponential backoff after crash (5s, 15s, 30s, 60s, then every 60s) | HC-001 | VER-003 |
 | SC-016 | Vault-encrypted token file is not readable by non-root users | HC-003 | VER-006 |
 | SC-017 | The Hermes bot authenticates with Discord using the configured token and responds to a `/ask` command | HC-001 | VER-001 |
 | SC-018 | After updating the token in the vault file and re-running the playbook, the bot authenticates with the new token | HC-002 | VER-004 |
 | SC-019 | Configuration and operations documentation covers all configurable keys, install, start/stop, upgrade, health check, secret rotation, backup, and rebuild procedures | HC-001, HC-002 | VER-010 |
+| SC-020 | Normal logs contain no Discord message content or Discord user IDs | HC-003 | VER-006 |
 
 ### Step 15 — Define verification methods
 
@@ -264,8 +266,8 @@ during provisioning. The human must secure the `.vault_pass` file separately.
 | VER-005 | Automated (CI) | Run playbook twice, compare changed counts | Second run: 0 changed |
 | VER-006 | Automated script | Scan repo for token patterns, scan journalctl for secrets | Zero matches |
 | VER-007 | Automated (CI) | Run `ufw status verbose` on provisioned VM | Only OpenSSH + outbound HTTPS |
-| VER-008 | Automated script | List files in /var/log/hermes/ older than 30 days | Zero files |
-| VER-009 | Automated script | Curl health endpoint after service start | HTTP 200 within 5s |
+| VER-008 | Automated script | Verify logs older than 14 days are compressed and files older than 30 days are absent from /var/log/hermes/ | Zero uncompressed files older than 14 days; zero files older than 30 days |
+| VER-009 | Automated script | Curl health endpoint for healthy (200) and degraded (503) states | HTTP 200 when healthy; HTTP 503 when degraded but running |
 | VER-010 | Document review | Inspect docs for coverage of all config keys, install, start/stop, upgrade, health check, secret rotation, backup, rebuild | All topics covered; every config key has type, default, change effect |
 
 ### Step 16 — Draft intended documentation
@@ -358,14 +360,14 @@ arises during implementation.
 OBJ-001  Deploy Hermes on VPS, Discord-accessible, Ansible-automated
   HC-001  Discord messages receive useful responses
     FR-001  systemd deployment
-      SC-003  Auto-restart within 60s       → VER-003  Recovery test
-      SC-014  systemd unit present/enabled  → VER-004  CI run
+       SC-003  Auto-restart after crash within 60s       → VER-003  Recovery test
+       SC-014  systemd unit present/enabled  → VER-004  CI run
     FR-002  Discord slash-command bot
       SC-001  Command response within 30s   → VER-001  Manual test
     FR-003  Bot token authentication
       SC-017  Auth via configured token     → VER-001  Manual test
     FR-012  Install all dependencies
-      SC-013  Binary in /usr/local/bin      → VER-004  CI run
+      SC-013  Binary, Python deps, system pkgs  → VER-004  CI run
     NFR-001  Reject unauthorised users
       BR-001  Authorised user by config ID
       SC-002  No response to unauthorised   → VER-002  Manual test
@@ -373,13 +375,15 @@ OBJ-001  Deploy Hermes on VPS, Discord-accessible, Ansible-automated
     NFR-002  Auto-restart after failure
       BR-002  Exponential backoff (5s–60s)
       SC-003  Recovery within 60s           → VER-003  Recovery test
-      SC-015  Exponential backoff           → VER-003  Recovery test
+      SC-015  Exponential backoff (5s–60s+) → VER-003  Recovery test
     NFR-005  Secure token storage
       SC-006  No secrets in repo or journal → VER-006  Scan script
       SC-016  Vault file not world-readable → VER-006  Scan script
+    NFR-006  No Discord content in logs
+      SC-020  No Discord content in logs     → VER-006  Scan script
     OPS-002  Health endpoint
-      SC-009  HTTP 200 when running         → VER-009  Curl test
-      SC-010  HTTP 503 when stopped         → VER-003  Recovery test
+      SC-009  HTTP 200 when healthy         → VER-009  Curl test
+      SC-010  HTTP 503 when degraded        → VER-009  Curl test
     OPS-004  Token rotation support
       SC-018  Token rotation via vault re-run    → VER-004  CI run
     DOC-001  Configuration/ops documentation
@@ -387,9 +391,9 @@ OBJ-001  Deploy Hermes on VPS, Discord-accessible, Ansible-automated
 
   HC-002  One-command clean VPS provisioning
     FR-001  systemd deployment
-      SC-014  systemd unit present/enabled  → VER-004  CI run
+       SC-014  systemd unit present/enabled  → VER-004  CI run
     FR-012  Install all dependencies
-      SC-013  Binary in /usr/local/bin      → VER-004  CI run
+      SC-013  Binary, Python deps, system pkgs  → VER-004  CI run
       SC-014  systemd unit present/enabled  → VER-004  CI run
     NFR-003  Idempotent playbook
       SC-005  Second run: 0 changed         → VER-005  CI idempotency check
@@ -397,7 +401,7 @@ OBJ-001  Deploy Hermes on VPS, Discord-accessible, Ansible-automated
       SC-011  Measured completion time      → VER-004  CI syntax + run
     OPS-001  Log rotation
       BR-003  Log retention: 14d compress, 30d delete
-      SC-008  No logs older than 30 days    → VER-008  Script
+      SC-008  Logs: 14d compress, 30d delete  → VER-008  Script
     OPS-003  UFW configuration
       SC-007  UFW: only SSH + HTTPS         → VER-007  CI check
     DOC-001  Configuration/ops documentation
@@ -409,6 +413,8 @@ OBJ-001  Deploy Hermes on VPS, Discord-accessible, Ansible-automated
     NFR-005  Secure token storage
       SC-006  No secrets in repo or journal → VER-006  Scan script
       SC-016  Vault file not world-readable → VER-006  Scan script
+    NFR-006  No Discord content in logs
+      SC-020  No Discord content in logs     → VER-006  Scan script
     OPS-003  UFW configuration
       SC-007  UFW: only SSH + HTTPS         → VER-007  CI check
 
@@ -466,9 +472,9 @@ an infrastructure deployment project with no UI. The analyst:
    documentation-gap-driven requirement discovery (Step 17).
 4. Classified 5 decisions (A/B/C), resolved 4 autonomously, escalated 1 (C) to
    the human with a bounded recommendation.
-5. Produced **4 functional requirements**, **5 non-functional requirements**,
+5. Produced **4 functional requirements**, **6 non-functional requirements**,
    **4 operational requirements**, **1 documentation requirement**,
-   **3 business rules**, **19 detailed success criteria**, and
+   **3 business rules**, **20 detailed success criteria**, and
    **10 verification methods**.
 6. Applied provenance labels to every requirement.
 7. Reviewed the full set (0 critical, 1 warning, 1 suggestion).
@@ -482,13 +488,13 @@ an infrastructure deployment project with no UI. The analyst:
 | Category | Count | IDs |
 |---|---|---|
 | FR (functional) | 4 | FR-001–FR-003, FR-012 |
-| NFR (non-functional) | 5 | NFR-001–NFR-005 |
+| NFR (non-functional) | 6 | NFR-001–NFR-006 |
 | OPS (operational) | 4 | OPS-001–OPS-004 |
 | DOC (documentation) | 1 | DOC-001 |
 | BR (business rule) | 3 | BR-001–BR-003 |
-| SC (success criterion) | 19 | SC-001–SC-019 |
+| SC (success criterion) | 20 | SC-001–SC-020 |
 | VER (verification) | 10 | VER-001–VER-010 |
-| **Total identifiers** | **46** | |
+| **Total requirement/rule/SC/VER identifiers** | **48** | |
 
 ### SC/VER mapping coverage
 
@@ -506,15 +512,16 @@ one VER:
 | NFR-003 | SC-005 | VER-005 |
 | NFR-004 | SC-011 | VER-004 |
 | NFR-005 | SC-006, SC-016 | VER-006 |
+| NFR-006 | SC-020 | VER-006 |
 | OPS-001 | SC-008 | VER-008 |
-| OPS-002 | SC-009, SC-010 | VER-009, VER-003 |
+| OPS-002 | SC-009, SC-010 | VER-009 |
 | OPS-003 | SC-007 | VER-007 |
 | OPS-004 | SC-018 | VER-004 |
 | DOC-001 | SC-019 | VER-010 |
-| BR-001 | SC-012 | VER-002 |
+| BR-001 | SC-002, SC-012 | VER-002 |
 | BR-002 | SC-015 | VER-003 |
 | BR-003 | SC-008 | VER-008 |
 
-All 17 identifiers (4 FR + 5 NFR + 4 OPS + 1 DOC + 3 BR) map to at least one SC
-and one VER. All 19 SCs map to at least one VER. Complete traceability is
+All 18 identifiers (4 FR + 6 NFR + 4 OPS + 1 DOC + 3 BR) map to at least one SC
+and one VER. All 20 SCs map to at least one VER. Complete traceability is
 established.
