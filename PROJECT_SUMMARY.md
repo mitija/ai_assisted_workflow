@@ -10,9 +10,19 @@ The framework is production-ready but still evolving, and applies beyond Odoo.
 Deliverables live in `agents/`.
 
 ## Current status
-Production-ready but still evolving. No code/app component — this is a
-guidance/skill bundle for agents. The root-level `skills/` directory holds ten general skills
-and six conductor-specific skills (internal orchestration steps).
+Production-ready for its core, spec-driven coding workflow, while broader
+documentation, research, analysis, configuration, and project-setup workflows remain
+less mature and evolving. The established paradigm is human objective ownership;
+an analyst-owned four-phase functional-contract lifecycle (intake, discovery, review,
+and traceable baseline); and conductor-owned six-phase code/non-code delivery
+(analyze, decompose, execute, review, escalate, and report). `analysis_mode` and
+`interaction_mode` are independent. Implementers and the verifier produce evidence,
+the mandatory reviewer audits it, the conductor assesses the functional outcome, and
+the human makes the final judgement. Analysis quality, non-functional and non-code
+verification, tooling, environment setup, and adoption remain honest limitations.
+No code/app component — this is a guidance/skill bundle for agents. The root-level
+`skills/` directory holds ten general skills and six conductor-specific skills
+(internal orchestration steps).
 Linked skill tables are maintained in README.md, root AGENTS.md, and the deployable agents/AGENTS.md, documenting both categories.
 Session handover files (`HANDOVER*`) are gitignored at the root.
 
