@@ -13,7 +13,7 @@ haptic cues.
 |---|---|
 | Objective brief / Intake (Phase 1) | Intake Q&A, objective brief production, human confirmation |
 | Mode choice | Selection of guided mode |
-| Decision classification | Class A/B decisions (animation style, sound defaults); Class C decisions escalated (pause behaviour, data persistence) |
+| Decision classification | Class A/B decisions (animation style, sound defaults); Class C decisions escalated (pause behaviour) |
 | Provenance | Every requirement labelled: explicitly-requested, inferred-context, domain-practice, design-decision, risk-control |
 | Requirements and business rules | FR-001–FR-018, BR-001–BR-006 |
 | Hierarchical success criteria | HC-001–HC-005 → FR-xxx → SC-001–SC-020 → VER-001–VER-011 |

@@ -163,7 +163,7 @@ status (completed / paused / interrupted), completedAt
 | ID | Rule | Rationale | Provenance |
 |---|---|---|---|
 | BR-001 | A session must have completed at least one full breath cycle to be recorded as completed. Fewer cycles are recorded as interrupted. | Prevents accidental taps from creating meaningless history entries | design-decision |
-| BR-002 | When a session is paused and then resumed, the current phase restarts from the beginning (remaining time resets to the full phase duration). | More natural for breathing — inhale always starts from the beginning of the inhale phase | human-requested-change |
+| BR-002 | When a session is paused and then resumed, the current phase continues from the exact point where it was paused (remaining time is preserved). | Most natural user expectation — pausing freezes time | design-decision |
 | BR-003 | Audio cues are disabled by default; the user must opt in. | Avoids startling users; accessibility consideration | domain-practice |
 | BR-004 | At most one session can be active at a time. Starting a new session while one is active prompts to end the current session first. | Prevents overlapping sessions and data ambiguity | design-decision |
 | BR-005 | Session history is stored in localStorage and persists across browser sessions. | No backend; localStorage is the standard client-side option | domain-practice |
@@ -191,7 +191,7 @@ animation style), so kept separate.
 
 | ID | Statement | Provenance |
 |---|---|---|
-| FR-016 | The history screen shall show an empty-state message when no sessions exist. | discovered-gap |
+| FR-016 | The history screen shall show an empty-state message when no sessions exist. | risk-control |
 
 ### Step 11 — Classify decisions
 
@@ -219,6 +219,8 @@ animation style), so kept separate.
 
 **Question:** When a paused session is resumed, where should it continue from?
 
+**Status:** `pending-human-validation`
+
 **Recommendation:** Continue from the exact point in the current phase (freeze
 behaviour). This is the most natural user expectation — pausing freezes time.
 
@@ -227,8 +229,6 @@ behaviour). This is the most natural user expectation — pausing freezes time.
    jarring — user loses progress within the phase)
 2. Restart the entire session from the beginning (safest but wasteful)
 
-**Human response:** "Freeze makes sense. Continue from the exact point."
-
 ### Step 14 — Define detailed success criteria
 
 | SC | Statement | Maps to | Verification |
@@ -236,8 +236,8 @@ behaviour). This is the most natural user expectation — pausing freezes time.
 | SC-001 | User can select any preset pattern and start a session with one tap. | HC-001 | VER-001 |
 | SC-002 | The visual guide shows the correct current phase name and remaining seconds. | HC-001 | VER-002 |
 | SC-003 | The circle animation expands during inhale and contracts during exhale. | HC-001 | VER-003 |
-| SC-004 | Tapping pause resets the current phase to 0 and shows the paused state. | HC-003 | VER-004 |
-| SC-005 | After pause, tapping resume restarts the current phase from the beginning. | HC-003 | VER-004 |
+| SC-004 | Tapping pause freezes the current phase timer and shows the paused state. | HC-003 | VER-004 |
+| SC-005 | After pause, tapping resume continues from the exact point in the current phase. | HC-003 | VER-004 |
 | SC-006 | Audio cue plays at each phase transition when enabled; no audio when disabled. | HC-001 | VER-005 |
 | SC-007 | Session can be paused and resumed at least 10 times in a single session without error. | HC-003 | VER-004 |
 | SC-008 | Completed session appears in history within 1 second of completion. | HC-005 | VER-006 |
@@ -261,7 +261,7 @@ behaviour). This is the most natural user expectation — pausing freezes time.
 | VER-001 | Manual test | Select pattern → tap start → session begins | Session starts within 1 tap of pattern selection |
 | VER-002 | Visual inspection | Check phase display, remaining time, responsive layout | Correct phase/time shown at all widths 320–1200px |
 | VER-003 | Visual inspection | Watch circle animation through a full cycle | Expands during inhale, contracts during exhale |
-| VER-004 | Manual test | Pause, wait 5s, resume; repeat 10 times | Phase restarts from beginning each time |
+| VER-004 | Manual test | Pause, wait 5s, resume; repeat 10 times | Phase continues from exact point each time |
 | VER-005 | Manual test | Toggle audio on/off; start session | Audio plays when on, silent when off |
 | VER-006 | Automated unit test | Complete session → check history; interrupt → check history; empty → check display | Correct status, data, and empty state |
 | VER-007 | Automated test | Check aria-live region content during phase transitions | Correct phase name announced |
@@ -318,8 +318,8 @@ revealed no explicit requirement for responsive rendering across device widths
 
 | ID | Statement | Provenance |
 |---|---|---|
-| FR-017 | The app shall show a text-based phase indicator (phase name + remaining seconds) as a fallback if animation rendering fails. | discovered-doc-gap |
-| FR-018 | The app shall render correctly and be usable at screen widths from 320px to 1200px. | discovered-doc-gap |
+| FR-017 | The app shall show a text-based phase indicator (phase name + remaining seconds) as a fallback if animation rendering fails. | risk-control |
+| FR-018 | The app shall render correctly and be usable at screen widths from 320px to 1200px. | risk-control |
 
 ### Step 18 — Produce wireframes
 
@@ -467,6 +467,12 @@ Consolidated all artefacts in preparation for the guided validation package.
 
 ### Functional Validation Package (proposal — shown as presented to the human)
 
+> **Pre-proposal state.** All artefacts below are *proposed* pending human
+> confirmation. The exact-point pause/resume behaviour described here (freeze on
+> pause, continue from exact point on resume) is the analyst's recommendation,
+> not the final baseline. See Phase 4 for the final baseline after human
+> override.
+
 #### Refined functional outcome
 
 BreatheEasy is a mobile-first PWA that lets users select from preset breathing
@@ -497,7 +503,7 @@ native apps, custom pattern creation (v1), analytics, notifications.
 #### Key business rules (as proposed)
 
 - BR-001: Minimum one full breath cycle for "completed" status.
-- BR-002: Pause freezes time; resume continues from exact point. *(overridden by human — see propagation below)*
+- BR-002: Pause freezes time; resume continues from exact point (proposed — pending human confirmation).
 - BR-003: Audio off by default.
 - BR-004: Only one active session at a time.
 - BR-005: Session history in localStorage.
@@ -527,13 +533,13 @@ native apps, custom pattern creation (v1), analytics, notifications.
 
 #### Decisions requiring confirmation (as proposed)
 
-| DEC | Question | Human response |
+| DEC | Question | Status |
 |---|---|---|
-| DEC-005 | Pause freezes vs restarts phase | Freeze (continue from exact point) |
+| DEC-005 | Pause freezes vs restarts phase | pending-human-validation |
 
 #### Low-fidelity wireframes
 
-(See Step 18 above — five wireframes: pattern selection, active session, paused
+(See Step 18 above — six wireframes: pattern selection, active session, paused
 session, completion screen, history populated, history empty state.)
 
 #### Detailed success-criteria coverage
@@ -592,7 +598,7 @@ The analyst identified and updated every affected artefact:
 |---|---|
 | BR-002 | Changed from "exact point" to "beginning of current phase" |
 | FR-004 / FR-007 | Updated pause description to reflect phase restart |
-| SC-004 | "Pause freezes the session timer" → "Pause resets the current phase to 0" |
+| SC-004 | "Pause freezes the current phase timer" → "Pause resets the current phase to 0" |
 | SC-005 | "Continue from exact point" → "Resume from beginning of current phase" |
 | SC-007 | Removed "preserves elapsed time" assertion |
 | User guide | Updated "Pause and Resume" section |
@@ -606,9 +612,35 @@ The analyst identified and updated every affected artefact:
 BR-002: When a session is paused and then resumed, the current phase
         restarts from the beginning (remaining time resets to the phase
         duration).
-        Rationale: More natural for breathing — inhale always starts
-        from the beginning of the inhale phase.
-        Provenance: human-requested-change (post-validation)
+        Rationale: Requested by human during validation — restarting from
+        the beginning feels more natural for breathing exercises.
+        Provenance: explicitly-requested (post-validation)
+```
+
+### Updated artefacts (post-propagation)
+
+**User guide — Pause and Resume (updated excerpt):**
+
+Tap the screen (or press Space) to pause your session. The current phase restarts from the beginning when you resume — this ensures each inhale, hold, exhale, and rest phase is experienced fully. Tap again (or press Space) to resume from the start of the paused phase.
+
+**Paused-state wireframe (updated — restart-from-phase-beginning):**
+
+```
+┌──────────────────────────┐
+│  BreatheEasy     [≡]     │
+│                           │
+│       ╭───────╮          │
+│      ╱ Paused  ╲         │
+│     │  Inhale  │         │
+│     │  0s/3s   │         │
+│      ╲         ╱         │
+│       ╰───────╯          │
+│                           │
+│  Phase resets on resume. │
+│                           │
+│  [ ▶ Resume ] [ ⏹ Stop ]│
+└──────────────────────────┘
+  Paused state (phase restarts on resume)
 ```
 
 ### Consistency check after propagation
@@ -621,7 +653,11 @@ All six cross-artefact checks passed. No contradictions introduced.
 
 ---
 
-## Phase 4 — Baseline
+## Phase 4 — Baseline (final)
+
+> **Final baseline.** After human override (restart-from-phase-beginning), all
+> artefacts below reflect the definitive requirements baseline. The exact-point
+> freeze behaviour from the proposal has been replaced.
 
 ### Traceability chain (summary)
 
@@ -743,7 +779,7 @@ consistently.
 This example demonstrates the complete analyst workflow in guided mode for a
 UI-heavy application with accessibility requirements. The analyst:
 
-1. Conducted a focused high-level Q&A (9 questions).
+1. Conducted a focused high-level Q&A (6 questions).
 2. Produced a confirmed objective brief (OBJ-001, HC-001–HC-005).
 3. Performed all 20 discovery steps, including domain research (Step 4),
    entity/session modelling (Step 6), exception analysis (Step 9), and
@@ -757,7 +793,7 @@ UI-heavy application with accessibility requirements. The analyst:
 8. Created a curated functional validation package for human review.
 9. Received "approved with changes" — the human overrode the pause-behaviour
    decision.
-10. Propagated the feedback across all 11 affected artefacts (BR-002, FR-004,
+10. Propagated the feedback across all 10 affected artefacts (BR-002, FR-004,
     FR-007, SC-004, SC-005, SC-007, user guide, wireframe, traceability links,
     decisions record).
 11. Confirmed consistency after propagation — no contradictions introduced.
