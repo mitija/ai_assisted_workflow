@@ -16,8 +16,17 @@ database before each run:
     <run_tests.sh> [-d DATABASE] module1 [module2 ...]
 
 Options: `-d DATABASE` (default from `odoo.database.default_name`), `-h/--help`.
-Output is shown live and saved to `/tmp/odoo_test_<timestamp>.log`. Always read
-that log file for the actual results rather than the truncated Bash output.
+
+The wrapper must configure Odoo's native `--logfile <path>` option so that Odoo
+writes all logging to `local/tmp/odoo_test_<timestamp>.log` instead of stderr.
+This is a wrapper implementation requirement (the wrapper is external to this
+repository and will be updated separately). Do not use shell redirection (`>`),
+append (`>>`), or `tee` to capture Odoo logs — rely solely on Odoo's `--logfile`.
+
+Because `--logfile` sends Odoo logging directly to the file, test log messages
+are not streamed to the terminal in real time. Only non-log command output
+(e.g. wrapper progress messages) may appear live. Always read the log file for
+the actual Odoo test results rather than the truncated Bash output.
 
 Direct CLI alternative (using `odoo.scripts.config_ini`):
 
@@ -25,8 +34,8 @@ Direct CLI alternative (using `odoo.scripts.config_ini`):
     ./odoo-bin -c <odoo.conf> -d <database> --test-file addons/<module>/tests/<file>.py --stop-after-init
 
 ## Reading Test Output / Logs
-- Inspect logs with `Read('/tmp/odoo_test_xxx.log', offset=..., limit=...)`.
-- Search with `Grep(pattern='ERROR|FAIL', path='/tmp/odoo_test_xxx.log')`.
+- Inspect logs with `Read('local/tmp/odoo_test_xxx.log', offset=..., limit=...)`.
+- Search with `Grep(pattern='ERROR|FAIL', path='local/tmp/odoo_test_xxx.log')`.
 - Never pipe/redirect via Bash to read or search log files.
 
 ## Database & Instances
