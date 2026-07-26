@@ -131,15 +131,14 @@ comparing against the previous implementation tag — and drives development
 through the six phases above. Verification runs the contractual tests as part
 of every task round.
 
-The user touches the process at up to three points: the analyst's objective brief
-and any consequential decisions it escalates during guided analysis, baseline
-confirmation, and a final human functional-outcome review distinct from the
-conductor's automated report. The conductor may invoke the analyst when a
-sufficient analysis baseline is needed before decomposition; `analysis_mode`
-(autonomous or guided) is independent of the conductor's own interactive/autonomous
-mode. The user validates the delivered outcome against the functional contract
-and the original objective — this is a human judgement, not automated verification.
-Everything between runs autonomously by default.
+Human involvement is conditional on the selected modes and project phase:
+
+- **Objective confirmation** — the human confirms the high-level objective brief before detailed discovery proceeds (Phase 1 gate, always required).
+- **Consequential/blocking decisions** — in autonomous analysis, Class C (material) and Class D (blocking) decisions are escalated to the human immediately. In guided analysis, non-blocking Class C decisions are deferred to the validation package while Class D always stops and asks immediately.
+- **Guided validation** — when analysis_mode is guided, the human reviews the functional validation package after Phase 3 Review (approve, approve-with-changes, or reanalyse).
+- **Final outcome review** — the human validates the delivered outcome against the functional contract and the original objective; this is a human judgement, not automated verification.
+
+The conductor may invoke the analyst when a sufficient analysis baseline is needed before decomposition; `analysis_mode` (autonomous or guided) is independent of the conductor's own interactive/autonomous mode. Everything between the listed touchpoints runs autonomously by default.
 
 ## Skills
 

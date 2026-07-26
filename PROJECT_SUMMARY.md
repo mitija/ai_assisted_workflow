@@ -43,10 +43,16 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   guided mode. Orchestrates four lifecycle phases via analyst-* skills loaded on demand:
   Phase 1 Intake (`analyst-intake`), Phase 2 Discovery (`analyst-discovery`),
   Phase 3 Review (`analyst-review`), Phase 4 Baseline (`analyst-baseline`).
-  Escalates only Class C/D decisions (material business, security, scope, or blocking);
-  resolves Class A/B decisions autonomously. Governed by provenance requirements —
-  every requirement is labelled by origin (explicitly-requested, inferred-context,
-  domain-practice, etc.) and never silently presented as human-requested. Never implements
+Class A-D decisions are impact-based (A=minor/reversible, B=low-impact functional,
+   C=material/consequential, D=blocking/high-risk) and distinct from the seven-value
+   provenance system. Class C handling is mode-dependent: ask immediately in autonomous
+   mode; defer non-blocking to the guided validation package. Class D always stops and
+   asks immediately. Class A/B resolved autonomously. Governed by provenance —
+   every requirement carries exactly one label (explicitly-requested, inferred-context,
+   inherited, domain-practice, design-decision, risk-control, unresolved) and is never
+   silently presented as human-requested. Analysis mode (autonomous/guided) is an
+   independent value selected at intake, distinct from the conductor's interaction
+   style or implementation autonomy. Never implements
   application code. Permission: `edit: allow`, `task: allow`, `bash` limited to read-only
   inspection commands (`git status`, `git log`, `git diff`, `grep`, `ls`).
 - `agent/conductor.md` — ...
@@ -112,16 +118,17 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   `escalate1`, or `escalate2` for commands outside their curated read-only
   allowlists.
 - `skills/analyst-intake/SKILL.md` — Phase 1 of the analyst workflow. Conducts initial high-level Q&A with the human to establish the problem, intended users, functional outcome, high-level success criteria, important constraints, explicit exclusions, major preferences, known integrations, and selected operating mode. Produces the objective brief. Determines whether sufficient analysis already exists or full discovery is needed.
-- `skills/analyst-discovery/SKILL.md` — Phase 2 of the analyst workflow. Transforms the confirmed objective brief into a complete, defensible functional contract through a structured 20-step discovery process. Evidence-first — inspects existing material before asking. Resolves non-blocking decisions autonomously, escalates consequential ones. Produces requirements, business rules, success criteria, verification definitions, wireframes, and intended documentation.
+- `skills/analyst-discovery/SKILL.md` — Phase 2 of the analyst workflow. Transforms the confirmed objective brief into a complete, defensible functional contract through a structured 20-step discovery process. Evidence-first — inspects existing material before asking. Resolves non-blocking decisions autonomously, escalates consequential ones. Produces functional, non-functional, operational, and documentation requirements with provenance, business rules, success criteria, verification definitions, wireframes, and intended documentation.
 - `skills/analyst-review/SKILL.md` — Phase 3 of the analyst workflow. Performs the requirements quality gate — checking every requirement for necessity, clarity, singularity, consistency, feasibility, testability, traceability, implementation independence, priority, visible assumptions, and scope. In guided mode, produces the functional validation package for human review and propagates all feedback across affected artefacts.
 - `skills/analyst-baseline/SKILL.md` — Phase 4 of the analyst workflow. Establishes and maintains the requirements baseline with stable identifiers, traceability, and consistency across the project lifecycle. Supports implementation (interpretation, change evaluation, scope protection), verification (evidence mapping), and completion (final documentation baseline). Maintains traceability from objective through high-level criteria, requirements, detailed criteria, verification, and evidence.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/handover/SKILL.md` — creates self-contained HANDOVER-xx.md at session end.
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
   with inferred defaults; asks the user only for what cannot be discovered.
-- `skills/specification-methodology/SKILL.md` — optional single-gate specification
-  structuring tool (all five steps uninterrupted — no intermediate approval stops).
-  Consumes the validated analyst baseline and produces wiki-style `spec/` directory
+- `skills/specification-methodology/SKILL.md` — optional post-baseline specification
+   structuring tool (all five steps uninterrupted — no methodology-owned approval gate;
+   material contract issues discovered during structuring route back to analyst).
+   Consumes the validated analyst baseline and produces wiki-style `spec/` directory
   with individual files per model (`models/`, global/shared) and use case
   (`use-cases/`, flat by default or grouped under `epics/<epic>/` for large-scope
   projects), cross-referenced via relative links. Main `spec-index.md` serves as
@@ -139,8 +146,9 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
 
 ## What `agents/AGENTS.md` covers
 - Spec-driven workflow rules: spec is the contract; never fill gaps with assumptions
-  (ambiguity is a blocker — ask interactively, one question at a time, unpacking
-  complex ones); no mid-flight spec changes; tests are executable spec and tests win;
+   (genuine ambiguity is a blocker — stop and route to the analyst for functional
+   interpretation, one question at a time, unpacking complex ones); no mid-flight spec
+   changes; tests are executable spec and tests win;
   work against the docs tag.
 - Implementation deliverables: code vs tag, automated tests, development report.
 - Build/Lint/Verify: commands sourced from `project_context.yaml` `commands:`; run
@@ -228,25 +236,36 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   wiki-style directory tree (`spec/` with `models/`, `use-cases/` subdirs,
   `spec-index.md` as index). Use cases reference models via a `## Related Models`
   section; model files do not back-reference use cases (maintenance trade-off).
-  Sections exceeding 40 lines extract to standalone files. All five steps run
-  uninterrupted with a "Wiki Integrity" check; guided analysis uses one
-  consolidated human validation package after Step 5.
-  Large-scope projects may split use cases under `epics/<epic>/` (one
+Sections exceeding 40 lines extract to standalone files. All five steps run
+   uninterrupted; there is no methodology-owned approval gate — material contract
+   issues route back to the analyst change/decision/validation policy.
+   Large-scope projects may split use cases under `epics/<epic>/` (one
   `<epic>_TESTS.md` each) while the data model stays global.
 - `analyst` agent created as the dedicated functional contract owner. Operates in
-  autonomous or guided mode with four lifecycle phases driven by analyst-* skills.
-  Governed by provenance requirements: every requirement carries an origin label
-  (explicitly-requested, inferred-context, domain-practice, etc.) and is never
-  silently presented as human-requested. Escalates only Class C/D (material)
-  decisions; resolves Class A/B autonomously.
+   autonomous or guided mode with four lifecycle phases driven by analyst-* skills.
+   Class A-D decisions are impact-based (A=minor/reversible, B=low-impact functional,
+   C=material/consequential, D=blocking/high-risk) and distinct from the seven-value
+   provenance system. Class C handling is mode-dependent (ask immediately in autonomous;
+   defer non-blocking to guided validation package); Class D always stops and asks
+   immediately; Class A/B resolved autonomously. Provenance is a separate concept —
+   every requirement carries exactly one label (explicitly-requested, inferred-context,
+   inherited, domain-practice, design-decision, risk-control, or unresolved) and is
+   never silently presented as human-requested. Analysis mode is an independent value
+   selected at intake, distinct from the conductor's interaction style or implementation
+   autonomy.
 - `analyst-intake` skill (Phase 1): high-level Q&A producing a confirmed objective
-  brief. `analyst-discovery` skill (Phase 2): 20-step evidence-first discovery
-  process producing requirements, business rules, success criteria, verification
-  definitions, wireframes, and intended documentation. `analyst-review` skill
+   brief. `analyst-discovery` skill (Phase 2): 20-step evidence-first discovery
+   process producing functional, non-functional, operational, and documentation
+   requirements with provenance, business rules, success criteria, verification
+   definitions, wireframes, and intended documentation. `analyst-review` skill
   (Phase 3): requirements quality gate checking 11 per-requirement and 7 whole-set
   criteria; guided mode produces a functional validation package. `analyst-baseline`
-  skill (Phase 4): stable identifiers, traceability (OBJ → HC → FR/BR → SC →
-  VER), consistency maintenance across the full lifecycle, and a documentation completion gate after verification/evidence mapping but before final review/outcome completion.
+skill (Phase 4): stable identifiers, traceability (OBJ → HC → FR/BR → SC →
+   VER), consistency maintenance across the full lifecycle, and a binary documentation
+   completion gate after verification/evidence mapping but before final review/outcome
+   completion. The gate produces a complete/partial/aborted verdict — documentation is
+   either complete (all criteria met), partial (deficiencies recorded with rationale),
+   or aborted (cannot proceed without reopening analysis).
 - `spec-refinement` skill was removed and replaced by the analyst methodology.
   The `specification-methodology` skill remains as a general-purpose spec authoring
   tool, but is no longer a conductor-phase prerequisite — spec writing is the
