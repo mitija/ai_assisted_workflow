@@ -18,12 +18,12 @@ Collect the following into a structured form you can pass to the `general` sub-a
 - **Goal** — the original request / what was supposed to be done.
 - **interaction_mode** — interactive or autonomous.
 - **analysis_mode** — guided or autonomous (from the analyze phase).
-- **Overall status** — `complete` (graph fully executed), `partial` (executed with deferred items or rejected human outcome), or `aborted` (escalation exhausted).
+- **Overall status** — `complete` (graph fully executed with no failures, analyst gate `passed`, no critical or blocking reviewer findings, functional-outcome result `pass`, and final human approval), `partial` (some or all work done but mandatory criteria unmet, caveats accepted, or human rejected with no further work), or `aborted` (unrecovered execution, escalation, or environment failure).
 - **Task count** — how many tasks completed successfully vs. total tasks in the graph.
 - **Per-task detail**, for each task in graph order: id, description, dependencies, the full prompt given to the executor, the verification performed and its result (pass/fail), the commit made (if any), and final status (passed / failed / not-started).
 - **Review rounds**: for each reviewer invocation, record the round number, the reviewer's findings (counts per severity and key observations), and the conductor's resolution (remedial tasks created, suggestions implemented or advisory, any re-review outcome).
-- **Analyst traceability gate** — gate status (`passed`, `passed with gaps`, or `not passed`), evidence mapping summary, limitations list, documentation discrepancies.
-- **Functional-outcome check** — overall result (`pass`, `partial`, `gap`), per-criterion detail with evidence references.
+- **Analyst traceability gate** — gate status (`passed` or `not passed`), evidence mapping summary, limitations list, documentation discrepancies.
+- **Functional-outcome check** — overall result (`pass`, `partial`, `gap`, or `not-applicable` if gate-blocked), per-criterion detail with evidence references.
 - **Final human outcome** — decision (approved, rejected, accepted with caveats), caveats text.
 
 ### 2. Delegate report writing
@@ -66,9 +66,9 @@ After the task details, include an analyst traceability gate section:
 ```markdown
 ## Analyst Traceability Gate
 
-**Gate status:** passed | passed with gaps | not passed
+**Gate status:** passed | not passed
 
-<if not passed or passed with gaps: description of limitations, deferred criteria, documentation discrepancies>
+<if not passed: description of limitations, deferred criteria, documentation discrepancies>
 
 **Evidence mapping:** <summary of test → requirement → criteria traceability>
 ```
@@ -93,12 +93,16 @@ critical/blocking findings" and a completely clean review.
 
 ### 6. Outcome sections
 
-After the review section, include functional outcome and final human outcome:
+After the review section, include functional outcome and final human outcome.
+If the analyst traceability gate is `not passed`, the functional-outcome result
+is `not-applicable` and the report status cannot be `complete`.
 
 ```markdown
 ## Functional Outcome Check
 
-**Overall result:** pass | partial | gap
+**Overall result:** pass | partial | gap | not-applicable
+
+<if not-applicable: analyst traceability gate was not passed>
 
 | Criterion | Result | Evidence |
 |-----------|--------|----------|

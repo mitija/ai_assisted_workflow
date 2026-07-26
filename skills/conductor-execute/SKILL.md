@@ -48,7 +48,7 @@ If **any** task in the round fails to execute or fails verification:
 - Do **not** commit the failed task's work.
 - Load the [`conductor-escalate`](../conductor-escalate/SKILL.md) skill via the `skill` tool to handle the failure.
 
-### 7. Analyst traceability gate (after graph exhausted)
+### 7. Analyst documentation/traceability gate
 
 When the graph is exhausted with no failures and before invoking the reviewer,
 invoke the `analyst` sub-agent once to map implementation verification evidence
@@ -78,19 +78,26 @@ The analyst must perform the following and report results:
 5. **Run the documentation completion gate** — assess whether the functional
    documentation (intended user guide, configuration reference, operations
    guide) is complete relative to the implemented behaviour. Report gate status
-   as `passed`, `passed with gaps` (non-blocking), or `not passed`.
+   as `passed` or `not passed`.
 
 The analyst returns:
 
-- **Gate status**: `passed`, `passed with gaps`, or `not passed`.
+- **Gate status**: `passed` or `not passed`.
 - **Evidence mapping**: traceability table linking tests → requirements → criteria.
 - **Limitations list**: deferred items, known gaps, unimplemented criteria.
 - **Documentation discrepancies**: list of files and items that need updating.
 - **Baseline consistency**: confirmation or flagged inconsistencies.
 
-**If gate status is `not passed`:** record the reason. Proceed to the reviewer
-audit (step 8) regardless — a failing gate does not block review, but the report
-will record the gate status.
+**If gate status is `not passed`** and the reason is concrete documentation or
+traceability discrepancies, record each discrepancy as a remedial task, add them
+to the graph, and execute them using the execute/verify/commit workflow
+(steps 1–5). After all remedial tasks complete, invoke the `analyst` sub-agent
+again to rerun the traceability gate (this step). Repeat until the gate passes
+or the discrepancies cannot be resolved (route to escalation, step 6, for
+unresolvable cases).
+
+Proceed to the reviewer audit (step 8) regardless of gate status — the reviewer
+audit is mandatory and always runs.
 
 ### 8. Reviewer audit (after analyst gate)
 
@@ -133,9 +140,14 @@ Based on the reviewer's findings:
 
 ### 10. Functional outcome check
 
-After the reviewer has no critical or blocking findings (and any accepted
-suggestions have been implemented), the conductor checks the achieved functional
-outcome against the original objective and high-level criteria.
+**If the analyst traceability gate status is `not passed`:** skip this step.
+The gate blocks a successful functional-outcome assessment. Record the gate
+status as blocking and proceed to step 11.
+
+**If the analyst traceability gate is `passed`:** after the reviewer has no
+critical or blocking findings (and any accepted suggestions have been
+implemented), the conductor checks the achieved functional outcome against
+the original objective and high-level criteria.
 
 Perform this check yourself (the conductor — do not delegate):
 
@@ -178,23 +190,29 @@ Either create new tasks for the reported issues (returning to step 1) or, if
 the user indicates the work should stop, record the outcome as `rejected` and
 proceed to the report phase with a `partial` or `aborted` status.
 
-**If the human approves or accepts with caveats:** record the decision and
-proceed to step 12.
+**If the human approves or accepts with caveats:** record the decision.
+Approval requires the analyst traceability gate to be `passed` and the
+functional-outcome result to be `pass`. If the gate is not passed or the
+functional outcome is not `pass`, the human can only accept with caveats or
+reject, not approve. Proceed to step 12.
 
-### 12. Route to report on completion
+### 12. Route to report
 
-When the graph is exhausted, the reviewer audit has passed (no critical or
-blocking findings remain, and any accepted suggestions have been implemented),
-and the final human outcome review is recorded, load the
+When execution has finished — whether exhausted, gated, or aborted — load the
 [`conductor-report`](../conductor-report/SKILL.md) skill via the `skill` tool
 to produce the final report. Include in the data passed to the report skill:
 
 - All existing task and reviewer data.
 - `analysis_mode` (guided or autonomous).
-- Analyst traceability gate: status, evidence mapping, limitations list,
-  documentation discrepancies.
-- Functional-outcome check: per-criterion results, overall result, evidence.
+- Analyst traceability gate: status (`passed` or `not passed`), evidence
+  mapping, limitations list, documentation discrepancies.
+- Functional-outcome check: per-criterion results, overall result (`pass`,
+  `partial`, `gap`, or `not-applicable` if gate-blocked), evidence.
 - Final human outcome: decision, caveats (if any).
+- Whether the `complete`-eligible conditions are all met: graph fully
+  executed with no failures, analyst gate `passed`, no critical or blocking
+  reviewer findings, functional-outcome result `pass`, and final human
+  approval.
 
 ### Parallelism notes
 
