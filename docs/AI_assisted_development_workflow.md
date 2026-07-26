@@ -1,66 +1,95 @@
 # Agentic Framework for Long-Horizon AI Work
 
-**Status:** Production ready, still evolving. Used on real projects, primarily Odoo-related work but not limited to Odoo. The framework now includes a dedicated **analyst** agent that owns requirements analysis and functional documentation, freeing the human to focus on intent and consequential decisions.
+**Status:** Production-ready for its core, spec-driven coding workflow and still
+evolving. The framework also supports documentation, research, analysis,
+configuration, and project setup; those broader non-code workflows are less mature.
 
-**Audience:** Senior developers and functional analysts, expanding to people who want to run long-horizon AI tasks. Comments, questions, and suggestions are explicitly welcome — this document is shared for feedback as much as for collaboration.
+This is the authoritative overview for the detailed [workflow documentation](workflow/README.md).
 
----
+## The paradigm
 
-This document is the landing page for a wiki-style collection. The detailed content lives under [`docs/workflow/README.md`](workflow/README.md).
+The human supplies intent, desired outcomes, high-level criteria, constraints, and
+consequential decisions. The **analyst** turns that intent into a defensible
+functional contract. The **conductor** delivers against the contract across code
+and non-code work. Implementers may use any suitable AI workflow; the deliverable
+and its evidence are what matter.
 
-Specification-driven coding is a relatively mature, well-tested capability within this framework. Current framework improvement prioritises non-coding long-horizon work — documentation, research, analysis, planning, and configuration — where the same structured decomposition and verification principles apply. The [philosophy page](workflow/philosophy.md) remains the canonical expanded explanation of the overall approach.
+## Roles and analyst phases
 
-## Core Roles
+- **Human (Objective Owner):** confirms the objective, makes consequential
+  decisions, and makes the final judgement about the delivered outcome.
+- **Analyst (Functional Contract Owner):** owns requirements, business rules,
+  success criteria, provenance, traceability, verification definitions, wireframes,
+  and intended documentation through four phases:
+  1. **Intake** establishes the objective brief and analysis mode.
+  2. **Discovery** uses existing evidence to develop the functional contract.
+  3. **Review** applies the requirements quality gate and, in guided mode, produces
+     a validation package for human review.
+  4. **Baseline** establishes stable identifiers, consistency, traceability, and
+     evidence mappings across the lifecycle.
+- **Conductor (Delivery Owner):** accepts the analyst baseline, coordinates delivery,
+  and owns outcome assessment. The analyst does not implement application code.
 
-Three roles own distinct parts of the workflow:
+Every requirement and important business rule carries exactly one provenance value:
+explicitly-requested, inferred-context, inherited, domain-practice, design-decision,
+risk-control, or unresolved. Inferred decisions are never silently presented as
+human requirements.
 
-- **Human (Objective Owner):** provides the problem, functional outcome, high-level success criteria, important constraints, and consequential business decisions. Validates the proposed functional interpretation in guided mode. Does not write detailed requirements or documentation.
-- **Analyst (Functional Contract Owner):** transforms high-level intent into a complete, defensible, internally consistent functional contract. Operates in four lifecycle phases (intake, discovery, review, baseline) and two modes (autonomous, guided). Owns requirements, business rules, success criteria, traceability, verification definitions, wireframes, and intended documentation across the full project lifecycle.
-- **Conductor (Delivery Owner):** coordinates implementation against the requirements baseline. Delegates analysis to the analyst, checks alignment with the original objective, decomposes work, orchestrates implementation and verification, and validates the delivered result against both the functional contract and the original objective.
+## Conductor phases
 
-For detailed role definitions, see the [Workflow page](workflow/workflow.md).
+The conductor owns six delivery phases:
 
-Two failure modes drive this methodology:
+1. **Analyze** determines goal, scope, work type, context, and analyst readiness.
+2. **Decompose** creates a dependency-aware graph for code or non-code work.
+3. **Execute** delegates implementation and verification, using the verifier and
+   committer where appropriate.
+4. **Review** invokes the mandatory read-only reviewer audit; critical or blocking
+   findings trigger remediation and re-review.
+5. **Escalate** diagnoses failed tasks through the escalation path before continuing
+   or aborting.
+6. **Report** records task results, evidence, review outcomes, and overall status.
 
-- **Spec ambiguity → assumption-driven defects.** The developer fills gaps with assumptions; the analyst or conductor rejects the result based on intent that was never written down. The cost is paid in iterations, which are now the dominant cost of software delivery.
-- **Specs are no longer read only by humans.** They are increasingly consumed by LLM tooling on the developer side. A spec good enough for a human to interpret is not necessarily good enough for an AI to implement against. Documents must be **AI-ready** as well as human-readable.
+`analysis_mode` (`guided` or `autonomous`) is independent of `interaction_mode`
+(`interactive` or `autonomous`). The first governs how the analyst handles
+requirements decisions and validation; the second governs how the conductor handles
+orchestration ambiguity. Neither mode removes the need to stop for genuine
+blockers or consequential decisions.
 
-The thesis:
+## Traceability and completion
 
-> **If the specification is precise enough and the test suite is exhaustive enough, an LLM-assisted developer should be able to produce conforming software in hours, not days — and the cycle should be reproducible by another developer or another LLM later.**
+The evidence chain runs from objective and high-level criteria through requirements,
+business rules, detailed success criteria, verification definitions, and delivered
+evidence. In spec-driven coding, contractual tests are necessary but not sufficient.
+Completion also requires review against the contract, behavioural or equivalent
+outcome evidence, documentation and traceability checks, the conductor's functional
+outcome assessment, and final human judgement. Passing tests alone is not completion.
 
-Then by extension:
+## Benefits and trade-offs
 
-> **The same principle extends to non-coding projects, where the contract is explicit acceptance criteria rather than a software specification plus test suite.**
+The separation of intent, contract ownership, and delivery makes assumptions visible,
+keeps work reproducible, and supports short implementation cycles when analysis is
+strong. The trade-off is that rigour moves up front: analysis quality becomes the
+main bottleneck, and human gates remain important for consequential interpretation.
 
-The methodology trades up-front specification rigour for short, lean implementation cycles. The center of gravity sits with the analyst and conductor, not the human or the developer.
+## Limitations and maturity
 
-Beyond coding, the same acceptance-driven autonomy applies. For non-coding flows (research, analysis, documentation, configuration), every task is defined with explicit acceptance criteria and the LLM is instructed how to assess its work against those criteria, continuing until they are met. For software flows, the acceptance criteria are operationalized as a test suite and the LLM runs the tests until they pass.
-
-**Primary context: Odoo customization.** Framework constraints (ORM, view system, module structure, standard UX patterns) remove many decisions that would otherwise need to be specified. The principles generalize to other constrained-framework projects.
+Analysis can drift from intent, particularly in autonomous mode, and no process can
+replace informed human judgement. Verification is less standardized for
+non-functional requirements, external triggers, UI/UX nuance, and non-code outcomes.
+Tooling, environment setup, git fluency, and the still-maturing non-code workflow
+also constrain adoption. These are active improvement areas, not reasons to treat
+the core workflow as experimental.
 
 ## Topics
 
 | Topic | Description |
 |---|---|
-| [Philosophy](workflow/philosophy.md) | Problem, intent, and the three guiding principles of the methodology |
-| [Principles](workflow/principles.md) | The eight load-bearing principles, including analyst ownership, provenance, and traceability |
-| [Workspace and Repositories](workflow/workspace-and-repositories.md) | Project layout, two-repo model, local area |
-| [Specification](workflow/specification.md) | Analyst-driven requirements process and the 5-step specification methodology |
-| [Test Suite](workflow/test-suite.md) | State-table test format and acceptance criteria |
-| [Workflow](workflow/workflow.md) | End-to-end cycle with analyst, conductor, and developer roles; autonomous and guided modes |
-| [Acceptance](workflow/acceptance.md) | Four required pillars of acceptance |
-| [Known Gaps and Open Questions](workflow/known-gaps-and-open-questions.md) | Honest assessment of current limitations, including analyst-maturity gaps |
-| [Sample Test Scenario](workflow/appendices/sample-test-scenario.md) | Worked example from a real Odoo procurement scenario |
-
----
-
-The methodology trades up-front specification effort for downstream speed and reproducibility:
-
-- **The analyst** owns the functional contract end-to-end, so the human provides intent, not detailed documents.
-- **Implementation cycles are short** because the spec eliminates ambiguity.
-- **Acceptance is multi-layered** — tests, AI-assisted code review, behavioural demo.
-- **Work is portable** — spec and tests describe the system independently of developer or AI.
-- **The customer always has the latest** because the docs repo is shared.
-
-It works when the analyst produces a rigorous requirements baseline and the developer can execute against it without filling gaps unilaterally. **The bottleneck shifts to analysis quality, not implementation speed.** Risks are named honestly in the [known gaps](workflow/known-gaps-and-open-questions.md) — feedback on closing them is the request.
+| [Philosophy](workflow/philosophy.md) | Problem, thesis, and guiding principles. |
+| [Principles](workflow/principles.md) | Load-bearing principles, provenance, and traceability. |
+| [Workspace and Repositories](workflow/workspace-and-repositories.md) | Project layout and repository model. |
+| [Specification](workflow/specification.md) | Analyst contract and optional post-baseline structuring. |
+| [Test Suite](workflow/test-suite.md) | Contractual test format and acceptance criteria. |
+| [Workflow](workflow/workflow.md) | Detailed analyst and conductor lifecycle. |
+| [Acceptance](workflow/acceptance.md) | Required acceptance and completion evidence. |
+| [Known Gaps and Open Questions](workflow/known-gaps-and-open-questions.md) | Current limitations and unresolved improvement questions. |
+| [Sample Test Scenario](workflow/appendices/sample-test-scenario.md) | Worked Odoo procurement example. |

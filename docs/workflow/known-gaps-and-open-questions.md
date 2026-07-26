@@ -2,36 +2,33 @@
 
 These are where input from senior developers is most welcome.
 
-## The Methodology Lives or Dies by the Analysis
+## Analysis Quality Is the Bottleneck
 
 Enormous onus is on the requirements baseline produced by the analyst. The conductor has no mandate to second-guess it, the developer has no mandate to fill gaps, and the human has already confirmed the high-level interpretation. **A bad requirements baseline produces bad software on schedule.** This is a feature — it forces analysis quality to be taken seriously — but it makes the analyst role the binding constraint on output quality.
 
-## The Analyst's Output Is AI-Drafted
-
-The requirements baseline is produced by the analyst agent in conversation with the human and the existing evidence. The deeper limitation: **if the analyst infers something the human didn't actually want, the specification drifts from intent before implementation begins.** Human review in guided mode is the primary safety net. In autonomous mode, the safety net is weaker — the conductor's alignment check and the final human outcome review catch drift later, at higher cost.
-
 ## Analyst / Conductor Split Maturity
 
-The separation of analysis (analyst) from delivery (conductor) is new. The following are open questions:
-
-- How much of the existing conductor's analysis-phase behaviour (Phase 1 — Analyze) should be retained versus delegated entirely?
-- Should the conductor perform a lightweight alignment check on the analyst's output, or is a formal review gate needed between analysis and delivery?
-- In autonomous mode, who decides when analysis is complete enough for implementation to begin?
-- How do mode transitions (guided → autonomous, autonomous → guided) interact with the conductor's decomposition and execution phases?
-
-Current implementation: the conductor determines whether sufficient analysis exists, delegates discovery to the analyst when needed, and checks alignment before accepting the baseline. This is expected to evolve with practice.
+The current division is settled: the analyst owns the functional contract and its
+four phases; the conductor owns delivery across six phases, including readiness and
+alignment checks. The split is still new in practice, so its effectiveness and the
+best operational hand-offs will continue to be evaluated.
 
 ## Provenance Rigor Overhead
 
 Every requirement must record its provenance (explicitly-requested, inferred-context, inherited, domain-practice, design-decision, risk-control, unresolved). For small, low-risk projects this may feel bureaucratic. The intent is that the format scales: small tasks may use a single consolidated document with lightweight provenance annotations; larger projects use structured YAML. Finding the right default balance is ongoing work.
 
-## The Spec Itself Is AI-Drafted
+## Analyst Output Can Drift from Intent
 
-The requirements baseline is analyst-drafted using AI. The deeper limitation: **if the analyst infers something the human didn't actually want, the AI produces something the human didn't want, and the human may sign off without spotting it (in guided mode) or never see it (in autonomous mode).** The methodology controls drift between spec and code, not between intent and spec. Review gates (guided validation, conductor alignment check, final outcome review) are the safety net.
+The requirements baseline is AI-drafted from conversation and existing evidence. If
+the analyst infers something the human did not want, the specification can drift
+before implementation. Guided validation, conductor alignment, traceability, and
+final outcome review reduce this risk but cannot eliminate it; autonomous analysis
+has a weaker early safety net.
 
-## The Analyst Is Also a Developer (Currently)
+## Technical Fluency and Role Boundaries
 
-The analyst role today is filled by the same person who handles the conductor and developer functions. This means:
+The analyst role is currently often filled by the same person who handles conductor
+and implementation functions. This means:
 
 - The requirements baseline routinely defines **technical architecture** — module boundaries, data model, integration points, performance-sensitive design — not just functional behaviour.
 - The analyst makes technical design decisions that a pure functional analyst would not.
@@ -61,9 +58,12 @@ We don't prescribe how the developer uses AI. Deliberate (developers vary, dicta
 
 A single linear tag sequence works for one project with one developer. Parallel epics, multi-developer engagements, and long-running branches would need a richer model. We haven't needed it yet.
 
-## Non-Functional Requirements
+## Verification Gaps
 
-NFRs (performance, security, observability) are captured in a dedicated spec section but not tested with the rigour of functional scenarios. **The largest single technical gap.**
+NFRs (performance, security, observability) are captured in a dedicated spec section
+but are not tested with the rigour of functional scenarios. External triggers,
+UI/UX nuance, and non-code outcomes also lack equally standardized verification.
+**This is the largest technical gap.**
 
 ## Analyst / Conductor Git Fluency
 

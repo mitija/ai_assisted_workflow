@@ -13,9 +13,9 @@ Every requirement and important business rule records its provenance — exactly
 
 For full details of the analyst's process, see the [analyst agent definition](../../agents/agent/analyst.md) and the four `analyst-*` skills (intake, discovery, review, baseline).
 
-## The 5-Step Specification Methodology
+## Optional 5-Step Specification Methodology
 
-An **optional** structuring tool (the `specification-methodology` skill) consumes the validated `analyst baseline` and formats it into implementation-ready wiki-style artefacts. This is not a second requirements elicitation process — the analyst owns the functional contract. It is not a mandatory prerequisite for the conductor.
+An **optional post-baseline structuring tool** (the `specification-methodology` skill) consumes the analyst baseline and formats it into implementation-ready wiki-style artefacts. This is not requirements elicitation: the analyst owns the functional contract. It is not a mandatory prerequisite for the conductor.
 
 The methodology runs all five steps uninterrupted in both analysis modes. Purely structural observations (naming, formatting, cross-references) are resolved within the methodology as they arise. If structuring reveals a material functional-contract issue, it is routed back through the analyst change/decision/validation policy — the methodology does not own its own approval gate. Blocking issues still stop appropriately.
 
