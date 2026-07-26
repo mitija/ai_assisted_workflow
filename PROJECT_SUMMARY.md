@@ -261,11 +261,11 @@ Sections exceeding 40 lines extract to standalone files. All five steps run
   (Phase 3): requirements quality gate checking 11 per-requirement and 7 whole-set
   criteria; guided mode produces a functional validation package. `analyst-baseline`
 skill (Phase 4): stable identifiers, traceability (OBJ → HC → FR/BR → SC →
-   VER), consistency maintenance across the full lifecycle, and a binary documentation
-   completion gate after verification/evidence mapping but before final review/outcome
-   completion. The gate produces a complete/partial/aborted verdict — documentation is
-   either complete (all criteria met), partial (deficiencies recorded with rationale),
-   or aborted (cannot proceed without reopening analysis).
+VER), consistency maintenance across the full lifecycle, and a documentation/traceability gate
+    after verification/evidence mapping. The gate returns only passed or not passed (documentation
+    domain); it does not produce a complete/partial/aborted verdict. That overall status is
+    determined later by the conductor/report after mandatory reviewer audit, functional-outcome
+    assessment, and final human outcome review.
 - `spec-refinement` skill was removed and replaced by the analyst methodology.
   The `specification-methodology` skill remains as a general-purpose spec authoring
   tool, but is no longer a conductor-phase prerequisite — spec writing is the

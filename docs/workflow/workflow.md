@@ -18,45 +18,48 @@
 │  4. Phase 3 — Review: quality gate                              │
 │  5. [Guided mode] Functional validation package → human approves│
 │  6. Phase 4 — Baseline: traceability, identifiers, consistency  │
-│  7. Binary completion gate (complete/partial/aborted)           │
-│  8. Produces requirements baseline with stable IDs and trace    │
+│  7. Produces requirements baseline with stable IDs and trace    │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  Conductor (Delivery Owner)                                     │
-│  9. Checks analyst output aligns with original objective        │
-│ 10. Decomposes implementation work (task graph)                 │
-│ 11. Coordinates implementation, technical review, verification  │
-│ 12. Validates delivered result against:                         │
+│  8. Checks analyst output aligns with original objective        │
+│  9. Decomposes implementation work (task graph)                 │
+│ 10. Coordinates implementation, technical review, verification  │
+│ 11. Validates delivered result against:                         │
 │     - detailed specification (functional contract)              │
 │     - original functional objective                             │
 │     - human's high-level success criteria                       │
-│ 13. Ensures traceability, verification evidence, documentation  │
+│ 12. Ensures traceability, verification evidence, documentation  │
 │     are complete before declaring success                       │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  Developer (with AI, method of their choice)                    │
-│ 14. Check out docs tag                                          │
-│ 15. Raise questions to analyst; if genuine gap → cycle updates  │
+│ 13. Check out docs tag                                          │
+│ 14. Raise questions to analyst; if genuine gap → cycle updates  │
 │     requirements baseline and produces new tag                  │
-│ 16. Implement against spec + tests                              │
-│ 17. Record the docs tag implemented in source-side traceability │
-│ 18. Deliver per [Developer Deliverables](#developer-deliverables)│
+│ 15. Implement against spec + tests                              │
+│ 16. Record the docs tag implemented in source-side traceability │
+│ 17. Deliver per [Developer Deliverables](#developer-deliverables)│
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  Conductor + Analyst + Reviewer                                 │
-│ 19. Code review (AI-assisted) against spec                      │
-│ 20. Run automated tests                                         │
-│ 21. Behavioural demo                                            │
-│ 22. Analyst updates traceability with evidence                  │
-│ 23. Conductor performs functional outcome review                │
-│ 24. Final human outcome review                                  │
-│ 25. Approve, or feed findings into next analysis iteration      │
+│ 18. Code review (AI-assisted) against spec                      │
+│ 19. Run automated tests                                         │
+│ 20. Behavioural demo                                            │
+│ 21. Analyst updates traceability with evidence                  │
+│ 22. Analyst documentation/traceability gate (passed/not passed) │
+│ 23. Mandatory reviewer audit                                    │
+│ 24. Conductor performs functional outcome assessment            │
+│ 25. Final human outcome review                                  │
+│ 26. Conductor/report determines overall status                  │
+│     (complete / partial / aborted)                              │
+│ 27. Approve, or feed findings into next analysis iteration      │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
