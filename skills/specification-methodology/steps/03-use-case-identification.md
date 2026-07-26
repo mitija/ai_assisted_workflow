@@ -34,9 +34,9 @@ Identify all user interactions with the system, starting from domain-specific wo
    - Ensure each use case has authorized roles assigned
    - Verify the [permissions matrix from Step 2](02-roles.md) covers all use cases
 
-## Analysis Mode Guidance
+## Structuring Observations
 
-When this step completes, do not pause for approval. In **guided** analysis, collect any non-blocking observations for the consolidated package after Step 5. In **autonomous** analysis, proceed directly.
+When this step completes, do not pause for approval. Resolve purely structural observations (naming, formatting, cross-references) within the methodology as you go. If a material functional-contract issue is found, stop and route it back through the analyst change/decision/validation policy.
 
 ## Output
 

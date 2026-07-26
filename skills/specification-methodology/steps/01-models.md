@@ -57,9 +57,9 @@ Plus a **Field Notes** section for detailed explanations (computation formulas, 
 - The **Related Model** column is only for relationship fields (ref, m2o, o2m, m2m) and related fields (Rel, Rel/S).
 - The **Comments** column should be short (on-delete behavior, enum values). Use **Field Notes** for anything that does not fit.
 
-## Analysis Mode Guidance
+## Structuring Observations
 
-When this step completes, do not pause for approval. In **guided** analysis, record any non-blocking observations for the consolidated package after Step 5. In **autonomous** analysis, proceed directly. Blocking issues (genuine ambiguity affecting implementation) stop here — ask one question at a time.
+When this step completes, do not pause for approval. Resolve purely structural observations (naming, formatting, cross-references) within the methodology as you go. If a material functional-contract issue is found — a requirement that is ambiguous, contradictory, or incomplete — stop and route it back through the analyst change/decision/validation policy. Genuine ambiguities affecting implementation stop here — ask one question at a time.
 
 ## Example
 

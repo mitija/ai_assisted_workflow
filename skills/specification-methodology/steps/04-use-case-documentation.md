@@ -28,9 +28,9 @@ Each use case must include all of the following sections:
 - **Post-conditions** — What is true after successful completion, data state changes, side effects
 - **Acceptance Criteria** — Gherkin-style scenarios (Given/When/Then). These are inputs to the contractual `<epic>_TESTS.md` scenarios authored via the `test-scenarios` skill, which are authoritative.
 
-## Analysis Mode Guidance
+## Structuring Observations
 
-When this step completes, do not pause for approval. In **guided** analysis, collect any non-blocking observations for the consolidated package after Step 5. In **autonomous** analysis, proceed directly.
+When this step completes, do not pause for approval. Resolve purely structural observations (naming, formatting, cross-references) within the methodology as you go. If a material functional-contract issue is found, stop and route it back through the analyst change/decision/validation policy.
 
 ## Output Format
 

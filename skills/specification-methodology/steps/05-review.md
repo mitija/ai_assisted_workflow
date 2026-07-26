@@ -1,10 +1,10 @@
-# Step 5: Consistency Check
+# Step 5: Structural Consistency and Wiki Integrity Check
 
 [Back to Step 4: Use Case Documentation](04-use-case-documentation.md) | [Up to Index](../SKILL.md)
 
 ## Objective
 
-Verify the specification artefacts are internally consistent, complete, and structurally sound. This is a **consistency check**, not a second quality gate — the analyst-review skill owns the functional validation and quality gate. Do not duplicate that work.
+Verify the specification artefacts are structurally consistent and the wiki layout is intact. This is a **structural consistency and wiki integrity check**, not a second quality or approval gate — the analyst-review skill owns the functional validation and quality gate. Do not duplicate that work.
 
 ## Consistency Checklist
 
@@ -16,19 +16,13 @@ See the [Quality Checklist](../references/quality-checklist.md) for the detailed
 - **Extraction rule** — Sections over 40 lines extracted to standalone files with summary + link.
 - **Output format** — All files follow the wiki-style directory layout.
 
-## Analysis Mode Guidance
+## Structuring Observations During the Checklist
 
-After the checklist pass, produce the appropriate output based on `analysis_mode`:
-
-- **Guided analysis**: Collect all non-blocking observations recorded during Steps 1–4 and present a single consolidated functional validation package. Include the full specification artefacts, any open questions, and a summary of observations. Wait for human feedback before finalising.
-- **Autonomous analysis**: Proceed directly. No intermediate approval needed. Follow analyst decision classes (Class C decisions are immediate in autonomous mode; Class D always immediate).
-
-Blocking issues — genuine ambiguities that affect implementation — must still be surfaced one at a time with unpacking. If none remain, finalise the specification artefacts directly.
+During the checklist pass, resolve purely structural observations (naming, formatting, cross-references, missing links, extraction rule violations) directly — these are within the methodology's scope. If the checklist reveals a material functional-contract issue (e.g., a missing requirement that affects correctness), stop and route it back through the analyst change/decision/validation policy; do not create a methodology-owned approval gate.
 
 ## Finalization
 
-1. Address any feedback from the consolidated validation package.
-2. Resolve any blocking issues.
-3. Update the revision history in `spec-index.md`.
-4. Mark the specification as "Final".
-5. Verify all files exist and all relative links resolve.
+1. Resolve any blocking issues found during the checklist.
+2. Update the revision history in `spec-index.md`.
+3. Mark the specification as "Final".
+4. Verify all files exist and all relative links resolve.

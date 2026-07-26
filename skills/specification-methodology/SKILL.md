@@ -28,7 +28,7 @@ If `$ARGUMENTS` is provided, read that file first.
 
 ## Process Overview
 
-Follow these five steps uninterrupted. Do not stop for approval between steps. In **guided** analysis, collect non-blocking matters (questions, notes, refinements) and present one consolidated functional validation package after Step 5. In **autonomous** analysis, proceed without intermediate approval, following analyst decision classes (Class C immediate in autonomous; Class D always immediate). Blocking issues — genuine ambiguities that affect implementation — still stop appropriately (one question at a time with unpacking).
+Follow these five steps uninterrupted in both analysis modes. Do not stop for approval between steps. Resolve purely structural observations (naming, formatting, cross-references) within the methodology as you go. If structuring reveals a material functional-contract issue — a requirement that is ambiguous, contradictory, or incomplete in a way that affects implementation — stop and route it back through the analyst change/decision/validation policy; do not create a methodology-owned approval gate. Genuine ambiguities still stop appropriately (one question at a time with unpacking).
 
 ```
 Analyst Requirements Baseline

@@ -42,9 +42,9 @@ Define user roles and their permission levels for each feature/use case.
 
 See [Specification Template: Roles Section](../assets/specification-template.md#roles-section) for the output format.
 
-## Analysis Mode Guidance
+## Structuring Observations
 
-When this step completes, do not pause for approval. In **guided** analysis, collect any non-blocking observations for the consolidated package after Step 5. In **autonomous** analysis, proceed directly.
+When this step completes, do not pause for approval. Resolve purely structural observations (naming, formatting, cross-references) within the methodology as you go. If a material functional-contract issue is found, stop and route it back through the analyst change/decision/validation policy.
 
 ## Example
 

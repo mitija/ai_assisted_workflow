@@ -17,7 +17,7 @@ For full details of the analyst's process, see the [analyst agent definition](..
 
 An **optional** structuring tool (the `specification-methodology` skill) consumes the validated `analyst baseline` and formats it into implementation-ready wiki-style artefacts. This is not a second requirements elicitation process — the analyst owns the functional contract. It is not a mandatory prerequisite for the conductor.
 
-The methodology runs all five steps uninterrupted. In **guided** analysis, non-blocking matters are collected throughout and presented as a single consolidated functional validation package after Step 5 (not after each step). In **autonomous** analysis, the skill proceeds without intermediate approval, following analyst decision classes. Blocking issues still stop appropriately.
+The methodology runs all five steps uninterrupted in both analysis modes. Purely structural observations (naming, formatting, cross-references) are resolved within the methodology as they arise. If structuring reveals a material functional-contract issue, it is routed back through the analyst change/decision/validation policy — the methodology does not own its own approval gate. Blocking issues still stop appropriately.
 
 The five techniques:
 
