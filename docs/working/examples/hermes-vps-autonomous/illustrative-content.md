@@ -250,13 +250,13 @@ during provisioning. The human must secure the `.vault_pass` file separately.
 
 #### Configuration reference (illustrative excerpt)
 
-| Key | Purpose | Type | Required | Default | Allowed | Security |
-|---|---|---|---|---|---|---|
-| `discord_token` | Discord bot token | string | yes | — | valid Discord bot token | Must be vault-encrypted |
-| `authorised_user_id` | Discord user ID allowed to interact | string | yes | — | valid Discord snowflake | Controls access |
-| `health_port` | Health check HTTP port | integer | no | 9100 | 1024–65535 | — |
-| `log_level` | Hermes log verbosity | string | no | info | debug, info, warn, error | — |
-| `log_dir` | Log file directory | string | no | /var/log/hermes | valid absolute path | — |
+| Key | Purpose | Type | Required | Default | Allowed | Security | Change effect |
+|---|---|---|---|---|---|---|---|
+| `discord_token` | Discord bot token | string | yes | — | valid Discord bot token | Must be vault-encrypted | Redeploy (vault update + playbook re-run) |
+| `authorised_user_id` | Discord user ID allowed to interact | string | yes | — | valid Discord snowflake | Controls access | Service restart |
+| `health_port` | Health check HTTP port | integer | no | 9100 | 1024–65535 | — | Service restart |
+| `log_level` | Hermes log verbosity | string | no | info | debug, info, warn, error | — | Service restart |
+| `log_dir` | Log file directory | string | no | /var/log/hermes | valid absolute path | — | Service restart |
 
 #### Operations guide (illustrative excerpt)
 
@@ -291,7 +291,7 @@ manual VPS access. Added FR-013.
 
 | ID | Statement | Provenance |
 |---|---|---|
-| FR-013 | The Ansible playbook shall support token rotation by re-running with an updated vault file. | discovered-doc-gap |
+| FR-013 | The Ansible playbook shall support token rotation by re-running with an updated vault file. | design-decision |
 
 ### Step 18 — Produce wireframes
 
@@ -421,7 +421,7 @@ OBJ-001  Deploy Hermes on VPS, Discord-accessible, Ansible-automated
 This example demonstrates the complete analyst workflow in autonomous mode for
 an infrastructure deployment project with no UI. The analyst:
 
-1. Conducted a focused high-level Q&A (9 questions).
+1. Conducted a focused high-level Q&A (6 questions).
 2. Produced a confirmed objective brief (OBJ-001, HC-001–HC-003).
 3. Performed all 20 discovery steps, including domain research (Step 4),
    entity modelling (Step 6), exception analysis (Step 9), and

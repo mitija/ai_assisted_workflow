@@ -14,7 +14,7 @@ Discord.
 | Objective brief / Intake (Phase 1) | Intake Q&A, objective brief production, human confirmation |
 | Mode choice | Selection of autonomous mode |
 | Decision classification | Class A/B decisions resolved autonomously (port selection, process manager, log rotation); Class C decisions escalated (secret storage approach) |
-| Provenance | Every requirement labelled with provenance: inferred-context, domain-practice, design-decision, risk-control |
+| Provenance | Every requirement labelled with provenance: explicitly-requested, inferred-context, domain-practice, design-decision, risk-control |
 | Requirements and business rules | FR-001–FR-013, BR-001–BR-003 |
 | Hierarchical success criteria | HC-001–HC-003 → FR-xxx → SC-001–SC-018 → VER-001–VER-009 |
 | Verification definitions | VER-001–VER-009 with method and pass/fail criteria |
