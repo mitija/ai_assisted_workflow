@@ -4,14 +4,14 @@
 
 Two failure modes drive this methodology:
 
-- **Spec ambiguity → assumption-driven defects.** The developer fills gaps with assumptions; the consultant rejects the result based on intent that was never written down. The cost is paid in iterations, which are now the dominant cost of software delivery.
+- **Spec ambiguity → assumption-driven defects.** The developer fills gaps with assumptions; the analyst or conductor rejects the result based on intent that was never written down. The cost is paid in iterations, which are now the dominant cost of software delivery.
 - **Specs are no longer read only by humans.** They are increasingly consumed by LLM tooling on the developer side. A spec good enough for a human to interpret is not necessarily good enough for an AI to implement against. Documents must be **AI-ready** as well as human-readable.
 
 ## Thesis
 
 > **If the specification is precise enough and the test suite is exhaustive enough, an LLM-assisted developer should be able to produce conforming software in hours, not days — and the cycle should be reproducible by another developer or another LLM later.**
 
-The methodology trades up-front specification rigour for short, lean implementation cycles. The center of gravity sits with the consultant, not the developer.
+The methodology trades up-front specification rigour for short, lean implementation cycles. The center of gravity sits with the analyst and conductor, not the human or the developer.
 
 **Every task — whether code, documentation, research, or configuration — must have explicit acceptance criteria defined before work begins, and completion must be checked against those criteria.**
 

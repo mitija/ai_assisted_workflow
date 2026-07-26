@@ -7,13 +7,13 @@ This directory contains the detailed documentation for the **Agentic Framework f
 | Page | Covers |
 |---|---|
 | [Philosophy](philosophy.md) | Problem, intent, thesis, and the three guiding principles |
-| [Principles](principles.md) | The seven load-bearing principles |
+| [Principles](principles.md) | The eight load-bearing principles, including analyst ownership, provenance, and traceability |
 | [Workspace and Repositories](workspace-and-repositories.md) | Project layout, two-repo model, local area |
-| [Specification](specification.md) | Requirement refinement and the 5-step methodology |
+| [Specification](specification.md) | Analyst-driven requirements process and the 5-step specification methodology |
 | [Test Suite](test-suite.md) | State-table test format and acceptance criteria |
-| [Workflow](workflow.md) | End-to-end cycle, roles, developer deliverables |
+| [Workflow](workflow.md) | End-to-end cycle with analyst, conductor, and developer roles; autonomous and guided modes |
 | [Acceptance](acceptance.md) | Three required pillars of acceptance |
-| [Known Gaps and Open Questions](known-gaps-and-open-questions.md) | Current limitations and areas for feedback |
+| [Known Gaps and Open Questions](known-gaps-and-open-questions.md) | Current limitations and areas for feedback, including analyst-maturity gaps |
 | [Sample Test Scenario](appendices/sample-test-scenario.md) | Worked example from a real Odoo procurement scenario |
 
 ## Navigation

@@ -1,14 +1,21 @@
 # The Specification
 
-## Requirement Refinement (Precursor)
+## From Intent to Requirements Baseline
 
-Before the methodology proper, a **refinement** step hardens the initial plain-English requirement. It is a guided, one-question-at-a-time interview (formalized as the `spec-refinement` skill) that turns a rough, high-level requirement into a precise, unambiguous narrative — clarifying the entities, their relationships, the main ways they are manipulated, the key business rules, and the terminology.
+Requirements are no longer produced through a human-driven refinement interview. The dedicated **analyst** agent owns the full transformation from high-level human intent to a complete, defensible functional contract. The analyst follows four lifecycle phases:
 
-It is deliberately **not exhaustive**: it stops once the requirement is precise enough to begin defining models. Exhaustive CRUD, full permissions, field-level types, and exception flows are left to the methodology. The refined narrative is written to `docs/working/refined-requirements.md` and becomes the input to the 5-step methodology below.
+1. **Intake** — high-level Q&A establishing the problem, intended users, functional outcome, high-level success criteria, constraints, exclusions, and operating mode. Produces a confirmed objective brief.
+2. **Discovery** — evidence-first 20-step process: inspects existing material, researches domain conventions, identifies actors and entities, generates candidate requirements, defines business rules, analyses exceptions, classifies and resolves decisions, defines detailed success criteria and verification methods, drafts intended documentation, produces wireframes, and performs an internal quality review.
+3. **Review** — structured quality gate against per-requirement and whole-set criteria. In guided mode, produces a functional validation package for human review. Propagates feedback across all artefacts.
+4. **Baseline** — establishes traceability with stable identifiers (OBJ-xxx, HC-xxx, FR-xxx, BR-xxx, NFR-xxx, SC-xxx, VER-xxx, DOC-xxx, DEC-xxx, RISK-xxx). Maintains consistency across all functional artefacts throughout implementation, verification, and completion.
 
-## The 5-Step Methodology
+Every requirement records its provenance — explicitly requested, inferred from context, inherited from standards, derived from domain practice, selected as a design decision, or required as a risk control. The governing rule: **never silently present an inferred requirement as though it was explicitly requested by the human.**
 
-A 5-step methodology, formalized as a reusable AI skill (the `specification-methodology` skill):
+For full details of the analyst's process, see the [analyst agent definition](../agents/agent/analyst.md) and the four `analyst-*` skills (intake, discovery, review, baseline).
+
+## The 5-Step Specification Methodology
+
+Once the requirements baseline exists, a 5-step methodology (formalized as the `specification-methodology` skill) structures the specification for implementation:
 
 1. **Models** — entities, fields with explicit types and constraints, relationships, on-delete behaviour. All models extend a `BaseModel` with audit fields.
 2. **Roles** — user types and permissions matrix per use case.
@@ -16,7 +23,7 @@ A 5-step methodology, formalized as a reusable AI skill (the `specification-meth
 4. **Use case documentation** — pre-conditions, actors and triggers, main sequence, alternative flows, exception flows, post-conditions, Gherkin acceptance criteria.
 5. **Review** — completeness, consistency, traceability, technical feasibility.
 
-Naming conventions, field types, constraint notation (`*`, `U`, `RO`, `C`, `C/S`, `Rel`, `Rel/S`), and relationship semantics (`ref` vs `m2o`) are formalized so that **two consultants — or two LLMs — produce comparable artifacts.**
+Naming conventions, field types, constraint notation (`*`, `U`, `RO`, `C`, `C/S`, `Rel`, `Rel/S`), and relationship semantics (`ref` vs `m2o`) are formalized so that **two practitioners — human or AI — produce comparable artifacts.**
 
 Outputs are a **wiki-style directory tree** rather than a single document: a `spec-index.md` index plus one file per model under `models/` (global, shared across epics) and one file per use case under `use-cases/`. Large or multi-item sections extract to their own files; large-scope projects may group use cases and tests under `epics/<epic>/` while the data model stays global.
 

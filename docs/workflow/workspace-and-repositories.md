@@ -41,7 +41,7 @@ Spec: docs@spec-260513
 
 ## Docs Working Area
 
-Versioned by design. `docs/working/` may contain conception notes, consultant-developer Q&A, analysis, and work-in-progress drafts that are relevant to the project and worth preserving with the documentation history. It is part of the docs repo, but it does not override the tagged customer-facing specification and tests.
+Versioned by design. `docs/working/` may contain conception notes, analyst-human Q&A, analysis, and work-in-progress drafts that are relevant to the project and worth preserving with the documentation history. It is part of the docs repo, but it does not override the tagged customer-facing specification and tests.
 
 ## Local Area
 

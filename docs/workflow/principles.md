@@ -5,8 +5,9 @@
 3. **Cycles are short by design.** Typical implementation cycle: a few hours of AI-assisted work. Design effort is pushed upstream so downstream is mechanical. *(TOL Improvements stats to be added.)*
 4. **No mid-flight spec changes.** Genuine questions stop work, update the spec, produce a new tag. Implementation never runs in parallel with spec clarification.
 5. **The developer is autonomous on method.** We specify the *what* (spec + tests + acceptance), not the *how* (which AI, which IDE, which prompts).
-6. **Documentation is a first-class artifact** — own repository, versioned, customer-accessible, kept up to date. A stale spec is worse than no spec.
+6. **Documentation is a first-class artifact** — own repository, versioned, customer-accessible, kept up to date. The analyst owns documentation across the full lifecycle; it is not a separate administrative task assigned to the human.
 7. **Local scratch material is not the contract.** Prompts, session notes, copied logs, and experiments may live in the project workspace outside both git repositories. Versioned documentation work may also live under `docs/working/`, but it is still not the frozen implementation contract unless promoted into the tagged customer-facing spec/test docs.
+8. **The analyst owns the functional contract.** Requirements, business rules, success criteria, traceability, wireframes, and documentation are produced and maintained by the analyst agent — not by the human or the conductor. Every requirement records its provenance explicitly. The governing rule: never silently present an inferred requirement as though it was explicitly requested by the human. Stable identifiers (OBJ/HC/FR/BR/NFR/SC/VER/DOC/DEC/RISK) maintain traceability from human objective through verification evidence.
 
 > **A note on strictness.** These principles are not guidelines — they are load-bearing. Loosening any one of them collapses the economics of the lean cycle. The methodology is designed to be adopted as a package, not partially.
 
