@@ -18,9 +18,16 @@ are handled according to the selected analysis mode.
 
 ## The 20-step discovery process
 
-Follow these steps in order. Each step builds on the previous. Do not skip
-steps unless the project is trivially small and the step clearly does not apply
-(state why if skipping).
+Follow these steps in order as ordered coverage checkpoints. They are not a fixed
+questionnaire: probing follows the available evidence and unresolved ambiguity.
+Do not skip steps unless the project is trivially small and the step clearly does
+not apply (state why if skipping). In interactive clarification, ask one
+question at a time and wait for the answer. In guided mode, the validation
+package may consolidate non-blocking decisions under the existing policy.
+
+Maintain a canonical glossary throughout discovery: use one term per concept,
+resolve synonyms and overloaded terms, and align terminology with existing
+project language. Update the glossary incrementally as decisions crystallise.
 
 ### Step 1 — Frame the objective
 
@@ -70,6 +77,11 @@ List every:
 
 For each, note their goals, interests, and interaction patterns.
 
+Identify the few defining user or operational workflows that express the
+system's purpose. Distinguish these from generic CRUD operations and incidental
+administrative operations; use the defining workflows to guide later modelling
+and validation.
+
 ### Step 6 — Model important entities, events, states, lifecycles and information flows
 
 Identify the key entities the system must store, track, or manage. For each:
@@ -77,11 +89,15 @@ Identify the key entities the system must store, track, or manage. For each:
 - attributes (high-level, not exhaustive field list)
 - lifecycle states and valid transitions
 - relationships to other entities
+- for each material relationship: ownership, cardinality, whether related
+  records can exist independently, lifecycle coupling (composition or
+  aggregation), and delete behaviour
 - events that trigger state changes
 - information flows between actors and entities
 
 Produce lightweight models — tables, lists, or diagrams in text. Do not design
-database schemas.
+database schemas. Test each material relationship decision with one concrete
+boundary scenario.
 
 ### Step 7 — Generate and classify candidate requirements
 
@@ -93,6 +109,9 @@ from:
 - entity lifecycles and state transitions
 - external system interactions
 - domain research findings
+
+Use the defining user and operational workflows identified in Step 5, rather
+than treating every CRUD or incidental operation as a defining workflow.
 
 For each requirement, determine whether it is:
 
@@ -150,6 +169,10 @@ From the Q&A, domain research, and entity models, extract:
 - derivation rules (what is computed from what)
 - authorisation rules (who can do what)
 - sequencing rules (what must happen before what)
+
+Distinguish invariant business rules from examples, illustrations, and observed
+instances. Never generalise an example into a BR-xxx without evidence that it
+expresses an invariant.
 
 Record each as BR-xxx with the rule statement, rationale, source, and exactly one
 canonical provenance label (explicitly-requested, inferred-context, inherited,
@@ -318,8 +341,13 @@ Consolidate everything into a coherent baseline:
 - Traceability links: objective → high-level criterion → requirement
   (FR/BR/NFR/OPS/DOC) → detailed criterion → verification method
 - Assumptions, decisions (with rationale), risks, known limitations
+- Canonical glossary, defining user and operational workflows, relationship
+  analysis, and invariant-versus-example checks
 - Intended documentation
 - Wireframes (where applicable)
+
+Maintain these artefacts incrementally as decisions crystallise; do not defer
+their first capture until the final consolidation.
 
 ## Output
 
@@ -334,6 +362,11 @@ rationale.
 ## Quality checklist
 
 - [ ] All 20 steps completed (skipped steps documented with rationale)
+- [ ] Canonical glossary maintained with one term per concept and project-language alignment
+- [ ] Defining user and operational workflows distinguished from generic CRUD and incidental operations
+- [ ] Material relationships document ownership, cardinality, independence, lifecycle coupling, delete behaviour, and a boundary scenario
+- [ ] Business rules are separated from examples, illustrations, and observed instances; examples were not generalised without evidence
+- [ ] Discovery artefacts were maintained incrementally as decisions crystallised
 - [ ] Every requirement (FR/NFR/OPS/DOC) has a provenance label
 - [ ] Every business rule (BR) has a provenance label
 - [ ] Every requirement has at least one detailed success criterion

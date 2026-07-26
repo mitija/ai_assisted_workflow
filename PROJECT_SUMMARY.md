@@ -257,7 +257,12 @@ immediately; Class A/B resolved autonomously. Provenance is a separate concept �
    brief. `analyst-discovery` skill (Phase 2): 20-step evidence-first discovery
    process producing functional, non-functional, operational, and documentation
    requirements with provenance, business rules, success criteria, verification
-   definitions, wireframes, and intended documentation. `analyst-review` skill
+   definitions, wireframes, and intended documentation. It preserves the valuable
+   historical refinement techniques now integrated: evidence/ambiguity-led probing
+   rather than a fixed questionnaire; one-question-at-a-time interactive clarification;
+   canonical terminology; defining workflows rather than generic CRUD; relationship
+   ownership, cardinality, lifecycle, and delete analysis with boundary scenarios;
+   and distinguishing invariant rules from examples. `analyst-review` skill
   (Phase 3): requirements quality gate checking 11 per-requirement and 7 whole-set
   criteria; guided mode produces a functional validation package. `analyst-baseline`
 skill (Phase 4): stable identifiers, traceability (OBJ → HC → FR/BR/NFR/OPS/DOC → SC →
