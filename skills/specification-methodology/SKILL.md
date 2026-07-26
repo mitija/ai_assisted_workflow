@@ -1,35 +1,37 @@
 ---
 name: specification-methodology
-description: Generates comprehensive software specifications from plain English requirements using a 5-step methodology (Models, Roles, Use Cases identification, Use Cases documentation, Review). Use when creating or writing software specifications, defining data models, documenting use cases, or planning a new software project.
+description: An optional specification-structuring tool that consumes an existing `analyst baseline` and produces a consistent, testable wiki-style specification. Uses 5 techniques (Models, Roles, Use Cases identification, Use Cases documentation, Review). Use when structuring an analyst's output into implementation-ready spec artefacts. Not a requirements elicitation process — the analyst owns the functional contract. Not a mandatory conductor prerequisite.
 argument-hint: [requirements-file-or-description]
 ---
 
 # Specification Writing Methodology
 
-You are a specification writer. Transform plain English requirements into structured, testable specifications suitable for TDD implementation.
+You are a specification writer. Transform an existing **`analyst baseline`** — the validated requirements baseline — into structured, testable implementation artefacts. This is an optional structuring tool — not a second requirements elicitation, not a mandatory conductor prerequisite. The analyst owns the functional contract (analyst-baseline skill); this methodology shapes it for implementation.
 
 ## When to Use
 
-- Creating a software specification from requirements
-- Defining data models, roles, or use cases for a new project
-- Documenting an existing system's behavior formally
-- Structuring plain English requirements
+- Structuring an existing analyst requirements baseline into wiki-style spec files
+- Defining data models, roles, or use cases from an established baseline
+- Documenting a system's behavior with consistent naming and output formats
+- Organising requirements that are already validated into implementation-ready artefacts
 
 ## Input
 
-The user provides plain English requirements as:
-- A file path to a requirements document: `$ARGUMENTS`
-- A description in the conversation
-- An existing partial specification to complete
+This skill consumes an existing **`analyst baseline`** (the output of the analyst's four-phase workflow: intake, discovery, review, baseline). The baseline provides:
+- Confirmed requirements with stable identifiers (FR-xxx, BR-xxx, NFR-xxx, etc.)
+- Business rules and success criteria
+- Verified traceability and provenance
+
+If no `analyst baseline` exists, stop. Route the requirements through the full analyst lifecycle (intake → discovery → review → baseline) before loading this skill. This methodology is not a requirements elicitation or validation tool; it is a structuring post-process for an already-validated baseline.
 
 If `$ARGUMENTS` is provided, read that file first.
 
 ## Process Overview
 
-Follow these five steps strictly. Complete each step before moving to the next. Present each step's output to the user for review before proceeding.
+Follow these five steps uninterrupted. Do not stop for approval between steps. In **guided** analysis, collect non-blocking matters (questions, notes, refinements) and present one consolidated functional validation package after Step 5. In **autonomous** analysis, proceed without intermediate approval, following analyst decision classes (Class C immediate in autonomous; Class D always immediate). Blocking issues — genuine ambiguities that affect implementation — still stop appropriately (one question at a time with unpacking).
 
 ```
-Plain English Requirements
+Analyst Requirements Baseline
          |
     Step 1: Models and Attributes
          |
@@ -39,9 +41,9 @@ Plain English Requirements
          |
     Step 4: Document Use Cases
          |
-    Step 5: Review
+    Step 5: Review (consistency check — not a second quality gate)
          |
-  Final Specification
+  Final Specification Artefacts
 ```
 
 ## Routing Table

@@ -42,6 +42,10 @@ Define user roles and their permission levels for each feature/use case.
 
 See [Specification Template: Roles Section](../assets/specification-template.md#roles-section) for the output format.
 
+## Analysis Mode Guidance
+
+When this step completes, do not pause for approval. In **guided** analysis, collect any non-blocking observations for the consolidated package after Step 5. In **autonomous** analysis, proceed directly.
+
 ## Example
 
 **Role definitions:**
@@ -59,5 +63,3 @@ See [Specification Template: Roles Section](../assets/specification-template.md#
 | Manage own progress | Full | Full (own only) |
 | User management | Full | None |
 | System configuration | Full | None |
-
-> **Checkpoint:** Present the roles and permissions matrix to the user for validation before moving to [Step 3](03-use-case-identification.md).

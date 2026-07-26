@@ -57,8 +57,10 @@ Plus a **Field Notes** section for detailed explanations (computation formulas, 
 - The **Related Model** column is only for relationship fields (ref, m2o, o2m, m2m) and related fields (Rel, Rel/S).
 - The **Comments** column should be short (on-delete behavior, enum values). Use **Field Notes** for anything that does not fit.
 
+## Analysis Mode Guidance
+
+When this step completes, do not pause for approval. In **guided** analysis, record any non-blocking observations for the consolidated package after Step 5. In **autonomous** analysis, proceed directly. Blocking issues (genuine ambiguity affecting implementation) stop here — ask one question at a time.
+
 ## Example
 
 File `models/Deck.md` — see [Complete Model Example](../references/field-reference.md#complete-model-example).
-
-> **Checkpoint:** Present the models to the user for validation before moving to [Step 2](02-roles.md). Do not proceed past an unresolved ambiguity.

@@ -34,6 +34,10 @@ Identify all user interactions with the system, starting from domain-specific wo
    - Ensure each use case has authorized roles assigned
    - Verify the [permissions matrix from Step 2](02-roles.md) covers all use cases
 
+## Analysis Mode Guidance
+
+When this step completes, do not pause for approval. In **guided** analysis, collect any non-blocking observations for the consolidated package after Step 5. In **autonomous** analysis, proceed directly.
+
 ## Output
 
 A summary table listing all identified use cases. The Model column may be left empty for cross-cutting use cases.
@@ -55,5 +59,3 @@ See [Specification Template: Use Case Index](../assets/specification-template.md
 | UC-005 | Create Collection | Collection | User, Admin |
 | UC-006 | Create Deck | Deck | User, Admin |
 | UC-007 | Create Card | Card | User, Admin |
-
-> **Checkpoint:** Present the use case list to the user for validation before moving to [Step 4](04-use-case-documentation.md).

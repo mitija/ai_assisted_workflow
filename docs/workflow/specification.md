@@ -15,13 +15,17 @@ For full details of the analyst's process, see the [analyst agent definition](..
 
 ## The 5-Step Specification Methodology
 
-Once the requirements baseline exists, a 5-step methodology (formalized as the `specification-methodology` skill) structures the specification for implementation:
+An **optional** structuring tool (the `specification-methodology` skill) consumes the validated `analyst baseline` and formats it into implementation-ready wiki-style artefacts. This is not a second requirements elicitation process — the analyst owns the functional contract. It is not a mandatory prerequisite for the conductor.
+
+The methodology runs all five steps uninterrupted. In **guided** analysis, non-blocking matters are collected throughout and presented as a single consolidated functional validation package after Step 5 (not after each step). In **autonomous** analysis, the skill proceeds without intermediate approval, following analyst decision classes. Blocking issues still stop appropriately.
+
+The five techniques:
 
 1. **Models** — entities, fields with explicit types and constraints, relationships, on-delete behaviour. All models extend a `BaseModel` with audit fields.
 2. **Roles** — user types and permissions matrix per use case.
 3. **Use case identification** — domain-specific first, then CRUD, then extended operations (export, mass operations, state changes).
 4. **Use case documentation** — pre-conditions, actors and triggers, main sequence, alternative flows, exception flows, post-conditions, Gherkin acceptance criteria.
-5. **Review** — completeness, consistency, traceability, technical feasibility.
+5. **Consistency check** — structural and naming consistency verification. Not a duplicate of the analyst-review quality gate; the analyst owns functional validation.
 
 Naming conventions, field types, constraint notation (`*`, `U`, `RO`, `C`, `C/S`, `Rel`, `Rel/S`), and relationship semantics (`ref` vs `m2o`) are formalized so that **two practitioners — human or AI — produce comparable artifacts.**
 

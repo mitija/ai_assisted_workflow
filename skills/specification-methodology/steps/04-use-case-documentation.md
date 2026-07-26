@@ -28,6 +28,10 @@ Each use case must include all of the following sections:
 - **Post-conditions** — What is true after successful completion, data state changes, side effects
 - **Acceptance Criteria** — Gherkin-style scenarios (Given/When/Then). These are inputs to the contractual `<epic>_TESTS.md` scenarios authored via the `test-scenarios` skill, which are authoritative.
 
+## Analysis Mode Guidance
+
+When this step completes, do not pause for approval. In **guided** analysis, collect any non-blocking observations for the consolidated package after Step 5. In **autonomous** analysis, proceed directly.
+
 ## Output Format
 
 Each use case written to `use-cases/UC-XXX-<kebab-case-title>.md`. See [Specification Template: Use Case File](../assets/specification-template.md#use-case-file-template) for the exact format.
@@ -36,4 +40,4 @@ Each use case written to `use-cases/UC-XXX-<kebab-case-title>.md`. See [Specific
 
 File: `use-cases/UC-006-create-deck.md` — see the [Use Case File Template](../assets/specification-template.md#use-case-file-template) for a filled example.
 
-> **Checkpoint:** Present the documented use cases to the user for validation before moving to [Step 5](05-review.md). The Gherkin acceptance criteria written here feed the contractual `<epic>_TESTS.md` (see the `test-scenarios` skill), which is the authoritative test contract.
+The Gherkin acceptance criteria written here feed the contractual `<epic>_TESTS.md` (see the `test-scenarios` skill), which is the authoritative test contract.
