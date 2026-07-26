@@ -10,7 +10,7 @@ The framework is production-ready but still evolving, and applies beyond Odoo.
 Deliverables live in `agents/`.
 
 ## Current status
-Production-ready but still evolving, and internally consistent. No code/app component — this is a
+Production-ready but still evolving. No code/app component — this is a
 guidance/skill bundle for agents. The root-level `skills/` directory holds ten general skills
 and six conductor-specific skills (internal orchestration steps).
 Linked skill tables are maintained in README.md, root AGENTS.md, and the deployable agents/AGENTS.md, documenting both categories.
@@ -119,13 +119,16 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
 - `skills/handover/SKILL.md` — creates self-contained HANDOVER-xx.md at session end.
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
   with inferred defaults; asks the user only for what cannot be discovered.
-- `skills/specification-methodology/SKILL.md` — 5-step spec writing (Models, Roles,
-  Use Cases identification, Use Cases documentation, Review). Produces wiki-style
-  `spec/` directory with individual files per model (`models/`, global/shared) and
-  use case (`use-cases/`, flat by default or grouped under `epics/<epic>/` for
-  large-scope projects), cross-referenced via relative links. Main `spec-index.md`
-  serves as index; sections over 40 lines extract to standalone files. Gherkin
-  acceptance criteria feed the contractual `<epic>_TESTS.md` (see test-scenarios).
+- `skills/specification-methodology/SKILL.md` — optional single-gate specification
+  structuring tool (all five steps uninterrupted — no intermediate approval stops).
+  Consumes the validated analyst baseline and produces wiki-style `spec/` directory
+  with individual files per model (`models/`, global/shared) and use case
+  (`use-cases/`, flat by default or grouped under `epics/<epic>/` for large-scope
+  projects), cross-referenced via relative links. Main `spec-index.md` serves as
+  index; sections over 40 lines extract to standalone files. Gherkin acceptance
+  criteria feed the contractual `<epic>_TESTS.md` (see test-scenarios). Not a
+  requirements elicitation process — the analyst owns the functional contract.
+  Not a mandatory conductor prerequisite.
 - `skills/test-scenarios/SKILL.md` — how to write contractual, customer-facing
   `<epic>_TESTS.md` scenarios.
 - `skills/todo-list/SKILL.md` — TDD-based TODO list generator. Each implementation TD
@@ -225,8 +228,9 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   wiki-style directory tree (`spec/` with `models/`, `use-cases/` subdirs,
   `spec-index.md` as index). Use cases reference models via a `## Related Models`
   section; model files do not back-reference use cases (maintenance trade-off).
-  Sections exceeding 40 lines extract to standalone files. Review process is
-  agent-run with human validation at each step and a "Wiki Integrity" check.
+  Sections exceeding 40 lines extract to standalone files. All five steps run
+  uninterrupted with a "Wiki Integrity" check; guided analysis uses one
+  consolidated human validation package after Step 5.
   Large-scope projects may split use cases under `epics/<epic>/` (one
   `<epic>_TESTS.md` each) while the data model stays global.
 - `analyst` agent created as the dedicated functional contract owner. Operates in
@@ -242,7 +246,7 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   (Phase 3): requirements quality gate checking 11 per-requirement and 7 whole-set
   criteria; guided mode produces a functional validation package. `analyst-baseline`
   skill (Phase 4): stable identifiers, traceability (OBJ → HC → FR/BR → SC →
-  VER), consistency maintenance across the full lifecycle.
+  VER), consistency maintenance across the full lifecycle, and a documentation completion gate after verification/evidence mapping but before final review/outcome completion.
 - `spec-refinement` skill was removed and replaced by the analyst methodology.
   The `specification-methodology` skill remains as a general-purpose spec authoring
   tool, but is no longer a conductor-phase prerequisite — spec writing is the

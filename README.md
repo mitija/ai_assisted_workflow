@@ -131,9 +131,15 @@ comparing against the previous implementation tag — and drives development
 through the six phases above. Verification runs the contractual tests as part
 of every task round.
 
-The user typically touches the process at two points: the analyst's initial Q&A
-and baseline confirmation, then reviewing the final report. Everything between
-runs autonomously by default.
+The user touches the process at up to three points: the analyst's objective brief
+and any consequential decisions it escalates during guided analysis, baseline
+confirmation, and a final human functional-outcome review distinct from the
+conductor's automated report. The conductor may invoke the analyst when a
+sufficient analysis baseline is needed before decomposition; `analysis_mode`
+(autonomous or guided) is independent of the conductor's own interactive/autonomous
+mode. The user validates the delivered outcome against the functional contract
+and the original objective — this is a human judgement, not automated verification.
+Everything between runs autonomously by default.
 
 ## Skills
 

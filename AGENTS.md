@@ -15,6 +15,7 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
   AGENTS.odoo.md               Odoo-specific companion (testing, DB, acceptance)
   project_context.template.yaml  Template for machine/project-specific config
   agent/
+    analyst.md               Analyst agent — functional contract owner (opencode agent definition)
     conductor.md               Conductor orchestration agent (opencode agent definition)
     committer.md               Committer agent — groups changes into focused commits (opencode agent definition)
     reviewer.md                Reviewer agent — read-only code review (opencode agent definition)

@@ -11,7 +11,7 @@ Requirements are no longer produced through a human-driven refinement interview.
 
 Every requirement records its provenance — explicitly requested, inferred from context, inherited from standards, derived from domain practice, selected as a design decision, or required as a risk control. The governing rule: **never silently present an inferred requirement as though it was explicitly requested by the human.**
 
-For full details of the analyst's process, see the [analyst agent definition](../agents/agent/analyst.md) and the four `analyst-*` skills (intake, discovery, review, baseline).
+For full details of the analyst's process, see the [analyst agent definition](../../agents/agent/analyst.md) and the four `analyst-*` skills (intake, discovery, review, baseline).
 
 ## The 5-Step Specification Methodology
 

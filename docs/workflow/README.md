@@ -12,7 +12,7 @@ This directory contains the detailed documentation for the **Agentic Framework f
 | [Specification](specification.md) | Analyst-driven requirements process and the 5-step specification methodology |
 | [Test Suite](test-suite.md) | State-table test format and acceptance criteria |
 | [Workflow](workflow.md) | End-to-end cycle with analyst, conductor, and developer roles; autonomous and guided modes |
-| [Acceptance](acceptance.md) | Three required pillars of acceptance |
+| [Acceptance](acceptance.md) | Four required pillars of acceptance |
 | [Known Gaps and Open Questions](known-gaps-and-open-questions.md) | Current limitations and areas for feedback, including analyst-maturity gaps |
 | [Sample Test Scenario](appendices/sample-test-scenario.md) | Worked example from a real Odoo procurement scenario |
 

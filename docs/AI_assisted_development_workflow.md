@@ -42,14 +42,14 @@ Beyond coding, the same acceptance-driven autonomy applies. For non-coding flows
 ## Topics
 
 | Topic | Description |
-|---|---|---|
+|---|---|
 | [Philosophy](workflow/philosophy.md) | Problem, intent, and the three guiding principles of the methodology |
 | [Principles](workflow/principles.md) | The eight load-bearing principles, including analyst ownership, provenance, and traceability |
 | [Workspace and Repositories](workflow/workspace-and-repositories.md) | Project layout, two-repo model, local area |
 | [Specification](workflow/specification.md) | Analyst-driven requirements process and the 5-step specification methodology |
 | [Test Suite](workflow/test-suite.md) | State-table test format and acceptance criteria |
 | [Workflow](workflow/workflow.md) | End-to-end cycle with analyst, conductor, and developer roles; autonomous and guided modes |
-| [Acceptance](workflow/acceptance.md) | Three required pillars of acceptance |
+| [Acceptance](workflow/acceptance.md) | Four required pillars of acceptance |
 | [Known Gaps and Open Questions](workflow/known-gaps-and-open-questions.md) | Honest assessment of current limitations, including analyst-maturity gaps |
 | [Sample Test Scenario](workflow/appendices/sample-test-scenario.md) | Worked example from a real Odoo procurement scenario |
 
