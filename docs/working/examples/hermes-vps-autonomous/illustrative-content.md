@@ -441,7 +441,7 @@ HC-002  After VPS loss/failure, clean supported replacement VPS operational with
 | DEC-ID | Decision | Class | Rationale |
 |---|---|---|---|
 | DEC-001 | Health port 9100 | A | Standard unused port |
-| DEC-002 | systemd as process manager | A | Ships with Ubuntu |
+| DEC-002 | systemd as process manager | B | Ships with Ubuntu |
 | DEC-003 | logrotate: 14d compress, 30d delete | A | Fits CX22 disk |
 | DEC-004 | Authorised user via config file | B | More flexible than hardcoded |
 | DEC-005 | Ansible Vault for secret storage | C | Escalated; human approved |
