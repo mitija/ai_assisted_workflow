@@ -60,10 +60,12 @@ the start of each session.
 - The framework is production-ready for its core use case but remains evolving;
   tooling, git fluency, environment setup, and the analyst/conductor split impose
    adoption costs.
-  Reduce adoption cost incrementally: start with `project_context.yaml` and the
-  conductor for bounded tasks, introduce the analyst baseline and traceability for
-  consequential or ambiguous work, then add frozen specifications and contractual
-  tests as code flows mature. Trivial tasks do not require the full process.
+  Reduce adoption cost incrementally: use `project_context.yaml` and a ready,
+  accepted analyst baseline first; for bounded, low-risk tasks, that baseline can
+  be proportionate and lightweight. Conductor work always uses the ready, accepted
+  baseline; add deeper analyst discovery and traceability, then frozen
+  specifications and contractual tests, as complexity and consequence grow.
+  Trivial tasks do not require the full process.
 
 ## What the repository contains
 
