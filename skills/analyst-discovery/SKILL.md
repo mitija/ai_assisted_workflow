@@ -1,0 +1,274 @@
+---
+name: analyst-discovery
+description: Phase 2 of the analyst workflow. Transforms the confirmed objective brief into a complete, defensible functional contract through a structured 20-step discovery process. Evidence-first — inspects existing material before asking. Resolves non-blocking decisions autonomously, escalates consequential ones. Produces requirements, business rules, success criteria, verification definitions, wireframes, and intended documentation.
+allowed-tools: Read, Grep, Glob, Edit, Write, WebFetch, Question
+---
+
+# Analyst Discovery Skill
+
+This is Phase 2 of the analyst workflow. Load it after the objective brief is
+confirmed.
+
+## Purpose
+
+Transform the high-level objective brief into a complete, internally consistent
+functional contract. This phase is evidence-first: inspect before asking.
+Resolve non-blocking uncertainty autonomously. Escalate only consequential or
+blocking decisions.
+
+## The 20-step discovery process
+
+Follow these steps in order. Each step builds on the previous. Do not skip
+steps unless the project is trivially small and the step clearly does not apply
+(state why if skipping).
+
+### Step 1 — Frame the objective
+
+Restate the objective from the brief in precise terms. Identify the core
+outcome the system must achieve. Distinguish the primary goal from secondary
+desires.
+
+### Step 2 — Capture high-level success criteria
+
+Extract every high-level success criterion the human stated or implied. Record
+them as HC-001, HC-002, etc. Do not yet derive detailed criteria — that comes
+later.
+
+### Step 3 — Inspect repository, environment and existing evidence
+
+Read existing code, documentation, configuration, templates, and project
+conventions. Look for:
+
+- existing models, schemas, or data structures
+- existing business rules documented elsewhere
+- prior requirements or specifications
+- environment constraints (languages, frameworks, platforms)
+- naming conventions and terminology
+
+Do not ask questions whose answers are already available in the repository.
+
+### Step 4 — Research domain conventions and comparable systems
+
+Where permitted (webfetch allowed), research:
+
+- domain standard practices
+- comparable open-source systems
+- common patterns and pitfalls
+- regulatory or compliance conventions
+
+Record findings concisely. Distinguish established conventions from opinions.
+
+### Step 5 — Identify actors, stakeholders and external systems
+
+List every:
+
+- **Actor** — human role or external system that interacts with the intended
+  system
+- **Stakeholder** — person or group with an interest in the outcome (not
+  necessarily a direct user)
+- **External system** — existing system the solution must integrate with
+
+For each, note their goals, interests, and interaction patterns.
+
+### Step 6 — Model important entities, events, states, lifecycles and information flows
+
+Identify the key entities the system must store, track, or manage. For each:
+
+- attributes (high-level, not exhaustive field list)
+- lifecycle states and valid transitions
+- relationships to other entities
+- events that trigger state changes
+- information flows between actors and entities
+
+Produce lightweight models — tables, lists, or diagrams in text. Do not design
+database schemas.
+
+### Step 7 — Generate candidate requirements
+
+Derive functional requirements from:
+
+- the objective and high-level criteria
+- actor goals and workflows
+- entity lifecycles and state transitions
+- external system interactions
+
+Write each requirement as a clear statement: "The system shall [behaviour]
+under [condition]." Assign a provisional identifier (FR-xxx).
+
+### Step 8 — Define business rules
+
+From the Q&A, domain research, and entity models, extract:
+
+- constraints on data or behaviour
+- derivation rules (what is computed from what)
+- authorisation rules (who can do what)
+- sequencing rules (what must happen before what)
+
+Record each as BR-xxx with the rule statement, rationale, and source.
+
+### Step 9 — Analyse exceptions, failures, recovery and edge cases
+
+For every requirement and business rule, consider:
+
+- What can go wrong? (network failure, invalid input, concurrent access,
+  timeout, partial failure)
+- What is the system's expected behaviour in each case?
+- How does it recover?
+- What are the edge cases? (empty states, boundary values, duplicate
+  submissions, rapid repeated actions)
+
+Record explicit exception and recovery requirements where the behaviour is not
+obvious.
+
+### Step 10 — Identify contradictions and gaps
+
+Cross-check all artefacts produced so far:
+
+- Do any requirements contradict each other?
+- Do any business rules conflict?
+- Are there scenarios not covered by any requirement?
+- Are there success criteria with no supporting requirements?
+
+Flag each contradiction or gap. If resolvable autonomously, resolve it and
+record the decision. If not, classify and escalate.
+
+### Step 11 — Classify decisions
+
+Review every unresolved decision and classify as A, B, C, or D (see the
+analyst agent's decision classification). Record the classification and
+rationale.
+
+### Step 12 — Resolve non-blocking decisions
+
+For Class A and B decisions:
+
+- Apply the most logical option based on evidence, precedent, and convention
+- Record the decision (DEC-xxx), rationale, and alternative considered
+- Do not ask the human
+
+### Step 13 — Escalate consequential decisions
+
+For Class C and D decisions:
+
+- Frame the question with: the issue, your recommended option, rationale,
+  alternatives, and consequences
+- Ask one question at a time, waiting for the answer
+- Record the human's decision as DEC-xxx
+
+### Step 14 — Define detailed success criteria
+
+For every requirement and business rule, define at least one detailed success
+criterion (SC-xxx). Each must be:
+
+- specific and measurable
+- verifiable (pass/fail or observed value)
+- mapped to at least one high-level criterion (HC-xxx)
+- distinct from the requirement itself
+
+### Step 15 — Define verification methods
+
+For every detailed success criterion, define how it will be verified:
+
+- automated test (unit, integration, end-to-end)
+- manual inspection
+- documented procedure
+- observed evidence (log, screenshot, output)
+
+Record as VER-xxx. The verification method defines **what** to check, not the
+implementation of the test itself.
+
+### Step 16 — Draft intended user and operational documentation
+
+Write documentation as though the system already exists:
+
+- **User guide** — purpose, intended users, normal workflows, supported
+  behaviour, permissions, expected responses, limitations, examples
+- **Configuration reference** — every externally supported configuration item:
+  name, purpose, type, required/optional, default, allowed values, example,
+  security implications, restart required
+- **Operations guide** — installation, start/stop, upgrade, monitoring, health
+  checks, logging, backup/restore, secret rotation, failure recovery, rebuild,
+  uninstall
+- **Troubleshooting guide** — symptoms, likely causes, diagnostic steps,
+  corrective actions, escalation conditions
+
+Write only the sections that apply to the project. Use gaps in documentation
+to discover missing requirements (Step 17).
+
+### Step 17 — Use documentation gaps to discover missing requirements
+
+Review the documentation you just wrote. Wherever you could not clearly explain
+behaviour, configuration, or operation, you have likely found a gap in the
+requirements. Add the missing requirements and update all affected artefacts.
+
+### Step 18 — Produce wireframes where they help validate behaviour
+
+Where the work includes meaningful UI components, produce low-fidelity
+wireframes (ASCII art, text layouts, or simple structural diagrams). These
+should validate:
+
+- primary workflows and navigation
+- information hierarchy
+- visible actions and state transitions
+- permissions — what each role can see or do
+- error states and empty states
+
+Wireframes focus on behaviour and structure. Do not specify final colours,
+branding, typography, or detailed visual polish.
+
+In guided mode, wireframes should appear in the validation package. In
+autonomous mode, create them without interruption unless they expose a Class C
+or D decision.
+
+### Step 19 — Perform an independent requirements-quality review
+
+Review the complete set of requirements against the quality criteria (see
+`analyst-review` skill if loaded separately, or apply them directly):
+
+- **Necessity** — does each requirement support an objective, constraint, or
+  risk control?
+- **Clarity** — is each requirement unambiguous?
+- **Singularity** — does each requirement address exactly one behaviour?
+- **Consistency** — no internal contradictions
+- **Feasibility** — is the requirement achievable within known constraints?
+- **Testability** — can success or failure be determined unambiguously?
+- **Traceability** — is each requirement linked to its source and criteria?
+- **Implementation independence** — does the requirement say *what*, not *how*?
+- **Priority** — is relative importance clear?
+- **Visible assumptions** — are assumptions explicit?
+- **No unnecessary scope** — is each requirement justified?
+
+Fix any issues found. Record findings.
+
+### Step 20 — Produce the requirements baseline and traceability package
+
+Consolidate everything into a coherent baseline:
+
+- Requirements (functional, business rules, non-functional) with stable
+  identifiers, statements, rationale, provenance, and priority
+- Detailed success criteria with high-level criterion mappings
+- Verification methods
+- Traceability links: objective → high-level criterion → requirement →
+  detailed criterion → verification method
+- Assumptions, decisions (with rationale), risks, known limitations
+- Intended documentation
+- Wireframes (where applicable)
+
+## Output
+
+The complete requirements baseline, ready for the quality gate (Phase 3). All
+artefacts are internally consistent and traceable.
+
+## Quality checklist
+
+- [ ] All 20 steps completed (skipped steps documented with rationale)
+- [ ] Every requirement has a provenance label
+- [ ] Every requirement has at least one detailed success criterion
+- [ ] Every detailed success criterion maps to a high-level criterion
+- [ ] Every mandatory requirement has a verification method
+- [ ] All Class A/B decisions resolved and recorded
+- [ ] All Class C/D decisions escalated and recorded
+- [ ] No evidence was ignored before asking questions
+- [ ] Documentation gaps used to discover missing requirements
+- [ ] No implementation code was written
+- [ ] Wireframes produced where UI behaviour is meaningful
