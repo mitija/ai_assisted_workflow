@@ -1,11 +1,11 @@
 ---
 name: conductor-noncode-decomposition
-description: Phase 2 for non-code work. Produces a task graph for non-code tasks — documentation, configuration, research, project setup. No spec-refinement or todo-list skill needed. Uses the standard per-task schema.
+description: Phase 2 for non-code work. Produces a task graph for non-code tasks — documentation, configuration, research, project setup. Requires the analyst baseline to be ready (same readiness criteria as code decomposition). Uses the standard per-task schema.
 ---
 
 # Conductor: Non-Code Decomposition
 
-This skill guides the conductor's **Phase 2 — Decompose into a task graph** for **non-code work**. The conductor should load this skill only after analysis has determined the work is not code-related.
+This skill guides the conductor's **Phase 2 — Decompose into a task graph** for **non-code work**. The conductor should load this skill only after analysis has determined the work is not code-related and the analyst baseline is ready and accepted (same readiness criteria as `conductor-code-decomposition`).
 
 ## Instructions
 

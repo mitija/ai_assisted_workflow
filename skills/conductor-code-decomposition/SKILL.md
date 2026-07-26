@@ -1,6 +1,6 @@
 ---
 name: conductor-code-decomposition
-description: Phase 2 for code work. Produces a dependency-aware task graph from code-related tasks. If the requirement is rough, loads spec-refinement then specification-methodology first. Checks for an existing TODOxx.md or generates one via the todo-list skill. Maps TDs to graph tasks with the standard schema.
+description: Phase 2 for code work. Produces a dependency-aware task graph from code-related tasks. Requires the analyst baseline to be ready and accepted before proceeding. Checks for an existing TODOxx.md or generates one via the todo-list skill. Maps TDs to graph tasks with the standard schema.
 ---
 
 # Conductor: Code Decomposition
@@ -9,16 +9,30 @@ This skill guides the conductor's **Phase 2 — Decompose into a task graph** fo
 
 ## Prerequisites
 
-If the initial requirement is **rough or ambiguous**, first load the
-[`spec-refinement`](../spec-refinement/SKILL.md) skill to refine it, then load
-the [`specification-methodology`](../specification-methodology/SKILL.md) skill
-to produce the full specification — **both before** decomposing into tasks.
+The **analyst baseline must be ready and accepted** before this skill is loaded.
+The conductor's analyze phase must have confirmed:
 
-In **autonomous mode**, `spec-refinement` is an interactive, one-question-at-a-time
-dialogue with the user and cannot run. If the requirement is rough in autonomous
-mode, treat it as a hard blocker — stop, surface it, and refuse to proceed —
-unless the user is available to answer questions. For a well-specified
-requirement, skip `spec-refinement` and proceed.
+- An objective brief exists and is confirmed.
+- Requirements, detailed success criteria, and verification methods are defined
+  with traceability.
+- The quality gate has passed (all critical findings resolved).
+- Guided mode: human has approved the functional validation package.
+- Autonomous mode: no blocking unresolved decisions remain.
+- Intended documentation is drafted proportionately.
+- The analyst confirms readiness for implementation decomposition.
+
+If these criteria are not met, do not proceed — return to the analyze phase and
+re-engage the analyst.
+
+### Specification methodology as an optional general skill
+
+The `specification-methodology` skill remains available as a general-purpose
+skill for authoring software specifications from scratch. It is **not** a
+conductor-owned requirements process loaded automatically during code
+decomposition. If an implementation task legitimately needs a full specification
+written (e.g. the spec is the deliverable rather than the output of the analyst
+workflow), load it explicitly as a task-level instruction to a `general`
+sub-agent — never as a conductor-phase prerequisite.
 
 ## Instructions
 

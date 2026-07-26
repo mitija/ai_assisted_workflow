@@ -1,6 +1,6 @@
 ---
 name: conductor-analyze
-description: Phase 1 of the conductor workflow. Determines the goal, scope, constraints, and type of work (code vs non-code). Gathers context via the explore sub-agent. Resolves ambiguities in interactive mode or notes them in autonomous mode. Routes to the correct decomposition skill.
+description: Phase 1 of the conductor workflow. Determines the goal, scope, constraints, and type of work (code vs non-code). Gathers context via the explore sub-agent. Resolves ambiguities in interactive mode or notes them in autonomous mode. Determines whether sufficient functional analysis exists and delegates to the analyst sub-agent when it does not. Routes to the correct decomposition skill after analyst baseline is ready.
 ---
 
 # Conductor: Analyze
@@ -73,14 +73,69 @@ From the user's request and the context you gathered:
 - What constraints apply? (Time, scope, conventions, compatibility.)
 - What is explicitly out of scope? (If not stated, note that in the report later.)
 
-### 5. Resolve ambiguities
+### 5. Check analysis sufficiency
+
+After gathering context and understanding constraints, determine whether
+sufficient functional analysis already exists to proceed to decomposition.
+
+**Sufficiency criteria** — the minimum required before decomposition can begin:
+
+1. An **objective brief** exists (or can be confirmed from the user's request
+   directly) that captures the functional objective, high-level success
+   criteria, constraints, scope boundaries, and selected operating mode.
+2. **Functional requirements** are defined with clear statements and
+   traceability to the objective.
+3. **Detailed success criteria and verification methods** exist for every
+   mandatory requirement.
+4. **Business rules** are documented where applicable.
+5. **Traceability** links objectives → criteria → requirements → verification.
+6. The **quality gate** has been passed (all critical findings resolved).
+7. In **guided mode**: the human has approved the functional interpretation.
+   In **autonomous mode**: no blocking unresolved decisions remain.
+
+If these criteria are met, the analysis is sufficient. Proceed to step 6.
+
+If these criteria are **not** met, delegate to the **`analyst` sub-agent**:
+
+1. Spawn the analyst with the current objective, context, and operating mode.
+2. In **interactive mode**: the analyst will conduct its initial intake Q&A
+   with the human.
+3. In **autonomous mode**: the analyst proceeds with intake, discovery,
+   review, and baseline (pausing only for Class C/D decisions).
+4. The analyst runs its four lifecycle phases (intake → discovery → review →
+   baseline) autonomously.
+5. After the analyst completes, **read its output** (objective brief,
+   requirements baseline, traceability) via the `explore` sub-agent.
+
+**Do not** perform detailed elicitation yourself — that is the analyst's
+responsibility. You own the decision to delegate, the alignment check, and the
+acceptance of the baseline.
+
+### 6. Check objective/scope alignment
+
+Once the analyst baseline is available (or existing analysis is confirmed
+sufficient), verify:
+
+- Does the baseline still match the original functional objective?
+- Has scope crept without authorisation?
+- Are there any unexplained additions or omissions?
+
+If misalignment is found, challenge it before proceeding. In interactive mode,
+surface the discrepancy to the user. In autonomous mode, record it and adjust
+the scope assumption.
+
+### 7. Resolve ambiguities
 
 - **Interactive mode** (default): if you hit a genuine ambiguity or missing requirement, **stop and ask** the user — one question at a time, unpacking complex ones — before continuing. Do not guess. The goal/scope/constraints dialogue is the primary place for these questions.
 - **Autonomous mode** (explicitly requested): note every ambiguity and the assumption you made. Continue unless you find a **hard blocker** (broken environment, contradictory requirements that cannot be reconciled) — in that case, stop, surface the blocker, and refuse to proceed.
 
-### 6. Route to decomposition
+### 8. Confirm readiness and route to decomposition
 
-Once analysis is complete:
+Confirm the analyst readiness gate criteria are satisfied (see sufficiency
+criteria in step 5). If the analyst was delegated to, confirm its baseline
+is complete and accepted.
+
+Once readiness is confirmed:
 
 - **If work is code work**: load the [`conductor-code-decomposition`](../conductor-code-decomposition/SKILL.md) skill via the `skill` tool.
 - **If work is non-code work**: load the [`conductor-noncode-decomposition`](../conductor-noncode-decomposition/SKILL.md) skill via the `skill` tool.

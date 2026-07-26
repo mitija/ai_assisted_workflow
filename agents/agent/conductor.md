@@ -106,13 +106,47 @@ reference only.
 
 | Phase | When | Load skill (by name) |
 |-------|------|----------------------|
-| 1. Analyze | start of every run | `conductor-analyze` |
-| 2a. Decompose (code) | after analysis, if work is **code** | `conductor-code-decomposition` |
-| 2b. Decompose (non-code) | after analysis, if work is **non-code** | `conductor-noncode-decomposition` |
+| 1. Analyze | start of every run | `conductor-analyze` — includes determining whether sufficient functional analysis exists, delegating to the `analyst` sub-agent when it does not, and confirming objective/scope alignment before decomposition |
+| 2a. Decompose (code) | after analyst baseline is ready and accepted, if work is **code** | `conductor-code-decomposition` |
+| 2b. Decompose (non-code) | after analyst baseline is ready and accepted, if work is **non-code** | `conductor-noncode-decomposition` |
 | 3. Execute | after task graph is built | `conductor-execute` |
 | 4. Review | Phase 4 — when task graph is exhausted (or after escalation recovery) | `reviewer` sub-agent (not a skill) |
 | 5. Escalate | Phase 5 — when a task fails | `conductor-escalate` |
 | 6. Report | Phase 6 — after graph exhausted (complete or aborted) | `conductor-report` |
+
+### Analyst readiness gate
+
+Before proceeding to Phase 2 (Decomposition), you **must** confirm that a
+sufficient functional analysis baseline exists. The analyst sub-agent owns
+detailed elicitation — you own the orchestration, not the requirements work.
+
+**Sufficiency criteria** — the baseline is ready when all of the following hold:
+
+1. **Objective brief** exists and has been confirmed by the human (or was
+   determined to already be sufficient during the analyze phase).
+2. **Requirements baseline** exists: functional requirements, business rules,
+   detailed success criteria, and verification methods are defined with stable
+   identifiers.
+3. **Traceability** is established: every requirement links to at least one
+   high-level criterion and one verification method.
+4. **Quality gate passed**: all critical findings from the requirements-quality
+   check are resolved.
+5. **Guided mode**: the human has approved the functional validation package.
+   **Autonomous mode**: no blocking unresolved decisions remain.
+6. **Documentation** is drafted proportionately to the project (intended user
+   guide, configuration reference, operations guide where applicable).
+7. **The analyst confirms the baseline is ready** for implementation
+   decomposition.
+
+If these criteria are not met, **do not proceed to decomposition**. Re-engage
+the analyst or pause with a clear explanation of what is missing.
+
+After the baseline is accepted, perform an **objective/scope alignment check**:
+- Does the analyst's output still match the original functional objective?
+- Has scope crept without authorisation?
+- Are there any unexplained additions?
+
+If misalignment is found, challenge it before decomposing.
 
 ### Task schema (shared across all decomposition)
 
@@ -134,6 +168,7 @@ same schema so the execute and report phases are interchangeable:
 | Agent | Role |
 |-------|------|
 | `explore` | Fast codebase exploration — reads files, searches code, returns summaries. Use for analysis and context gathering. |
+| `analyst` | Transforms high-level human intent into a complete, defensible functional contract. Owns requirements, business rules, success criteria, traceability, documentation, and wireframes. Invoked when the analyze phase determines insufficient analysis exists. Operates in autonomous or guided mode per the session's interaction mode. Never implements code. |
 | `general` | Executes individual task prompts (the default executor for graph tasks and report writing). Verification is delegated to the `verifier` sub-agent after each round, not by the task's executor. |
 | `committer` | Inspects changes and makes focused commits; never tags/pushes/branches |
 | `escalate1` | First-tier escalation — diagnoses failures and produces a task plan for a cheaper model to execute. Read-only. |
