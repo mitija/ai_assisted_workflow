@@ -27,6 +27,7 @@ Use the following identifier prefixes for all functional artefacts:
 | FR | Functional requirement | FR-001 |
 | BR | Business rule | BR-001 |
 | NFR | Non-functional requirement | NFR-001 |
+| OPS | Operational requirement | OPS-001 |
 | SC | Detailed success criterion | SC-001 |
 | VER | Verification method | VER-001 |
 | DOC | Documentation requirement | DOC-001 |
@@ -71,7 +72,7 @@ OBJ-xxx (Functional objective)
     ↓ maps-to
 HC-xxx (High-level success criterion)
     ↓ satisfies
-FR-xxx / BR-xxx / NFR-xxx (Requirement or business rule)
+FR-xxx / BR-xxx / NFR-xxx / OPS-xxx / DOC-xxx (Requirement or business rule)
     ↓ verified-by
 SC-xxx (Detailed success criterion)
     ↓ verified-by
@@ -118,9 +119,9 @@ following sequence is mandatory:
 1. **Stop implementation.** The implementation agent must stop and report the
    finding rather than working around it or silently altering behaviour.
 2. **Analyst updates requirements.** The analyst updates the affected
-   requirements, specification, and contractual tests in `docs/working/`,
-   propagating traceability through the full chain (OBJ → HC → FR/BR/NFR → SC
-   → VER).
+requirements, specification, and contractual tests in `docs/working/`,
+    propagating traceability through the full chain (OBJ → HC →
+    FR/BR/NFR/OPS/DOC → SC → VER).
 3. **Human reviews and tags.** The human reviews the updated artefacts. When
    satisfied, the human creates a new docs tag (e.g. `spec-260714`). **AI
    never creates tags.**

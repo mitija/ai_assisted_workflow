@@ -124,7 +124,7 @@ Functional objective
     ↓
 High-level human success criterion (HC-xxx)
     ↓
-Requirement or business rule (FR-xxx / BR-xxx)
+Requirement or business rule (FR-xxx / BR-xxx / NFR-xxx / OPS-xxx / DOC-xxx)
     ↓
 Detailed success criterion (SC-xxx)
     ↓
@@ -229,5 +229,5 @@ mapping), and completion (final documentation baseline).
   criteria testing absent behaviour, documented configuration options that are
   unsupported, and requirements changed without updating traceability.
 - **Stable identifiers.** Use OBJ-xxx, HC-xxx, FR-xxx, BR-xxx, NFR-xxx,
-  SC-xxx, VER-xxx, DOC-xxx, DEC-xxx, RISK-xxx identifiers traceable throughout
-  the project lifecycle.
+  OPS-xxx, SC-xxx, VER-xxx, DOC-xxx, DEC-xxx, RISK-xxx identifiers traceable
+  throughout the project lifecycle.
