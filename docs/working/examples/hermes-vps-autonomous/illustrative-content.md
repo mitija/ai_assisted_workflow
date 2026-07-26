@@ -147,7 +147,7 @@ security practices, and Hetzner Ubuntu 24.04 setup guides (webfetch used).
 
 | ID | Rule | Rationale | Provenance |
 |---|---|---|---|
-| BR-001 | The authorised Discord user is identified by their Discord user ID, hardcoded in the Hermes config. | Single-user deployment; avoids building an auth subsystem | design-decision |
+| BR-001 | The authorised Discord user is identified by their Discord user ID, configured in the Hermes config file. | Single-user deployment; avoids building an auth subsystem | design-decision |
 | BR-002 | The process manager (systemd) restarts Hermes with exponential backoff: 5s, 15s, 30s, 60s, then every 60s. | Prevents rapid restart loops while ensuring eventual recovery | domain-practice |
 | BR-003 | Logs older than 14 days are compressed; logs older than 30 days are deleted. | Balances debugging history with disk constraints on CX22 | domain-practice |
 
@@ -229,6 +229,8 @@ during provisioning. The human must secure the `.vault_pass` file separately.
 | SC-014 | systemd unit file is present and enabled | HC-002 | VER-004 |
 | SC-015 | Hermes restarts with exponential backoff after crash (5s, 15s, 30s, 60s) | HC-001 | VER-003 |
 | SC-016 | Vault-encrypted token file is not readable by non-root users | HC-003 | VER-006 |
+| SC-017 | The Hermes bot authenticates with Discord using the configured token and responds to a `/ask` command | HC-001 | VER-001 |
+| SC-018 | After updating the token in the vault file and re-running the playbook, the bot authenticates with the new token | HC-002 | VER-004 |
 
 ### Step 15 — Define verification methods
 
@@ -342,18 +344,20 @@ OBJ-001  Deploy Hermes on VPS, Discord-accessible, Ansible-automated
     FR-002  Discord slash-command bot
       SC-001  Command response within 30s   → VER-001  Manual test
     FR-003  Bot token authentication
-      (covered by SC-006, SC-016)
+      SC-017  Auth via configured token          → VER-001
     FR-004  Reject unauthorised users
-      SC-002  No response to unauthorised   → VER-002  Manual test
-      SC-012  Authorised user in config     → VER-002  Manual test
+      BR-001  Authorised user by config ID
+      SC-002  No response to unauthorised   → VER-002
+      SC-012  Authorised user in config     → VER-002
     FR-005  Auto-restart after failure
-      SC-003  Recovery within 60s           → VER-003  Recovery test
-      SC-015  Exponential backoff           → VER-003  Recovery test
+      BR-002  Exponential backoff (5s–60s)
+      SC-003  Recovery within 60s           → VER-003
+      SC-015  Exponential backoff           → VER-003
     FR-009  Health endpoint
       SC-009  HTTP 200 when running         → VER-009  Curl test
       SC-010  HTTP 503 when stopped         → VER-003  Recovery test
     FR-013  Token rotation support
-      (verified by re-running playbook)
+      SC-018  Token rotation via vault re-run    → VER-004
 
   HC-002  One-command clean VPS provisioning
     FR-006  Idempotent playbook
@@ -366,6 +370,7 @@ OBJ-001  Deploy Hermes on VPS, Discord-accessible, Ansible-automated
     FR-010  UFW configuration
       SC-007  UFW: only SSH + HTTPS         → VER-007  CI check
     FR-008  Log rotation
+      BR-003  Log retention: 14d compress, 30d delete
       SC-008  No logs older than 30 days    → VER-008  Script
 
   HC-003  Secrets absent from repo and logs
@@ -423,7 +428,7 @@ an infrastructure deployment project with no UI. The analyst:
    documentation-gap-driven requirement discovery (Step 17).
 4. Classified 5 decisions (A/B/C), resolved 4 autonomously, escalated 1 (C) to
    the human with a bounded recommendation.
-5. Produced 13 functional requirements, 3 business rules, 16 detailed success
+5. Produced 13 functional requirements, 3 business rules, 18 detailed success
    criteria, and 9 verification methods.
 6. Applied provenance labels to every requirement.
 7. Reviewed the full set (0 critical, 1 warning, 1 suggestion).

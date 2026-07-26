@@ -15,7 +15,7 @@ haptic cues.
 | Mode choice | Selection of guided mode |
 | Decision classification | Class A/B decisions (animation style, sound defaults); Class C decisions escalated (pause behaviour, data persistence) |
 | Provenance | Every requirement labelled: explicitly-requested, inferred-context, domain-practice, design-decision, risk-control |
-| Requirements and business rules | FR-001–FR-015, BR-001–BR-006 |
+| Requirements and business rules | FR-001–FR-018, BR-001–BR-006 |
 | Hierarchical success criteria | HC-001–HC-005 → FR-xxx → SC-001–SC-020 → VER-001–VER-011 |
 | Verification definitions | VER-001–VER-011 |
 | Traceability | Complete chain from OBJ-001 → HC → FR/BR → SC → VER |
@@ -23,7 +23,7 @@ haptic cues.
 | Intended documentation | User guide, configuration reference (breathing patterns), troubleshooting guide |
 | Quality review | Step 19 findings: compound requirements split, missing edge cases addressed |
 | Guided validation package | Functional validation package produced; human feedback received and propagated |
-| Human feedback propagation | Human requested pause-resume behaviour change; analyst updated BR-002, FR-004, SC-004, SC-007, user guide, wireframe, traceability |
+| Human feedback propagation | Human requested pause-resume behaviour change; analyst updated BR-002, FR-004, FR-007, SC-004, SC-005, SC-007, user guide, wireframe, traceability |
 | Baseline outcome | Final traceability state, decision record, validation decision, documentation completeness |
 
 ## Mode: Guided

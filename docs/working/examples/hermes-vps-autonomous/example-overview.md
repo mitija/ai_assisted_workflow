@@ -15,8 +15,8 @@ Discord.
 | Mode choice | Selection of autonomous mode |
 | Decision classification | Class A/B decisions resolved autonomously (port selection, process manager, log rotation); Class C decisions escalated (secret storage approach) |
 | Provenance | Every requirement labelled with provenance: inferred-context, domain-practice, design-decision, risk-control |
-| Requirements and business rules | FR-001–FR-012, BR-001–BR-003 |
-| Hierarchical success criteria | HC-001–HC-003 → FR-xxx → SC-001–SC-016 → VER-001–VER-009 |
+| Requirements and business rules | FR-001–FR-013, BR-001–BR-003 |
+| Hierarchical success criteria | HC-001–HC-003 → FR-xxx → SC-001–SC-018 → VER-001–VER-009 |
 | Verification definitions | VER-001–VER-009 with method and pass/fail criteria |
 | Traceability | Complete chain from OBJ-001 → HC-xxx → FR/BR → SC → VER |
 | Wireframe / UI representation | Not applicable (infrastructure, no UI) |
@@ -24,6 +24,8 @@ Discord.
 | Quality review | Step 19 findings (critical, warning, suggestion) |
 | Validation package / approval | Not produced (autonomous mode skips the guided validation gate) |
 | Baseline outcome | Final traceability state, autonomous decision record, documentation completeness |
+
+The `configured authorised-user` decision is traced through BR-001, DEC-004, SC-002, SC-012, and the `authorised_user_id` configuration entry.
 
 ## Mode: Autonomous
 

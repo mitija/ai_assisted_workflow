@@ -148,7 +148,7 @@ status (completed / paused / interrupted), completedAt
 | FR-004 | The app shall display a visual guide showing the current phase and its remaining time. | inferred-context |
 | FR-005 | The app shall play an optional audio cue at each phase transition. | domain-practice |
 | FR-006 | The user shall be able to pause and resume a session. | explicitly-requested |
-| FR-007 | When a session is paused, the visual guide shall show a paused state with the current phase and elapsed time preserved. | design-decision |
+| FR-007 | When a session is paused, the visual guide shall show a paused state with the current phase displayed. | design-decision |
 | FR-008 | The app shall record completed sessions locally (pattern used, duration, date). | explicitly-requested |
 | FR-009 | The app shall display a session history screen showing past sessions. | explicitly-requested |
 | FR-010 | The app shall function offline after the first load. | explicitly-requested |
@@ -163,7 +163,7 @@ status (completed / paused / interrupted), completedAt
 | ID | Rule | Rationale | Provenance |
 |---|---|---|---|
 | BR-001 | A session must have completed at least one full breath cycle to be recorded as completed. Fewer cycles are recorded as interrupted. | Prevents accidental taps from creating meaningless history entries | design-decision |
-| BR-002 | When a session is paused and then resumed, it continues from the exact point in the current phase (same phase, same elapsed time). | Natural user expectation — pause freezes time | design-decision |
+| BR-002 | When a session is paused and then resumed, the current phase restarts from the beginning (remaining time resets to the full phase duration). | More natural for breathing — inhale always starts from the beginning of the inhale phase | human-requested-change |
 | BR-003 | Audio cues are disabled by default; the user must opt in. | Avoids startling users; accessibility consideration | domain-practice |
 | BR-004 | At most one session can be active at a time. Starting a new session while one is active prompts to end the current session first. | Prevents overlapping sessions and data ambiguity | design-decision |
 | BR-005 | Session history is stored in localStorage and persists across browser sessions. | No backend; localStorage is the standard client-side option | domain-practice |
@@ -236,8 +236,8 @@ behaviour). This is the most natural user expectation — pausing freezes time.
 | SC-001 | User can select any preset pattern and start a session with one tap. | HC-001 | VER-001 |
 | SC-002 | The visual guide shows the correct current phase name and remaining seconds. | HC-001 | VER-002 |
 | SC-003 | The circle animation expands during inhale and contracts during exhale. | HC-001 | VER-003 |
-| SC-004 | Tapping pause freezes the session timer and phase indicator. | HC-003 | VER-004 |
-| SC-005 | After pause, tapping resume continues from the exact phase and remaining time. | HC-003 | VER-004 |
+| SC-004 | Tapping pause resets the current phase to 0 and shows the paused state. | HC-003 | VER-004 |
+| SC-005 | After pause, tapping resume restarts the current phase from the beginning. | HC-003 | VER-004 |
 | SC-006 | Audio cue plays at each phase transition when enabled; no audio when disabled. | HC-001 | VER-005 |
 | SC-007 | Session can be paused and resumed at least 10 times in a single session without error. | HC-003 | VER-004 |
 | SC-008 | Completed session appears in history within 1 second of completion. | HC-005 | VER-006 |
@@ -249,8 +249,8 @@ behaviour). This is the most natural user expectation — pausing freezes time.
 | SC-014 | Starting a second session while one is active shows a confirmation prompt. | HC-001 | VER-009 |
 | SC-015 | Keyboard space starts/pauses; escape stops the session. | HC-004 | VER-010 |
 | SC-016 | Patterns with cycle > 120s show a warning before session starts. | HC-001 | VER-011 |
-| SC-017 | Session is recorded as "interrupted" when user stops before completing one full cycle. | HC-005 | BR-001 |
-| SC-018 | Session is recorded as "completed" when user completes at least one full cycle and reaches the end. | HC-005 | BR-001 |
+| SC-017 | Session is recorded as "interrupted" when user stops before completing one full cycle. | HC-005 | VER-006 |
+| SC-018 | Session is recorded as "completed" when user completes at least one full cycle and reaches the end. | HC-005 | VER-006 |
 | SC-019 | Visual guide is centered and responsive (works at 320px–1200px width). | HC-002 | VER-002 |
 | SC-020 | localStorage full triggers warning and oldest entries are purged. | HC-005 | VER-006 |
 
@@ -261,7 +261,7 @@ behaviour). This is the most natural user expectation — pausing freezes time.
 | VER-001 | Manual test | Select pattern → tap start → session begins | Session starts within 1 tap of pattern selection |
 | VER-002 | Visual inspection | Check phase display, remaining time, responsive layout | Correct phase/time shown at all widths 320–1200px |
 | VER-003 | Visual inspection | Watch circle animation through a full cycle | Expands during inhale, contracts during exhale |
-| VER-004 | Manual test | Pause, wait 5s, resume; repeat 10 times | Timer resumes at exact elapsed value each time |
+| VER-004 | Manual test | Pause, wait 5s, resume; repeat 10 times | Phase restarts from beginning each time |
 | VER-005 | Manual test | Toggle audio on/off; start session | Audio plays when on, silent when off |
 | VER-006 | Automated unit test | Complete session → check history; interrupt → check history; empty → check display | Correct status, data, and empty state |
 | VER-007 | Automated test | Check aria-live region content during phase transitions | Correct phase name announced |
@@ -312,11 +312,14 @@ Audio is off by default. Toggle it in settings before starting a session.
 
 Writing the troubleshooting guide revealed that no requirement existed for
 graceful degradation when the animation API is unavailable (e.g., older
-browsers). Added FR-017.
+browsers). Added FR-017. Additionally, documenting responsive breakpoints
+revealed no explicit requirement for responsive rendering across device widths
+— added FR-018.
 
 | ID | Statement | Provenance |
 |---|---|---|
 | FR-017 | The app shall show a text-based phase indicator (phase name + remaining seconds) as a fallback if animation rendering fails. | discovered-doc-gap |
+| FR-018 | The app shall render correctly and be usable at screen widths from 320px to 1200px. | discovered-doc-gap |
 
 ### Step 18 — Produce wireframes
 
@@ -462,7 +465,7 @@ Consolidated all artefacts in preparation for the guided validation package.
 
 ## Phase 3 — Review (guided mode: validation package)
 
-### Functional Validation Package
+### Functional Validation Package (proposal — shown as presented to the human)
 
 #### Refined functional outcome
 
@@ -491,10 +494,10 @@ native apps, custom pattern creation (v1), analytics, notifications.
 4. **Offline session:** Load app while online → disconnect → start pattern →
    complete → history stored locally.
 
-#### Key business rules
+#### Key business rules (as proposed)
 
 - BR-001: Minimum one full breath cycle for "completed" status.
-- BR-002: Pause freezes time; resume continues from exact point.
+- BR-002: Pause freezes time; resume continues from exact point. *(overridden by human — see propagation below)*
 - BR-003: Audio off by default.
 - BR-004: Only one active session at a time.
 - BR-005: Session history in localStorage.
@@ -522,7 +525,7 @@ native apps, custom pattern creation (v1), analytics, notifications.
 | DEC-003 | localStorage for history | Simple, sufficient for data volume |
 | DEC-004 | Calm blue colour palette | Evidence-based association with calm |
 
-#### Decisions requiring confirmation (Class C)
+#### Decisions requiring confirmation (as proposed)
 
 | DEC | Question | Human response |
 |---|---|---|
@@ -626,17 +629,22 @@ All six cross-artefact checks passed. No contradictions introduced.
 OBJ-001  BreatheEasy PWA
   HC-001  User can follow a session
     FR-001  Pattern library (4 presets)
+      BR-006  Warning if cycle > 120s
       SC-001  Select and start with one tap       → VER-001
+      SC-016  Warning shown for long patterns      → VER-011
     FR-002  Phase sequence with durations
       (covered by SC-001, SC-002)
     FR-003  Start session
+      BR-004  Only one active session at a time
       SC-001  One-tap start                       → VER-001
     FR-004  Visual guide (phase + remaining time)
       SC-002  Correct phase and time              → VER-002
       SC-019  Responsive 320–1200px               → VER-002
     FR-005  Optional audio cues
+      BR-003  Audio off by default
       SC-006  Audio on/off honoured               → VER-005
     FR-006  Pause and resume
+      BR-002  Phase restarts on resume
       SC-004  Pause resets current phase           → VER-004
       SC-005  Resume from phase beginning          → VER-004
       SC-007  Can pause/resume 10+ times           → VER-004
@@ -655,11 +663,12 @@ OBJ-001  BreatheEasy PWA
     FR-010  Offline-capable
       SC-012  Works offline                       → VER-008
       SC-013  Add to home screen                  → VER-008
-    FR-019  Responsive design
+    FR-018  Responsive design
       SC-019  Works at 320–1200px                  → VER-002
 
   HC-003  Pause and resume
     FR-006  Pause/resume (restart phase)
+      BR-002  Phase restarts on resume
       SC-004  Pause resets phase                  → VER-004
       SC-005  Resume from phase beginning         → VER-004
       SC-007  10+ pause/resume cycles             → VER-004
@@ -674,18 +683,16 @@ OBJ-001  BreatheEasy PWA
     FR-008  Record sessions locally
       SC-008  Completed in history within 1s      → VER-006
       SC-009  Interrupted with partial data       → VER-006
-      SC-017  BR-001 enforcement                  → VER-006
-      SC-018  BR-001 enforcement                  → VER-006
+      SC-017  <1 cycle = interrupted              → VER-006
+      SC-018  1+ cycle = completed                → VER-006
     FR-009  History display
       SC-008  Completed entry                     → VER-006
       SC-009  Interrupted entry                   → VER-006
     FR-016  Empty state
       SC-010  Helpful empty message               → VER-006
     BR-005  localStorage persistence
+      SC-020  Warning + purge on storage full      → VER-006
       (covered by SC-008, SC-009)
-    BR-001  One-cycle minimum for "completed"
-      SC-017  <1 cycle = interrupted              → VER-006
-      SC-018  1+ cycle = completed                → VER-006
 ```
 
 ### Decisions recorded
@@ -741,7 +748,7 @@ UI-heavy application with accessibility requirements. The analyst:
 3. Performed all 20 discovery steps, including domain research (Step 4),
    entity/session modelling (Step 6), exception analysis (Step 9), and
    documentation-gap-driven requirement discovery (Step 17).
-4. Produced 17 requirements, 6 business rules, 20 success criteria, and 11
+4. Produced 18 requirements, 6 business rules, 20 success criteria, and 11
    verification methods.
 5. Applied provenance labels to every requirement.
 6. Produced 6 ASCII wireframes (pattern selection, active session, paused,
