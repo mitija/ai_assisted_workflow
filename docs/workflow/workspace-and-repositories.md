@@ -8,7 +8,7 @@ project-folder/
 │   ├── customer-facing/  # contractual specs/tests, tagged when ready
 │   └── working/          # versioned project documentation work
 ├── src/                  # source-code git repo
-└── local/                # unversioned prompts, session notes, logs, scratch material
+└── local/                # unversioned project-local tool config (e.g. Lima), prompts, session notes, logs, scratch material
 ```
 
 This separation is deliberate:
@@ -45,7 +45,15 @@ Versioned by design. `docs/working/` may contain conception notes, consultant-de
 
 ## Local Area
 
-Unversioned by design. `local/` may contain prompt drafts, AI session notes, copied logs, temporary experiments, and other scratch material. It is useful context for humans and AI agents, but it does not override the tagged documentation repo and should not be treated as contractual.
+Unversioned by design. `local/` may contain project-local tool configuration files
+(e.g. Lima config), prompt drafts, AI session notes, copied logs, temporary
+experiments, and other scratch material. It is useful context for humans and AI
+agents, but it does not override the tagged documentation repo and should not be
+treated as contractual.
+
+Temporary files for project work should use `local/tmp/` rather than system `/tmp`
+to keep scratch material within the project boundary. The `local/tmp/` directory
+is created automatically by the init-project workflow.
 
 ## Navigation
 

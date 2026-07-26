@@ -46,10 +46,14 @@ docs/customer-facing/
 docs/working/
 src/
 local/
+local/tmp/
 ```
 
 Use `Bash("mkdir -p ...")` for each missing directory. Do **not** create them
 if the project already has a different layout.
+
+The `local/tmp/` directory is the project-local location for temporary files;
+prefer it over system `/tmp` for project work.
 
 ### Initialize `.gitignore`
 

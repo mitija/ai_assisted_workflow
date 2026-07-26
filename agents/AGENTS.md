@@ -15,8 +15,11 @@ project-folder/
 │   ├── customer-facing/  # contractual specs/tests, tagged when ready
 │   └── working/          # versioned project documentation work
 ├── src/        # source-code git repo
-└── local/      # unversioned prompts, session notes, logs, scratch material
+└── local/      # unversioned project-local tool config (e.g. Lima), prompts, session notes, logs, scratch material
 ```
+
+Temporary files for project work should live under `local/tmp/` rather than system
+`/tmp` to keep scratch material within the project boundary.
 
 The `docs` and `src` repositories have different lifecycles. Documentation is
 drafted, reviewed, committed, and tagged when ready for implementation. Source

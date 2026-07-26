@@ -163,7 +163,7 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
 - `AI_assisted_development_workflow.md` (docs/) — the methodology `agents/AGENTS.md`
   encodes. Workspace root with separate docs and source repos; docs repo split into
   `customer-facing/` and versioned `working/`; unversioned workspace-level `local/`
-  scratch material; docs freeze tags; 5-step spec methodology; state-table tests;
+  for project-local tool config and scratch material, with `local/tmp/` for
   multi-layer acceptance; known gaps.
 - `docs/workflow/README.md` — wiki-style collection of detailed pages (philosophy,
   principles, workspace layout, specification, test suite, workflow, acceptance,
