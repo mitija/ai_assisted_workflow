@@ -63,7 +63,7 @@ functional contract) and implementation (building against a frozen baseline).
 The analyst owns the functional contract: authoring requirements, business
 rules, success criteria, documentation, and wireframes. The analyst may:
 
-- Resolve **Class A** (explicit or entailed low-risk factual) decisions
+- Resolve **Class A** (minor, low-impact, reversible) decisions
   autonomously with provenance and rationale.
 - Resolve **Class B** (low-impact functional) decisions autonomously with
   provenance and guided-package visibility.
