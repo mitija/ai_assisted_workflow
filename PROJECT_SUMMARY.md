@@ -155,18 +155,36 @@ every requirement and important business rule carries exactly one label (explici
   rules were removed.)
 
 ## What `agents/AGENTS.md` covers
+- Generic deployed guidance applies proportionately to code and non-code work,
+  including documentation, research, analysis, planning, configuration, and project setup.
+- Role ownership and lifecycle: the analyst owns the functional contract and evidence
+  model across intake, discovery, review, and baseline; the conductor owns Analyze,
+  Decomposition, Execute, Review, Escalate, and Report delivery orchestration; the human
+  owns intent, consequential decisions, and final functional-outcome judgement.
+- `analysis_mode` and `interaction_mode` are independent; autonomous operation does not
+  bypass objective confirmation, functional validation, Class C/D decisions,
+  external-permission approval, final review, or final human judgement where applicable.
+- Delivery evidence is applicable to the work type: code follows the frozen spec baseline
+  and produces contractual tests/reporting, while non-code work produces applicable
+  artefacts, verification, traceability, and outcome reporting without imposed code-only
+  deliverables.
 - Spec-driven workflow rules: spec is the contract; never fill gaps with assumptions
    (genuine ambiguity is a blocker — stop and route to the analyst for functional
    interpretation, one question at a time, unpacking complex ones); no mid-flight spec
    changes; tests are executable spec and tests win;
   work against the docs tag.
-- Implementation deliverables: code vs tag, automated tests, development report.
-- Build/Lint/Verify: commands sourced from `project_context.yaml` `commands:`; run
-  before done; minimal-diff/no scope-creep formatting.
-- Definition of Done checklist (tests pass, lint/typecheck/build clean, report written,
-  sample files synced).
+- Coding deliverables: code against the docs tag, automated tests, development report;
+  non-code work follows its applicable artefacts and evidence.
+- Build/Lint/Verify: use configured `project_context.yaml` `commands:` rather than
+  guessing or inventing commands; run each applicable check and record non-applicable
+  checks; minimal-diff/no scope-creep formatting.
+- Definition of Done includes the analyst completion gate, applicable tests or non-code
+  acceptance evidence, evidence/traceability, mandatory reviewer audit, functional-outcome
+  assessment, human judgement where required, and synchronized reports/config samples.
 - Project config via `project_context.yaml` (lives in the project folder, one level
   above the `docs` and `src` repos); maintain `PROJECT_SUMMARY.md`.
+- `project_context.template.yaml` and the embedded template in `skills/init-project/SKILL.md`
+  remain synchronized.
 - **Filesystem Boundary & External Access**: project root is the default boundary;
   external directories require `permission.external_directory` entries in the
   project `opencode.json`. Broad patterns (`~/Projects/**`, `~/**`) prohibited.
