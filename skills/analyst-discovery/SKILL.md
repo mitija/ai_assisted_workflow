@@ -1,6 +1,6 @@
 ---
 name: analyst-discovery
-description: Phase 2 of the analyst workflow. Transforms the confirmed objective brief into a complete, defensible functional contract through a structured 20-step discovery process. Evidence-first — inspects existing material before asking. Resolves non-blocking decisions autonomously, escalates consequential ones. Produces requirements, business rules, success criteria, verification definitions, wireframes, and intended documentation.
+description: Phase 2 of the analyst workflow. Transforms the confirmed objective brief into a complete, defensible functional contract through a structured 20-step discovery process. Evidence-first — inspects existing material before asking. Class A and B decisions are resolved autonomously; Class C and D decisions are handled according to the selected analysis mode. Produces requirements, business rules, success criteria, verification definitions, wireframes, and intended documentation.
 allowed-tools: Read, Grep, Glob, Edit, Write, WebFetch, Question
 ---
 
@@ -13,8 +13,8 @@ confirmed.
 
 Transform the high-level objective brief into a complete, internally consistent
 functional contract. This phase is evidence-first: inspect before asking.
-Resolve non-blocking uncertainty autonomously. Escalate only consequential or
-blocking decisions.
+Class A and B decisions are resolved autonomously; Class C and D decisions
+are handled according to the selected analysis mode.
 
 ## The 20-step discovery process
 
@@ -138,22 +138,39 @@ Review every unresolved decision and classify as A, B, C, or D (see the
 analyst agent's decision classification). Record the classification and
 rationale.
 
-### Step 12 — Resolve non-blocking decisions
+### Step 12 — Resolve Class A and B decisions (both modes)
 
 For Class A and B decisions:
 
 - Apply the most logical option based on evidence, precedent, and convention
 - Record the decision (DEC-xxx), rationale, and alternative considered
 - Do not ask the human
+- In guided analysis, flag Class B decisions for prominent inclusion in the
+  Phase 3 validation package
 
-### Step 13 — Escalate consequential decisions
+### Step 13 — Handle Class C and D decisions (mode-dependent)
 
-For Class C and D decisions:
+For Class C and D decisions, behaviour depends on the analysis mode recorded
+in the objective brief:
 
-- Frame the question with: the issue, your recommended option, rationale,
-  alternatives, and consequences
-- Ask one question at a time, waiting for the answer
-- Record the human's decision as DEC-xxx
+**Class C (material decision):**
+
+- **Autonomous analysis**: stop and ask the human immediately. Frame the
+  question with: the issue, your recommended option, rationale, alternatives,
+  and consequences. Ask one question at a time, waiting for the answer. Record
+  the human's decision as DEC-xxx.
+- **Guided analysis**: if the decision blocks continued analysis (nothing can
+  proceed without a ruling), ask immediately using the same framing. Otherwise,
+  record the provisional decision (DEC-xxx) with a "pending-human-validation"
+  tag and include it prominently in the Phase 3 validation package. Do not ask
+  the human now.
+
+**Class D (blocking decision):**
+
+- **Both modes**: stop and ask the human immediately. Frame the question with:
+  the issue, your recommended option, rationale, alternatives, and consequences.
+  Ask one question at a time, waiting for the answer. Record the human's
+  decision as DEC-xxx. Do not continue until the human responds.
 
 ### Step 14 — Define detailed success criteria
 
@@ -216,9 +233,9 @@ should validate:
 Wireframes focus on behaviour and structure. Do not specify final colours,
 branding, typography, or detailed visual polish.
 
-In guided mode, wireframes should appear in the validation package. In
-autonomous mode, create them without interruption unless they expose a Class C
-or D decision.
+In guided analysis, wireframes should appear in the validation package. In
+autonomous analysis, create them without interruption unless they expose a
+Class C or D decision (which must be asked immediately per Step 13).
 
 ### Step 19 — Perform an independent requirements-quality review
 
@@ -266,8 +283,9 @@ artefacts are internally consistent and traceable.
 - [ ] Every requirement has at least one detailed success criterion
 - [ ] Every detailed success criterion maps to a high-level criterion
 - [ ] Every mandatory requirement has a verification method
-- [ ] All Class A/B decisions resolved and recorded
-- [ ] All Class C/D decisions escalated and recorded
+- [ ] All Class A/B decisions resolved and recorded; Class B flagged for validation package in guided mode
+- [ ] All Class C decisions handled per mode (asked immediately in autonomous; deferred to validation package or asked immediately in guided)
+- [ ] All Class D decisions stopped and asked immediately in both modes
 - [ ] No evidence was ignored before asking questions
 - [ ] Documentation gaps used to discover missing requirements
 - [ ] No implementation code was written

@@ -1,6 +1,6 @@
 ---
 name: analyst-intake
-description: Phase 1 of the analyst workflow. Conducts an initial high-level Q&A with the human to establish the problem, intended users, functional outcome, high-level success criteria, important constraints, explicit exclusions, major preferences, known integrations, and selected operating mode. Produces the objective brief. Determines whether sufficient analysis already exists or full discovery is needed.
+description: Phase 1 of the analyst workflow. Establishes the objective brief via a high-level Q&A with the human. The analysis mode (autonomous or guided) is an explicit independent value selected and recorded here — distinct from conductor interaction style or implementation autonomy. Produces the confirmed objective brief and determines whether sufficient analysis already exists or full discovery is needed.
 allowed-tools: Read, Grep, Glob, Edit, Write, Question
 ---
 
@@ -12,8 +12,8 @@ analysis engagement.
 ## Purpose
 
 Establish the human's intent at a high level — not the detailed specification.
-The human should confirm the objective baseline before detailed autonomous
-analysis proceeds.
+The human must confirm the objective baseline before detailed analysis proceeds,
+in both autonomous and guided analysis modes.
 
 ## What to produce
 
@@ -32,7 +32,8 @@ The objective brief, containing where applicable:
   must interact with
 - **Assumptions already supplied by the human** — pre-existing beliefs or
   conditions taken as true
-- **Selected operating mode** — autonomous or guided
+- **Selected analysis mode** — autonomous or guided (analysis governance;
+  distinct from conductor interaction style or implementation autonomy)
 
 ## Intake process
 
@@ -69,7 +70,7 @@ Keep questions at the level of:
 - What are the important constraints?
 - What is explicitly out of scope?
 - What existing systems must this work with?
-- What operating mode do you want? (autonomous / guided)
+- **What analysis mode do you want? (autonomous / guided)
 
 **Ask one question at a time.** Include your recommended answer where
 reasonable. Wait for the answer before asking the next question.
@@ -94,17 +95,25 @@ that you have understood the intended outcome.
 If the human disagrees or corrects, update the brief and re-present until
 confirmed.
 
-### 5. Determine mode readiness
+### 5. Record analysis mode and proceed
 
-- If selected mode is **autonomous**: proceed to Phase 2 (load
-  `analyst-discovery`).
-- If selected mode is **guided**: note that a validation gate will be required
-  after Phase 2. Proceed to Phase 2.
+Record the selected analysis mode in the objective brief. This is an
+independent value governing when the human validates the functional
+interpretation; it is distinct from implementation autonomy or the
+conductor's interaction style.
+
+- If **autonomous analysis**: proceed to Phase 2 (load `analyst-discovery`).
+  The human has confirmed the objective brief and will be asked immediately
+  for any Class C or D decisions during discovery.
+- If **guided analysis**: note that a functional validation package will be
+  required after Phase 2. Proceed to Phase 2. Class C decisions that do not
+  block continued analysis are deferred to the validation package; Class D
+  decisions stop and ask immediately regardless of mode.
 
 ## Output
 
 - `docs/working/objective-brief.md` — confirmed by the human
-- Decision on operating mode (autonomous or guided)
+- `analysis_mode` field: `autonomous` or `guided` — explicit independent value
 - Assessment of whether existing analysis suffices or full discovery is needed
 
 ## Quality checklist
@@ -113,6 +122,6 @@ confirmed.
 - [ ] High-level success criteria are in the human's language, not formal
       requirement statements
 - [ ] Explicit exclusions and scope boundaries are documented
-- [ ] Selected operating mode is recorded
+- [ ] Selected analysis mode is recorded (autonomous or guided)
 - [ ] The human confirmed the baseline
 - [ ] No detailed technical questions were asked during intake
