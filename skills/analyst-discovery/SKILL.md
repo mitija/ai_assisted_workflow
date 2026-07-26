@@ -83,17 +83,64 @@ Identify the key entities the system must store, track, or manage. For each:
 Produce lightweight models — tables, lists, or diagrams in text. Do not design
 database schemas.
 
-### Step 7 — Generate candidate requirements
+### Step 7 — Generate and classify candidate requirements
 
-Derive functional requirements from:
+Derive functional, non-functional, operational, and documentation requirements
+from:
 
 - the objective and high-level criteria
 - actor goals and workflows
 - entity lifecycles and state transitions
 - external system interactions
+- domain research findings
+
+For each requirement, determine whether it is:
+
+- **Functional (FR-xxx)** — a specific behaviour or capability the system
+  must provide
+- **Non-functional / quality (NFR-xxx)** — a quality attribute or constraint
+  on system behaviour (performance, security, privacy, accessibility,
+  reliability, availability, maintainability, observability)
+- **Operational / infrastructure (OPS-xxx)** — a constraint or capability
+  related to deployment, configuration, backup/recovery, monitoring,
+  support/operations, or infrastructure
+- **Documentation (DOC-xxx)** — a required document, reference, or label
+  the system must produce or expose
+
+Explicitly consider each of the following areas. For each, either derive at
+least one requirement or record a rationale for why it is not applicable:
+
+| Area | Typical concern |
+|------|----------------|
+| Security | Authentication, authorisation, encryption, audit, secrets management, input validation |
+| Privacy | Data minimisation, retention, consent, anonymisation, PII handling |
+| Accessibility | WCAG compliance, screen-reader support, keyboard navigation, colour contrast |
+| Performance | Response times, throughput, concurrency, batch windows, latency |
+| Availability | Uptime SLA, planned maintenance windows, graceful degradation, failover |
+| Reliability | Error handling, data integrity, idempotency, consistency guarantees |
+| Observability | Logging, metrics, tracing, health checks, alerting, dashboards |
+| Maintainability | Code modularity, configuration externalisation, upgrade paths, API versioning |
+| Deployment | Build pipeline, environment provisioning, release strategy, rollback |
+| Configuration | Environment variables, feature flags, secrets, runtime settings |
+| Backup / recovery | Snapshot schedule, retention policy, restore procedure, disaster recovery |
+| Regulatory / compliance | GDPR, SOC2, PCI-DSS, HIPAA, jurisdiction-specific rules |
+| Support / operations | Incident response, escalation paths, runbooks, SLAs, on-call rotation |
 
 Write each requirement as a clear statement: "The system shall [behaviour]
-under [condition]." Assign a provisional identifier (FR-xxx).
+under [condition]." Assign a provisional identifier (FR-xxx, NFR-xxx,
+OPS-xxx, or DOC-xxx).
+
+For every requirement, record:
+
+- **Provenance** — how it was derived (explicitly-requested, inferred-context,
+  inherited, domain-practice, design-decision, risk-control)
+- **Confidence** — high/medium/low assessment
+- **Rationale** — why this requirement exists
+- **Impact** — cost, scope, or risk impact if missing
+- **Success criteria** — at least one measurable criterion (detailed in Step 14)
+- **Verification approach** — how it will be verified (detailed in Step 15)
+- **Traceability** — link to the source (HC-xxx, actor goal, entity,
+  external system)
 
 ### Step 8 — Define business rules
 
@@ -274,7 +321,11 @@ Consolidate everything into a coherent baseline:
 ## Output
 
 The complete requirements baseline, ready for the quality gate (Phase 3). All
-artefacts are internally consistent and traceable.
+artefacts are internally consistent and traceable. The baseline explicitly
+includes functional, non-functional, operational, and documentation requirements,
+each with provenance, confidence, rationale, impact, success criteria,
+verification, and traceability. Non-applicable categories are documented with
+rationale.
 
 ## Quality checklist
 
@@ -290,3 +341,6 @@ artefacts are internally consistent and traceable.
 - [ ] Documentation gaps used to discover missing requirements
 - [ ] No implementation code was written
 - [ ] Wireframes produced where UI behaviour is meaningful
+- [ ] Every non-functional, operational, and documentation requirement has stable ID, provenance, confidence, rationale, impact, and traceability
+- [ ] Each of security, privacy, accessibility, performance, availability, reliability, observability, maintainability, deployment, configuration, backup/recovery, regulatory/compliance, and support/operations was explicitly considered — either requirements exist or rationale is recorded for inapplicability
+- [ ] Non-applicable categories are documented with rationale, not silently omitted

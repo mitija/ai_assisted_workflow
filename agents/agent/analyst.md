@@ -180,12 +180,18 @@ mode. The human confirms the high-level objective baseline before proceeding.
 
 Load the `analyst-discovery` skill. Perform the structured discovery process:
 frame the objective, capture high-level criteria, inspect existing evidence,
-research domain conventions, identify actors and entities, generate candidate
-requirements, define business rules, analyse exceptions, classify decisions,
-resolve Class A and B decisions autonomously, apply mode-dependent handling
-for Class C and D, define detailed success criteria and verification methods,
-draft intended documentation, use documentation gaps to find missing
-requirements, produce wireframes, and perform requirements-quality review.
+research domain conventions, identify actors and entities, generate and
+classify candidate requirements (functional FR-xxx, non-functional NFR-xxx,
+operational OPS-xxx, documentation DOC-xxx), define business rules, analyse
+exceptions, classify decisions, resolve Class A and B decisions autonomously,
+apply mode-dependent handling for Class C and D, define detailed success
+criteria and verification methods, draft intended documentation, use
+documentation gaps to find missing requirements, produce wireframes, and
+perform requirements-quality review. Explicitly consider each area — security,
+privacy, accessibility, performance, availability, reliability, observability,
+maintainability, deployment, configuration, backup/recovery, regulatory/
+compliance, and support/operations — deriving requirements or recording
+rationale when not applicable.
 
 ### Phase 3 — Review
 
