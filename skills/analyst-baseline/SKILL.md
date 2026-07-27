@@ -23,7 +23,9 @@ repository. Do so only after the applicable quality and baseline gates; guided
 analysis additionally requires human validation approval, while autonomous
 analysis requires that no blocking Class C or D decision remains. Use the
 project's canonical naming convention, defaulting to `spec-YYMMDD` with a
-deterministic collision suffix. The tag must point to the committed approved
+deterministic numeric collision suffix (for example, `spec-260727-1`). Custom
+naming conventions outside the permitted `spec-*` command pattern require
+explicit permission/configuration. The tag must point to the committed approved
 documentation baseline and be recorded with repository, tag, commit, baseline,
 validation, and publication status. Record it as the current implementation
 tag. Never move, delete, or repoint an existing tag; any change requires a new

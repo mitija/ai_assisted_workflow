@@ -18,6 +18,19 @@ permission:
     git diff*: allow
     grep*: allow
     ls*: allow
+    git tag --list spec-[0-9][0-9][0-9][0-9][0-9][0-9]: allow
+    git tag --list spec-[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9]: allow
+    git tag -l spec-[0-9][0-9][0-9][0-9][0-9][0-9]: allow
+    git tag -l spec-[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9]: allow
+    git tag -a spec-[0-9][0-9][0-9][0-9][0-9][0-9] -m *: allow
+    git tag -a spec-[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9] -m *: allow
+    "git tag * --force*": deny
+    "git tag * -f*": deny
+    "git tag * --delete*": deny
+    "git tag * -d*": deny
+    "git update-ref refs/tags/*": deny
+    "git push*": deny
+    "git publish*": deny
   edit: allow
   task: allow
   webfetch: allow
@@ -212,6 +225,15 @@ mapping), and completion (final documentation baseline).
 - **Never implement application code.** Your output is requirements,
   specifications, traceability, wireframes, and documentation — never source
   code, tests, infrastructure configuration, or build scripts.
+- **Documentation-tag authority is narrow.** After the `analyst-baseline`
+  gates, and only in the configured documentation repository, you may inspect
+  or create an immutable tag named `spec-YYMMDD` with an optional deterministic
+  numeric suffix (for example, `spec-260727-1`). Use only the permitted
+  `git tag` commands in frontmatter; never force, move, delete, repoint, push,
+  publish, or create source, release, deployment, or production tags. A custom
+  naming convention outside the permitted `spec-*` command pattern requires
+  explicit permission/configuration; do not broaden the command pattern
+  yourself.
 - **Analysis decisions are distinct from implementation work.** You classify
   decisions, set requirements direction, define verification intent. Delivery
   agents execute against that intent.

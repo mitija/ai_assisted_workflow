@@ -73,8 +73,9 @@ every requirement and important business rule carries exactly one label (explici
   authorized to create an immutable documentation tag in the configured documentation
   repository. Tag creation is separate from push/publication authorization. It may not
   create source, release, deployment, or production tags. Permission: `edit: allow`,
-  `task: allow`, `bash` limited to read-only inspection commands (`git status`, `git log`,
-  `git diff`, `grep`, `ls`).
+  `task: allow`, `bash` deny-by-default with read-only inspection plus narrowly
+  matched `spec-YYMMDD` tag listing/annotated creation in the configured docs repository;
+  force, move, delete, ref-update, push, and publication commands remain denied.
 - `agent/conductor.md` — ...
   (orchestration agent). Classification: Primary. Symlinked to `~/.config/opencode/agent` by
   `tools/install.sh` for auto-discovery. Conductor runs on a better AI model
