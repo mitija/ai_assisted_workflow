@@ -35,9 +35,11 @@ to the analyst.
    verification methods must exist, the quality gate must pass, and the analyst
    must confirm readiness. Guided mode additionally requires human validation
    approval; autonomous mode requires no blocking C/D decision.
-7. Check acceptance readiness. Code work must include the required passing unit
-   and contractual tests as applicable. Non-code work must include the analyst's
-   explicit acceptance criteria and evidence definition.
+7. Check verification readiness. For code work, the analyst baseline must identify
+   applicable contractual scenarios, unit-test expectations, and verification and
+   evidence methods. Passing test and check results are required during Execute
+   and at completion, not before decomposition. Non-code work must include the
+   analyst's explicit acceptance criteria and evidence definition.
 8. If analysis is insufficient, delegate the complete analysis lifecycle to the
    analyst and then re-read its outputs through `explore`. Do not perform that
    work in the conductor.
