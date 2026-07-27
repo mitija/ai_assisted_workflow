@@ -1,82 +1,64 @@
 # project_context.template.yaml
+# Copy to project_context.yaml. The project file is local and gitignored.
+# Do not place literal secrets here; use references to protected config/env files.
 #
-# Copy this file to `project_context.yaml` and fill in the values for your
-# local machine / project. `project_context.yaml` should be gitignored.
-#
-# Agents read this file at the start of a session to discover project-specific
-# paths, credentials, and commands. Never hard-code these values in code or docs.
+# v2 uses a minimal envelope and visible profile selection. Inactive profiles
+# impose no fields. A file without schema_version is legacy v1 and retains the
+# meanings of its top-level project/layout/spec/commands/filesystem/odoo keys.
+
+schema_version: 2
 
 project:
-  name:                  # Human-readable project name, e.g. "Gulli Foods barcode suite"
-  description:           # One-line description of what this project is
+  name:
+  description:
 
-# Where the code and docs live. Adjust to match this project's layout.
-layout:
-  source_dir:            # Directory holding the source code, e.g. "src" or "odoo-sco-pca"
-  docs_dir:              # Directory holding project docs, e.g. "docs"
-  summary_file: PROJECT_SUMMARY.md   # File holding current project state (no history)
+profiles:
+  selected: []       # e.g. [code], [non_code], or [code, odoo]
+  inferred: []       # signals found by init-project; review and correct selected
 
-# Spec-driven workflow: where the specification and tests live (see
-# AI_assisted_development_workflow.md). Specs/tests are usually in a separate,
-# tagged documentation repo. Agents read these before implementing.
-spec:
-  docs_repo:             ./docs                   # Path or URL of the documentation repo
-  customer_facing_dir:   ./docs/customer-facing   # Dir holding <epic>_SPEC.md and <epic>_TESTS.md
-  current_tag:           # Spec freeze tag to implement against, e.g. "spec-260513"
+  code:
+    layout:
+      source_dir:
+      docs_dir:
+      summary_file: PROJECT_SUMMARY.md
+    spec:
+      docs_repo:
+      customer_facing_dir:
+      current_tag:
+    commands:
+      install:
+      build:
+      lint:
+      typecheck:
+      format:
+      test:
+    filesystem:
+      external_paths: []  # path + reason; authorization remains in opencode.json
 
-# Generic build / quality commands. Fill in for non-Odoo projects, or in addition
-# to the Odoo section below. Agents use configured commands rather than guessing
-# or inventing them, and run each applicable check before completion. (Odoo tests
-# use odoo.scripts.run_tests instead.)
-commands:
-  install:               # e.g. "npm install" / "pip install -e ."
-  build:                 # e.g. "npm run build"
-  lint:                  # e.g. "ruff check ." / "npm run lint"
-  typecheck:             # e.g. "mypy ." / "tsc --noEmit"
-  format:                # e.g. "ruff format ." / "prettier -w ."
-  test:                  # generic test command (Odoo uses odoo.scripts.run_tests)
+  non_code:
+    acceptance:
+      criteria: []
+      evidence:
+    research:
+      sources: []
+      findings: []
+    layout:
+      docs_dir:
+      summary_file: PROJECT_SUMMARY.md
 
-# ----------------------------------------------------------------------------
-# Filesystem boundary (informational — mirrors opencode.json permissions).
-# These are paths outside the project root that this project legitimately needs.
-# The authoritative access rules live in the project's opencode.json under
-# `permission.external_directory`. This section documents what they are and why.
-# Agents use this during the permission preflight to detect missing authorizations.
-# ----------------------------------------------------------------------------
-# filesystem:
-# external_paths:
-#     - path: /path/to/odoo/source
-#       reason: "Odoo runtime for development server"
-#     - path: /path/to/shared/lib
-#       reason: "Sibling monorepo workspace"
+  odoo:
+    version:
+    source:
+      base:
+      enterprise:
+    scripts:
+      start:
+      run_tests:
+      config_ini:       # reference to a protected config file, not credentials
+    qa_instance:
+      config_ini:       # reference to a protected config file
+    modules: []
 
-# ----------------------------------------------------------------------------
-# Odoo-specific section. Remove this whole block for non-Odoo projects.
-# ----------------------------------------------------------------------------
-odoo:
-  version:               # e.g. "17"
-
-  # Odoo source code (read-only reference)
-  source:
-    base:                # Base Odoo source, e.g. "/path/to/odoo/17/odoo"
-    enterprise:          # Enterprise source, e.g. "/path/to/odoo/17/enterprise"
-
-  # Executable / scripts
-  scripts:
-    start:               # Odoo launcher wrapper, e.g. "/path/to/odoo/17/start_odoo17.sh"
-    run_tests:           # Test wrapper (drops/recreates DB), e.g. "/path/to/odoo/17/run_tests.sh"
-    # Connection config for the local dev/test database. All DB credentials
-    # (host, port, user, password, dbname) come from this file — do not
-    # duplicate them here.
-    config_ini:          # e.g. "scripts/odoo_config.ini"  (gitignored)
-
-  # Remote QA instance reachable via XMLRPC for data checks (optional).
-  # All connection details (URL, credentials) are read from config_ini below.
-  qa_instance:
-    config_ini:          # e.g. "scripts/odoo-qa.ini"  (gitignored)
-
-  # Modules maintained in this project (optional, list as needed)
-  modules:
-    # - name: gullifood_stock_barcode
-    #   path: odoo-gulli-foods/gullifood_stock_barcode
-    #   depends: [stock_barcode, stock_barcode_mrp, product_multiple_barcodes]
+# Controlled, self-describing project-specific additions. Preserve unknown
+# extension keys when inspecting or migrating; do not reinterpret them.
+extensions: {}
