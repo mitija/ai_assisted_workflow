@@ -16,6 +16,22 @@ full traceability. Maintain consistency across all functional artefacts
 throughout implementation, verification, and completion. The baseline is the
 single source of truth for the functional contract.
 
+## Documentation tag policy
+
+Only the analyst may create an immutable tag in the configured documentation
+repository. Do so only after the applicable quality and baseline gates; guided
+analysis additionally requires human validation approval, while autonomous
+analysis requires that no blocking Class C or D decision remains. Use the
+project's canonical naming convention, defaulting to `spec-YYMMDD` with a
+deterministic collision suffix. The tag must point to the committed approved
+documentation baseline and be recorded with repository, tag, commit, baseline,
+validation, and publication status. Record it as the current implementation
+tag. Never move, delete, or repoint an existing tag; any change requires a new
+tag. Tag creation is distinct from push or publication, which requires separate
+authorization. The analyst may not create source, release, deployment, or
+production tags. Conductor, committer, reviewer, verifier, and implementation
+roles remain prohibited from tagging.
+
 ## Stable identifiers
 
 Use the following identifier prefixes for all functional artefacts:
@@ -122,9 +138,12 @@ following sequence is mandatory:
 requirements, specification, and contractual tests in `docs/working/`,
     propagating traceability through the full chain (OBJ → HC →
     FR/BR/NFR/OPS/DOC → SC → VER).
-3. **Human reviews and tags.** The human reviews the updated artefacts. When
-   satisfied, the human creates a new docs tag (e.g. `spec-260714`). **AI
-   never creates tags.**
+3. **Human reviews and analyst tags.** The human reviews the updated artefacts.
+   After the applicable quality and baseline gates, the analyst creates a new
+   immutable docs tag in the configured documentation repository. In guided
+   mode this requires human validation approval; in autonomous mode it requires
+   no blocking Class C/D decision. The tag points to the committed approved
+   docs baseline and implementation resumes against it.
 4. **Implementation resumes against new tag.** Implementation resumes only
    against the new tag. The implementation agent re-reads the current spec and
    tests at the new tag before continuing.

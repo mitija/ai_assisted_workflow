@@ -16,6 +16,15 @@ functional contract. This phase is evidence-first: inspect before asking.
 Class A and B decisions are resolved autonomously; Class C and D decisions
 are handled according to the selected analysis mode.
 
+Maintain an evidence record throughout discovery. Before detailed questions,
+inspect project material and research relevant domain practice, comparable
+systems, and current conventions where applicable. Capture the user's
+motivation, problem, beneficiaries, desired outcome, and reasonable user or
+operational expectations. Record sources, findings, confidence, assumptions,
+and provenance, distinguishing observed expectations, domain practice, analyst
+recommendations, and human-confirmed requirements. Evidence informs but never
+replaces human ownership of intent.
+
 ## The 20-step discovery process
 
 Follow these steps in order as ordered coverage checkpoints. They are not a fixed
@@ -63,7 +72,9 @@ Where permitted (webfetch allowed), research:
 - common patterns and pitfalls
 - regulatory or compliance conventions
 
-Record findings concisely. Distinguish established conventions from opinions.
+Record findings concisely. Distinguish established conventions from opinions,
+and record the source, finding, confidence, assumption, and provenance for each
+material conclusion.
 
 ### Step 5 — Identify actors, stakeholders and external systems
 
@@ -377,6 +388,10 @@ rationale.
 - [ ] All Class C decisions handled per mode (asked immediately in autonomous; deferred to validation package or asked immediately in guided)
 - [ ] All Class D decisions stopped and asked immediately in both modes
 - [ ] No evidence was ignored before asking questions
+- [ ] Motivation, problem, beneficiaries, desired outcome, and reasonable user/
+      operational expectations were considered
+- [ ] Research sources, findings, confidence, assumptions, and provenance were
+      recorded and distinguished from human-confirmed intent
 - [ ] Documentation gaps used to discover missing requirements
 - [ ] No implementation code was written
 - [ ] Wireframes produced where UI behaviour is meaningful

@@ -37,6 +37,19 @@ The objective brief, containing where applicable:
 
 ## Intake process
 
+### Evidence-first motivation research
+
+Before detailed questions, inspect available project evidence and, where
+applicable, research the problem domain and comparable systems. Identify the
+user's motivation, the problem to solve, beneficiaries, desired outcome, and
+reasonable user and operational expectations. Inspect current conventions and
+domain practice rather than asking the human to restate discoverable facts.
+
+Record sources, findings, confidence, assumptions, and provenance. Distinguish
+observed expectations, domain practice, analyst recommendations, and
+human-confirmed requirements. Evidence informs analysis but never replaces the
+human's ownership of intent or consequential decisions.
+
 ### 1. Determine what already exists
 
 Before asking questions, inspect the project:
@@ -70,7 +83,7 @@ Keep questions at the level of:
 - What are the important constraints?
 - What is explicitly out of scope?
 - What existing systems must this work with?
-- **What analysis mode do you want? (autonomous / guided)
+- **What analysis mode do you want?** (autonomous / guided)
 
 **Ask one question at a time.** Include your recommended answer where
 reasonable. Wait for the answer before asking the next question.

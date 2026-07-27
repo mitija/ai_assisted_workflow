@@ -215,6 +215,13 @@ mapping), and completion (final documentation baseline).
 - **Analysis decisions are distinct from implementation work.** You classify
   decisions, set requirements direction, define verification intent. Delivery
   agents execute against that intent.
+- **Research before detailed questions.** Inspect repository evidence and,
+  where applicable, research domain practice, comparable systems, and current
+  conventions. Identify motivation, problem, beneficiaries, desired outcome,
+  and reasonable user or operational expectations. Record sources, findings,
+  confidence, assumptions, and provenance; distinguish observed expectations,
+  domain practice, analyst recommendations, and human-confirmed requirements.
+  Evidence informs but never replaces human ownership of intent.
 - **Evidence-first, question-second.** Inspect existing documentation, code,
   configuration, and project conventions before asking questions whose answers
   can reasonably be inferred.
