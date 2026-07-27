@@ -2,8 +2,8 @@
 
 Odoo-specific guidance. Append/include alongside the generic `AGENTS.md`.
 All concrete paths and credentials come from protected configuration referenced by
-`project_context.yaml` (see `profiles.odoo` in v2, or the legacy equivalent when
-reading v1) — do not hard-code or expose them here.
+the v2 `profiles.odoo` section of `project_context.yaml` — do not hard-code or
+expose them here.
 
 ## Odoo Source Code (read-only reference)
 The base and enterprise source trees (`profiles.odoo.source.base` /
@@ -44,7 +44,7 @@ Direct CLI alternative (using the protected config referenced by
 
 ## Database & Instances
 - Local dev/test DB: use the protected config referenced by
-  `profiles.odoo.scripts.config_ini` (or its recognized legacy v1 equivalent).
+  `profiles.odoo.scripts.config_ini`.
 - QA instance (optional): use the protected config referenced by
   `profiles.odoo.qa_instance.config_ini`,
   reachable via XMLRPC for data checks.

@@ -1,17 +1,17 @@
 ---
 name: init-project
-description: Initialize, inspect, migrate, or repair project_context.yaml using evidence-first profile inference while preserving legacy v1 semantics and extensions.
+description: Initialize, inspect, convert with approval, or repair valid v2 project_context.yaml using evidence-first profile inference and controlled extensions.
 allowed-tools: Read, Glob, Bash, Edit, Write, Question
 ---
 
 # Init Project
 
 Use this skill when `project_context.yaml` is missing or unusable, or when a
-project asks to inspect or migrate it. Scan first and ask last. Do not print
+project asks to inspect or repair it. Scan first and ask last. Do not print
 secrets. Use config references for credentials and keep external access
 permission-gated.
 
-## Profiles and compatibility
+## Profiles and schema
 
 The standalone `agents/project_context.template.yaml` and this embedded
 template are the same v2 structure:
@@ -71,56 +71,48 @@ extensions: {}
 signals visibly; the user may correct `selected`. Inactive profiles impose no
 fields. Profiles are typed: `code` carries source/spec/commands and optional
 filesystem data, `non_code` carries acceptance and research support, and `odoo`
-adds Odoo-specific fields. Extensions must be controlled, self-describing, and
-preserved unchanged when not understood.
+adds Odoo-specific fields. Extensions must be controlled and self-describing;
+unknown extension keys in valid v2 are preserved unchanged when not understood.
 
-For legacy v1, a missing `schema_version` means v1. Read and preserve the
-top-level `project`, `layout`, `spec`, `commands`, `filesystem`, and `odoo`
-structures and their meanings. Do not silently reinterpret or discard unknown
-keys. Offer migration to v2, retain unknown content under `extensions` only
-with the user's agreement, and document the migration result.
+`schema_version: 2` is required and v2 is the only supported schema. Missing or
+unsupported versions are unusable. Init may offer explicit reinitialization or
+conversion with user approval, but promises no automatic migration or
+preservation and never silently interprets an old top-level layout as supported
+v2 data.
 
 ## Workflow
 
 1. Inspect `project_context.yaml`, the standalone template, root directories,
    `PROJECT_SUMMARY.md`, package/build metadata, docs/spec files, git remotes,
-   Odoo indicators, and relevant configuration. Detect the schema before making
-   any write: `schema_version: 2` is v2; a missing `schema_version` is legacy v1.
-2. For v2, infer project name, layout, commands, and profiles from evidence. Set
-   `profiles.inferred` to those signals, ask the user to confirm or correct
+   Odoo indicators, and relevant configuration before writing. Detect the schema:
+   only `schema_version: 2` is usable.
+2. For valid v2, infer project name, layout, commands, and profiles from evidence.
+   Set `profiles.inferred` to those signals, ask the user to confirm or correct
    `profiles.selected`, and write the confirmed active profile selection. Ask
-   only for missing fields belonging to active profiles. A non-code project
-   must not be asked for source, build, test, or
-   Odoo fields. Validate the selected active profiles: check required paths and
-   commands, acceptance criteria/evidence for non-code work, spec/tag references
-   for code work, and Odoo fields only when `odoo` is selected. Record unresolved
-   values explicitly.
-3. For legacy v1, preserve the existing top-level schema, meanings, and unknown
-   keys. Infer work type/profile only in the inspection report; do not write
-   `profiles.inferred` or otherwise add v2 profile keys to the v1 file. Validate
-   recognized v1 fields and report missing or unusable values. Offer migration
-   to v2, but migrate and write only after the user explicitly agrees; preserve
-   unknown content under `extensions` only with that agreement and document the
-   migration result.
-4. If no context exists, create it from the v2 template above. For an existing
-   file, preserve its detected schema and unknown fields while repairing only
-   unusable values under that schema. Discover external paths from active v2
-   profile data, or from the corresponding recognized legacy v1 data when
-   inspecting v1.
+   only for missing fields belonging to active profiles. A non-code project must
+   not be asked for source, build, test, or Odoo fields. Validate active profiles:
+   required paths and commands, acceptance criteria/evidence for non-code work,
+   spec/tag references for code work, and Odoo fields only when selected.
+3. If the file is missing, create it from the v2 template above. If it has a
+   missing or unsupported version, report it as unusable and offer explicit
+   reinitialization or conversion. Write only after the user approves; do not
+   promise automatic migration or preservation and do not interpret old
+   top-level fields as supported v2 data.
+4. For an existing valid v2 file, preserve unknown extension keys while repairing
+   only unusable v2 values. Discover external paths only from active v2 profile
+   data.
 5. Expand variables and `~`, normalize `.`/`..`, resolve absolute paths, and
    canonicalize symlinks before classifying. Reject broad paths and present
    concrete project-specific paths one at a time for permission approval. The
-   authoritative allow list is `opencode.json`; never bypass or silently alter
-   it.
-6. For v2, write the context after each answer. For legacy v1, write only
-   repairs that preserve v1 semantics; do not write a v2 migration until the
-   user agrees. In either schema, ensure literal secrets are absent and
-   references point to protected config or environment values.
-7. Verify YAML parsing, selected-profile validity for v2, recognized-field
-   validity and preservation for v1, and that the standalone and embedded v2
-   templates remain semantically and structurally synchronized. Report inferred
-   values, blanks, compatibility status, and any proposed migration.
+   authoritative allow list is `opencode.json`; never bypass or silently alter it.
+6. Write a valid v2 context after each approved answer. Ensure literal secrets
+   are absent and references point to protected config or environment values.
+7. Verify YAML parsing, selected-profile validity, controlled-extension handling,
+   and that the standalone and embedded v2 templates remain semantically and
+   structurally synchronized. Report inferred values, blanks, and any approved
+   reinitialization or conversion.
 
 The conductor invokes this skill when context is absent or unusable; an
 unresolved human choice or permission decision remains a gate, not a reason to
-guess.
+guess. Setup planning occurs before decomposition, while command execution and
+setup evidence belong to Execute and completion.

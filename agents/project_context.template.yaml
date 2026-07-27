@@ -3,8 +3,8 @@
 # Do not place literal secrets here; use references to protected config/env files.
 #
 # v2 uses a minimal envelope and visible profile selection. Inactive profiles
-# impose no fields. A file without schema_version is legacy v1 and retains the
-# meanings of its top-level project/layout/spec/commands/filesystem/odoo keys.
+# impose no fields. schema_version: 2 is required; missing or unsupported
+# versions are unusable and require explicit reinitialization or conversion.
 
 schema_version: 2
 
@@ -60,5 +60,5 @@ profiles:
     modules: []
 
 # Controlled, self-describing project-specific additions. Preserve unknown
-# extension keys when inspecting or migrating; do not reinterpret them.
+# extension keys in valid v2 files; do not reinterpret them.
 extensions: {}
