@@ -42,6 +42,10 @@ contractual.
 - The **conductor** owns delivery orchestration across six phases: Analyze,
   Decomposition, Execute, Review, Escalate, and Report. The conductor does not
   replace the analyst's functional ownership or the human's approval gates.
+- The conductor is the normal delivery entry point and transparently drives the
+  analyst when a baseline is absent or needs maintenance. It owns initialization,
+  tooling/environment readiness, command/layout discovery, permissions, setup
+  tasks, and setup blockers, delegating mechanics to the appropriate agents.
 
 `analysis_mode` and `interaction_mode` are independent values. `analysis_mode`
 (`autonomous` or `guided`) governs the analyst's functional-contract lifecycle and
@@ -181,12 +185,14 @@ one level above the `docs` and `src` repos. Read it at the start of a session. I
 it is missing, copy `project_context.template.yaml` to `project_context.yaml` and
 ask the user to fill it in. Never hard-code these paths or credentials in code or docs.
 
-The project context uses a minimal envelope with optional visible typed profiles
-for code, non-code, Odoo, and other controlled extensions. Inactive profiles impose
-no requirements; legacy v1 remains readable; and unknown extension keys are
-preserved without reinterpretation. The conductor routes missing or unusable
-context to `init-project`, which infers profiles and asks only for active-profile
-values. Secrets remain protected and external-path authorization remains in
+The project context uses a minimal v2 envelope with optional visible typed profiles
+for code, non-code, Odoo, and other controlled extensions. `schema_version: 2` is
+required; missing or unsupported versions are unusable and route to `init-project`
+for explicit reinitialization or conversion. Inactive profiles impose no
+requirements, and unknown extension keys in valid v2 are preserved without
+reinterpretation. The conductor routes missing or unusable context to
+`init-project`, which infers profiles and asks only for active-profile values.
+Secrets remain protected and external-path authorization remains in
 `opencode.json`.
 
 ## Maintain Context

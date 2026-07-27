@@ -13,7 +13,7 @@ Deliverables live in `agents/`.
 Production-ready for its core, spec-driven coding workflow, while broader
 documentation, research, analysis, configuration, and project-setup workflows remain
 less mature and evolving. The established paradigm is human objective ownership;
-an analyst-owned four-phase functional-contract lifecycle (intake, discovery, review,
+an analyst-owned proportional four-phase functional-contract lifecycle (intake, discovery, review,
 and traceable baseline); and conductor-owned six-phase code/non-code delivery
 (analyze, decompose, execute, review, escalate, and report). `analysis_mode` and
 `interaction_mode` are independent. Analyst discovery is evidence-first: it researches
@@ -21,8 +21,12 @@ motivation, problem, beneficiaries, outcomes, and reasonable user or operational
 expectations, recording sources, findings, confidence, assumptions, and provenance.
 Implementers and the verifier produce evidence, the mandatory reviewer audits it, the
 conductor assesses the functional outcome, and the human makes the final judgement.
-Analysis quality, non-functional and non-code verification, tooling, environment setup,
-and adoption remain honest limitations.
+Analysis quality and non-functional/non-code verification remain honest limitations.
+The conductor is the normal delivery entry point and transparently drives the analyst,
+while owning initialization, tooling/environment readiness, command/layout discovery,
+permissions, setup tasks, and setup blockers. Trivial bounded low-risk work may use a
+consolidated lightweight baseline; consequential or complex work uses the full artefact
+set and gates.
 No code/app component — this is a guidance/skill bundle for agents. The root-level
 `skills/` directory holds ten general skills and six conductor-specific skills
 (internal orchestration steps).
@@ -37,10 +41,11 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   tags; validation is non-mutating and creation is restricted to a clean docs
   worktree at `HEAD`.
 - `project_context.template.yaml` — template for machine/project-specific values
-  (minimal v2 envelope with optional typed code, non-code, Odoo, and controlled
+  (v2-only minimal envelope with optional typed code, non-code, Odoo, and controlled
   extension profiles; paths, spec docs repo + tag, generic `commands:` block for
-  build/lint/typecheck/format/test, Odoo source/scripts, modules). Legacy v1 files
-  remain readable and unknown extension keys are preserved. Odoo DB credentials removed — they
+  build/lint/typecheck/format/test, Odoo source/scripts, modules). Missing or
+  unsupported versions are unusable; unknown extension keys in valid v2 are preserved.
+  Odoo DB credentials removed — they
   live in `odoo_config.ini` exclusively. Copy to `project_context.yaml` (gitignored)
   per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
@@ -202,8 +207,10 @@ every requirement and important business rule carries exactly one label (explici
 - `project_context.template.yaml` and the embedded template in `skills/init-project/SKILL.md`
   remain synchronized. The project context is a minimal profile-aware envelope with
   optional typed code, non-code, Odoo, and controlled extension profiles; inactive
-  profiles impose no requirements, legacy v1 remains readable, and unknown extensions
-  are preserved without reinterpretation.
+  profiles impose no requirements. `schema_version: 2` is required; missing or
+  unsupported versions are unusable and routed to explicit reinitialization or
+  conversion. There is no automatic preservation guarantee; controlled unknown
+  extensions are preserved only inside valid v2.
 - **Filesystem Boundary & External Access**: project root is the default boundary;
   external directories require `permission.external_directory` entries in the
   project `opencode.json`. Broad patterns (`~/Projects/**`, `~/**`) prohibited.

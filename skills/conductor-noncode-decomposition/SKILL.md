@@ -5,7 +5,7 @@ description: Phase 2 for non-code work. Produces a task graph for non-code tasks
 
 # Conductor: Non-Code Decomposition
 
-This skill guides the conductor's **Phase 2 — Decompose into a task graph** for **non-code work**. The conductor should load this skill only after analysis has determined the work is not code-related and the analyst baseline is ready and accepted (same readiness criteria as `conductor-code-decomposition`).
+This skill guides the conductor's **Phase 2 — Decompose into a task graph** for **non-code work**. The conductor should load this skill only after analysis has determined the work is not code-related and a sufficient full or consolidated lightweight analyst baseline is ready and accepted.
 
 ## Instructions
 

@@ -5,9 +5,11 @@ description: Phase 1 orchestration gate. Records modes and permissions, initiali
 
 # Conductor: Analyze
 
-This phase is a thin orchestration gate. The conductor does not perform detailed
-elicitation, research, motivation analysis, or requirements design; those belong
-to the analyst.
+This phase is the user-facing orchestration gate. The conductor owns project
+initialization, tooling and environment readiness, command/layout discovery,
+permissions, setup tasks, and setup blockers, but delegates mechanics to
+`init-project`, `general`, `explore`, or `verifier`. Detailed elicitation,
+research, motivation analysis, and requirements design belong to the analyst.
 
 ## Gate
 
@@ -20,9 +22,11 @@ to the analyst.
    permissions, and persist only approved entries. Interactive mode handles
    these questions during normal dialogue. Do not modify `opencode.json` before
    approval.
-3. Check `project_context.yaml`. If it is absent or unusable, invoke or arrange
-   the `init-project` skill, respecting its human questions and permission gates.
-   Confirm the resulting context is usable before continuing.
+3. Check `project_context.yaml`. It is usable only when it is valid v2 with
+   `schema_version: 2`; missing or unsupported versions are unusable. If absent
+   or unusable, invoke or arrange `init-project`, respecting explicit
+   reinitialization/conversion approval and permission gates. Confirm the
+   resulting context is usable before continuing.
 4. Delegate project-context gathering to `explore`: read the context, summary,
    applicable docs/spec and test references, and relevant project files. Do not
    duplicate the analyst's research or detailed elicitation.
@@ -30,19 +34,23 @@ to the analyst.
    application-test changes. Non-code work includes documentation,
    configuration, setup, organisation, or research that does not produce
    application code.
-6. Check analyst baseline sufficiency. The objective and scope must be aligned,
-   the objective brief confirmed, requirements/business rules/traceability and
-   verification methods must exist, the quality gate must pass, and the analyst
-   must confirm readiness. Guided mode additionally requires human validation
-   approval; autonomous mode requires no blocking C/D decision.
+6. Check analyst baseline sufficiency. If it is absent or needs maintenance,
+   automatically delegate the proportionate analyst lifecycle. The minimum gate
+   is confirmed objective/scope, applicable requirements or acceptance criteria,
+   verification/evidence method, alignment, no blocking decision, and analyst
+   readiness. Full-tier work additionally requires the full artefact and quality
+   gates; lightweight work may use one consolidated baseline. Guided mode
+   additionally requires one consolidated human validation approval; autonomous
+   mode requires no blocking C/D decision.
 7. Check verification readiness. For code work, the analyst baseline must identify
    applicable contractual scenarios, unit-test expectations, and verification and
    evidence methods. Passing test and check results are required during Execute
    and at completion, not before decomposition. Non-code work must include the
    analyst's explicit acceptance criteria and evidence definition.
-8. If analysis is insufficient, delegate the complete analysis lifecycle to the
-   analyst and then re-read its outputs through `explore`. Do not perform that
-   work in the conductor.
+8. If analysis is insufficient or stale, delegate the proportionate analysis
+   lifecycle to the analyst and then re-read its outputs through `explore`. Do
+   not perform that work in the conductor. A direct analyst run intended to drive
+   delivery follows this same readiness and alignment check.
 9. Challenge unexplained scope additions or objective misalignment. Preserve
    mandatory objective confirmation, guided validation, final review, and human
    outcome judgement.

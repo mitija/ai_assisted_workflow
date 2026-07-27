@@ -5,16 +5,18 @@ description: Phase 2 for code work. Produces a dependency-aware task graph from 
 
 # Conductor: Code Decomposition
 
-This skill guides the conductor's **Phase 2 — Decompose into a task graph** for **code work**. The conductor should load this skill only after analysis has determined the work is code-related.
+This skill guides the conductor's **Phase 2 — Decompose into a task graph** for **code work**. The conductor should load this skill only after analysis has determined the work is code-related and a sufficient baseline exists.
 
 ## Prerequisites
 
-The **analyst baseline must be ready and accepted** before this skill is loaded.
+The **analyst baseline must be ready and accepted** before this skill is loaded. It
+may be a full baseline or a consolidated lightweight baseline selected for
+trivial, bounded, low-risk work.
 The conductor's analyze phase must have confirmed:
 
 - An objective brief exists and is confirmed.
-- Requirements, detailed success criteria, and verification methods are defined
-  with traceability.
+- Applicable requirements or acceptance criteria, and verification/evidence
+  methods, are defined with proportionate traceability.
 - The quality gate has passed (all critical findings resolved).
 - Guided mode: human has approved the functional validation package.
 - Autonomous mode: no blocking unresolved decisions remain.
