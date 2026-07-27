@@ -154,16 +154,23 @@ detailed elicitation — you own the orchestration, not the requirements work.
 2. **Requirements baseline** exists: functional requirements, business rules,
    detailed success criteria, and verification methods are defined with stable
    identifiers.
-3. **Traceability** is established: every requirement links to at least one
+3. **Applicable delivery expectations are identified**: contractual scenarios,
+   code unit-test expectations, and verification/evidence methods are defined;
+   non-code work has explicit acceptance criteria and evidence requirements.
+   These are planning requirements, not passing results.
+4. **Traceability** is established: every requirement links to at least one
    high-level criterion and one verification method.
-4. **Quality gate passed**: all critical findings from the requirements-quality
+5. **Quality gate passed**: all critical findings from the requirements-quality
    check are resolved.
-5. **Guided analysis_mode**: the human has approved the functional validation package.
+6. **Guided analysis_mode**: the human has approved the functional validation package.
    **Autonomous analysis_mode**: no blocking unresolved decisions remain.
-6. **Documentation** is drafted proportionately to the project (intended user
+7. **Documentation** is drafted proportionately to the project (intended user
    guide, configuration reference, operations guide where applicable).
-7. **The analyst confirms the baseline is ready** for implementation
+8. **The analyst confirms the baseline is ready** for implementation
    decomposition.
+
+Passing test, check, and acceptance results are collected during Execute and are
+required for completion; they are not required before decomposition.
 
 If these criteria are not met, **do not proceed to decomposition**. Re-engage
 the analyst or pause with a clear explanation of what is missing.

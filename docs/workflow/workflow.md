@@ -35,6 +35,14 @@ The conductor's six phases are:
 6. **Report** — records task results, verification evidence, review findings,
    resolutions, and overall status.
 
+### Readiness versus results
+
+Before Decompose, the analyst baseline identifies applicable contractual scenarios,
+code unit-test expectations, verification/evidence methods, and explicit non-code
+acceptance criteria/evidence. This is a planning gate, not a requirement for
+passing results. Applicable tests, checks, and acceptance evidence are run and
+assessed during Execute and are required at completion.
+
 ## Modes and questions
 
 The analyst's `analysis_mode` is independent of the conductor's `interaction_mode`:

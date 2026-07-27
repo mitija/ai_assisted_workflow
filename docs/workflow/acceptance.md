@@ -1,5 +1,11 @@
 # Acceptance
 
+The decomposition readiness gate confirms that the baseline identifies applicable
+contractual scenarios, code unit-test expectations, verification/evidence methods,
+and explicit non-code acceptance criteria/evidence. It does not require passing
+results before decomposition. Applicable tests, checks, and acceptance evidence
+are produced during Execute and assessed as part of completion.
+
 Passing tests is necessary but is not completion. Acceptance combines:
 
 1. **Verification evidence** — automated tests and appropriate inspection checks

@@ -21,6 +21,10 @@ are still evolving.
    permissions, context readiness, work classification, analyst-baseline
    sufficiency, and objective/scope alignment, then decomposes, executes, reviews,
    escalates failures, and reports for code and non-code work.
+   The baseline identifies applicable contractual scenarios, code unit-test
+   expectations, verification/evidence methods, and non-code acceptance criteria /
+   evidence before decomposition; passing results are required during Execute and
+   at completion, not before decomposition.
 4. **Evidence and judgement:** implementers and the verifier produce evidence;
    the reviewer audits it; the conductor assesses the functional outcome; and the
    human makes the final outcome judgement.

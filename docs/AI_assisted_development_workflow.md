@@ -55,6 +55,12 @@ The conductor owns six delivery phases:
    or aborting.
 6. **Report** records task results, evidence, review outcomes, and overall status.
 
+Before Decompose, the analyst baseline must identify applicable contractual
+scenarios, code unit-test expectations, verification/evidence methods, and explicit
+non-code acceptance criteria/evidence. This gate confirms that delivery evidence is
+planned, not that it has already passed. Passing tests and checks are collected
+during Execute and are required for completion.
+
 `analysis_mode` (`guided` or `autonomous`) is independent of `interaction_mode`
 (`interactive` or `autonomous`). The first governs how the analyst handles
 requirements decisions and validation; the second governs how the conductor handles

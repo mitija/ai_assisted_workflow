@@ -141,6 +141,12 @@ and outcome report. Do not impose source-code, automated-test, docs-tag, or comm
 deliverables where they do not apply.
 The analyst must provide an explicit acceptance-criteria list for non-code work.
 
+Before decomposition, the analyst baseline must identify the applicable contractual
+scenarios, code unit-test expectations, verification/evidence methods, and explicit
+non-code acceptance criteria/evidence. These are planned delivery expectations, not
+passing results. Applicable tests, checks, and acceptance evidence are produced and
+assessed during Execute and are required at completion.
+
 ## Build, Lint & Verify
 Use the applicable build, lint, typecheck, format, and test commands configured in
 `project_context.yaml`. Do not guess commands. Record checks that are not

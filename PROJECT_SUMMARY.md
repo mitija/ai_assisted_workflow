@@ -332,6 +332,10 @@ VER), consistency maintenance across the full lifecycle, and a documentation/tra
   to decomposition, it confirms that a sufficient functional analysis baseline exists.
   If not, it delegates to the analyst sub-agent. The conductor owns delegation,
   alignment checking, and baseline acceptance, not detailed elicitation.
+- The decomposition readiness gate checks that the baseline identifies applicable
+  contractual scenarios, code unit-test expectations, verification/evidence methods,
+  and explicit non-code acceptance criteria/evidence. Passing tests and checks are
+  produced during Execute and required at completion, not before decomposition.
 
 ## Planned / open
 - Consider an `agents/AGENTS.md` note on non-functional requirements (workflow §8.8 gap).
