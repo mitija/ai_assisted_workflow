@@ -4,14 +4,16 @@
 
 1. **Human:** provides the problem, desired functional outcome, high-level
    criteria, constraints, and consequential decisions.
-2. **Analyst:** performs evidence-first intake, discovery, review, and baseline.
-   The analyst researches task/domain/background context and records motivation,
-   beneficiaries, outcomes, reasonable expectations, sources, findings,
-   confidence, assumptions, and provenance. The result is a requirements baseline
-   with stable IDs, verification definitions, intended documentation, and
-   traceability.
-3. **Conductor:** confirms analyst readiness and alignment, then runs Analyze,
-   Decompose, Execute, Review, Escalate on failure, and Report.
+2. **Conductor:** is the normal entry, transparently invokes the analyst when the
+   baseline is missing or stale, and owns initialization, tooling, environment,
+   command/layout, permission, and setup readiness plus blockers. It then confirms
+   analyst readiness and alignment and runs Analyze, Decompose, Execute, Review,
+   Escalate on failure, and Report.
+3. **Analyst:** performs evidence-first intake, discovery, review, and baseline when
+   invoked by the conductor. The analyst researches task/domain/background context
+   and records motivation, beneficiaries, outcomes, reasonable expectations,
+   sources, findings, confidence, assumptions, and provenance. Direct analyst
+   invocation remains the specialist, analysis-only path.
 4. **Implementers:** deliver code or non-code work against the baseline. In code
    work, contractual tests are derived from the frozen specification where one
    exists. Genuine functional ambiguity is a blocker routed to the analyst.

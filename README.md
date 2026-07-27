@@ -54,13 +54,19 @@ git clone <repo-url>
 
 The installer symlinks `agents/` to `~/.agents`, `agents/agent/` to
 `~/.config/opencode/agent`, and `skills/` to `~/.config/opencode/skills`.
-Alternatively, copy the directories manually. The conductor invokes
-`init-project` when `project_context.yaml` is absent or unusable. Init creates or
-repairs the minimal v2 envelope, infers visible typed profiles such as `code`,
-`non_code`, and `odoo`, asks only for missing fields in selected profiles, and
-preserves readable legacy v1 structures and controlled self-describing extensions.
-Secrets and external-path authorization remain protected. Agents read the
-resulting context and `AGENTS.md` at the start of each session.
+Alternatively, copy the directories manually. The conductor is the normal delivery
+entry: it transparently invokes the analyst when a baseline is missing or stale and
+owns initialization, tooling, environment, command/layout discovery, permission,
+and setup readiness, delegating mechanics to the appropriate agents. Direct analyst
+invocation remains the specialist, analysis-only path. The conductor invokes
+`init-project` when `project_context.yaml` is absent or unusable. Init requires
+`schema_version: 2`, infers visible typed profiles such as `code`, `non_code`, and
+`odoo`, and asks only for missing fields in selected profiles. Missing or unsupported
+context requires explicit reinitialization or conversion; v1 readability or
+preservation is not promised. Controlled self-describing extensions are preserved
+only for valid v2 context. Secrets and external-path authorization remain
+protected. Agents read the resulting context and `AGENTS.md` at the start of each
+session.
 
 ## Known limitations
 
@@ -71,18 +77,21 @@ resulting context and `AGENTS.md` at the start of each session.
 - Verification is strongest for functional software behaviour. Non-functional
   requirements, external triggers, UI/UX nuance, and non-code outcomes have
   weaker or less standardized verification paths.
-- The framework is production-ready for its core use case but remains evolving;
-  tooling, git fluency, environment setup, and the analyst/conductor split impose
-   adoption costs.
-  Reduce adoption cost incrementally: use `project_context.yaml` and a ready,
-  accepted analyst baseline first; for bounded, low-risk tasks, that baseline can
-  be proportionate and lightweight. Conductor work always uses the ready, accepted
-  baseline; add deeper analyst discovery and traceability, then frozen
-  specifications and contractual tests, as complexity and consequence grow.
-  Trivial tasks do not require the full process.
-- Profile-aware context reduces setup noise but adds migration and selection
-  complexity; legacy v1 compatibility and controlled extensions remain important
-  maintenance concerns.
+- The framework reduces adoption cost through conductor automation: the conductor
+  transparently drives analyst readiness and handles initialization, tooling,
+  environment, command/layout, permission, and setup readiness. Project-specific
+  authorization and genuine hard blockers remain irreducible. The framework is
+  production-ready for its core use case but remains evolving; analysis quality and
+  weaker verification for some outcomes remain genuine limitations.
+- Trivial or bounded, low-risk requests may use a consolidated proportionate
+  baseline and only the applicable artefacts. Even this lightweight path requires a
+  minimum objective and scope, acceptance and requirements, verification and
+  evidence, objective/scope alignment, no unresolved blocker, and analyst readiness.
+  Material, ambiguous, or high-risk work follows the full path with deeper analysis,
+  traceability, specifications, and contractual tests as applicable.
+- Profile-aware context reduces irrelevant setup fields while requiring valid v2
+  schema and profile validation; controlled extensions are preserved only for valid
+  v2 context.
 
 ## What the repository contains
 

@@ -6,13 +6,6 @@ These are where input from senior developers is most welcome.
 
 Enormous onus is on the requirements baseline produced by the analyst. The conductor has no mandate to second-guess it, the developer has no mandate to fill gaps, and the human has already confirmed the high-level interpretation. **A bad requirements baseline produces bad software on schedule.** This is a feature — it forces analysis quality to be taken seriously — but it makes the analyst role the binding constraint on output quality.
 
-## Analyst / Conductor Split Maturity
-
-The current division is settled: the analyst owns the functional contract and its
-four phases; the conductor owns delivery across six phases, including readiness and
-alignment checks. The split is still new in practice, so its effectiveness and the
-best operational hand-offs will continue to be evaluated.
-
 ## Provenance Rigor Overhead
 
 Every requirement must record its provenance (explicitly-requested, inferred-context, inherited, domain-practice, design-decision, risk-control, unresolved). For small, low-risk projects this may feel bureaucratic. The intent is that the format scales: small tasks may use a single consolidated document with lightweight provenance annotations; larger projects use structured YAML. Finding the right default balance is ongoing work.
@@ -65,22 +58,23 @@ but are not tested with the rigour of functional scenarios. External triggers,
 UI/UX nuance, and non-code outcomes also lack equally standardized verification.
 **This is the largest technical gap.**
 
-## Analyst / Conductor Git Fluency
+## Project-Specific Authorization and Git Boundaries
 
-The workflow assumes the analyst and conductor can use git fluently — commits,
-documentation tags, branches, conflicts, and publication boundaries. Most
-functional analysts and consultants can't. This is a real obstacle to extending
-the methodology beyond technically-fluent practitioners. The bounded analyst tag
-policy reduces one hand-off but does not remove the need for a wrapper UI, a
-"spec publishing" step that hides git, or an explicit authorization workflow.
+The conductor automates routine setup and delegates mechanics, but project-specific
+authorization remains a genuine boundary: commits, documentation tags, branches,
+conflicts, and publication may require explicit approval. Most functional analysts
+and consultants cannot safely grant these permissions. The bounded analyst tag
+policy reduces one hand-off but does not remove the need for a wrapper UI, a "spec
+publishing" step that hides git, or an explicit authorization workflow.
 
 ## Profile-Aware Project Context
 
-The minimal envelope with optional typed profiles reduces irrelevant setup fields
-for non-code and mixed projects while retaining legacy v1 readability and
-self-describing extensions. Profile selection, migration, validation, and
-extension governance add complexity, and the right balance between flexibility and
-machine-readable consistency remains an active maintenance concern.
+The minimal v2 envelope with optional typed profiles reduces irrelevant setup fields
+for non-code and mixed projects. Missing or unsupported context requires explicit
+reinitialization or conversion, and controlled extensions are preserved only for
+valid v2 context. Profile selection, validation, and extension governance add
+complexity, and the right balance between flexibility and machine-readable
+consistency remains an active maintenance concern.
 
 ## Navigation
 

@@ -123,10 +123,12 @@ changes, check the other two.
   `skills/`.
 - If a skill is added or removed, update both `agents/AGENTS.md` (skills table)
   and `README.md` (skills table).
-- The project context uses a minimal envelope with optional visible typed profiles;
-  inactive profiles impose no requirements, legacy v1 remains readable, and
-  controlled self-describing extensions are preserved. Keep secrets and external
-  path authorization protected.
+- The project context uses `schema_version: 2` with optional visible typed profiles;
+  inactive profiles impose no requirements. Missing or unsupported context is
+  unusable and routes through the conductor and `init-project` for explicit
+  reinitialization or conversion. Controlled self-describing extensions are
+  preserved only in valid v2 context. Keep secrets and external path authorization
+  protected.
 
 ### Agent definitions
 

@@ -9,14 +9,14 @@ This is the authoritative overview for the detailed [workflow documentation](wor
 ## The paradigm
 
 The human supplies intent, desired outcomes, high-level criteria, constraints, and
-consequential decisions. The **analyst** turns that intent into a defensible
-functional contract through evidence-first research and analysis. The analyst owns
-research into motivation, the problem, beneficiaries, outcomes, and reasonable user
-or operational expectations, recording sources, findings, confidence, assumptions,
-and provenance while distinguishing observed or domain expectations from explicit
-human requirements. The **conductor** delivers against the contract across code
-and non-code work. Implementers may use any suitable AI workflow; the deliverable
-and its evidence are what matter.
+consequential decisions. The **conductor** is the normal delivery entry: it
+transparently invokes the **analyst** when the functional baseline is missing or
+stale, then delivers against that contract across code and non-code work. The
+analyst turns intent into a defensible functional contract through evidence-first
+research and analysis, owning research into motivation, the problem, beneficiaries,
+outcomes, and reasonable user or operational expectations. Direct analyst invocation
+remains the specialist, analysis-only path. Implementers may use any suitable AI
+workflow; the deliverable and its evidence are what matter.
 
 ## Roles and analyst phases
 
@@ -31,8 +31,11 @@ and its evidence are what matter.
      a validation package for human review.
   4. **Baseline** establishes stable identifiers, consistency, traceability, and
      evidence mappings across the lifecycle.
-- **Conductor (Delivery Owner):** accepts the analyst baseline, coordinates delivery,
-  and owns outcome assessment. The analyst does not implement application code.
+- **Conductor (Delivery Owner):** is the normal entry point, transparently drives
+  analyst readiness, owns initialization, tooling, environment, command/layout,
+  permission, and setup readiness plus blockers, delegates mechanics, coordinates
+  delivery, and owns outcome assessment. The analyst does not implement application
+  code.
 
 Every requirement and important business rule carries exactly one provenance value:
 explicitly-requested, inferred-context, inherited, domain-practice, design-decision,
@@ -78,10 +81,18 @@ authorization. No agent other than the analyst may create tags, and the analyst
 may not create source, release, deployment, or production tags.
 
 Project context uses a minimal envelope with optional visible typed profiles such
-as `code`, `non_code`, and `odoo`. Inactive profiles impose no requirements;
-controlled self-describing extensions are preserved, legacy v1 remains readable,
-and secrets and external paths remain protected. If context is missing or unusable,
-the conductor routes the work to `init-project`.
+as `code`, `non_code`, and `odoo`, with `schema_version: 2` required. Inactive
+profiles impose no requirements. Missing or unsupported context is unusable and the
+conductor routes it through `init-project` for explicit reinitialization or
+conversion. There is no v1 readability, preservation, or migration promise.
+Controlled self-describing extensions are preserved only for valid v2 context;
+secrets and external paths remain protected.
+
+For trivial or bounded, low-risk requests, the conductor may use a consolidated,
+proportionate baseline with only applicable artefacts. The minimum remains an
+objective and scope, acceptance and requirements, verification and evidence,
+alignment, no unresolved blocker, and analyst readiness. Material, ambiguous, or
+high-risk work follows the full path.
 
 ## Traceability and completion
 
@@ -104,9 +115,10 @@ main bottleneck, and human gates remain important for consequential interpretati
 Analysis can drift from intent, particularly in autonomous mode, and no process can
 replace informed human judgement. Verification is less standardized for
 non-functional requirements, external triggers, UI/UX nuance, and non-code outcomes.
-Tooling, environment setup, git fluency, and the still-maturing non-code workflow
-also constrain adoption. These are active improvement areas, not reasons to treat
-the core workflow as experimental.
+The conductor automates routine tooling, environment, command/layout, and setup
+readiness, reducing adoption cost. Project-specific authorization and genuine hard
+blockers remain irreducible. The still-maturing non-code workflow is an active
+improvement area, not a reason to treat the core workflow as experimental.
 
 ## Topics
 

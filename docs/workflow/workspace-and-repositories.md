@@ -57,12 +57,14 @@ is created automatically by the init-project workflow.
 
 ## Project Context
 
-`project_context.yaml` uses a minimal envelope with optional visible typed profiles,
-such as `code`, `non_code`, and `odoo`. Only selected profiles impose fields or
-validation requirements. Controlled self-describing extensions are preserved, and
-legacy v1 files remain readable during migration. Secrets stay in protected config
-or environment references, while external-path authorization remains in
-`opencode.json`. The conductor routes missing or unusable context to `init-project`.
+`project_context.yaml` requires `schema_version: 2` and uses a minimal envelope with
+optional visible typed profiles, such as `code`, `non_code`, and `odoo`. Only
+selected profiles impose fields or validation requirements. Missing or unsupported
+context is unusable and the conductor routes it through `init-project` for explicit
+reinitialization or conversion. There is no v1 readability, preservation, or
+migration promise. Controlled self-describing extensions are preserved only for
+valid v2 context. Secrets stay in protected config or environment references, while
+external-path authorization remains in `opencode.json`.
 
 ## Navigation
 
