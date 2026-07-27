@@ -10,22 +10,26 @@ are still evolving.
 
 1. **Human intent:** the human provides the problem, desired outcome, high-level
    criteria, constraints, and consequential decisions.
-2. **Analyst contract:** the analyst runs evidence-first intake, discovery, review,
-   and baseline to produce stable requirements, provenance, traceability,
-   verification definitions, wireframes, and intended documentation. The analyst
-   records sources, findings, confidence, assumptions, and provenance, including
-   motivation, beneficiaries, outcomes, and reasonable user or operational
-   expectations, without presenting inferred expectations as explicit human
-   requirements.
-3. **Conductor delivery:** the conductor performs a thin Analyze gate for modes,
+2. **Conductor-led delivery:** the conductor performs a thin Analyze gate for modes,
    permissions, context readiness, work classification, analyst-baseline
-   sufficiency, and objective/scope alignment, then decomposes, executes, reviews,
-   escalates failures, and reports for code and non-code work.
-   The baseline identifies applicable contractual scenarios, code unit-test
-   expectations, verification/evidence methods, and non-code acceptance criteria /
-   evidence before decomposition; passing results are required during Execute and
-   at completion, not before decomposition.
-4. **Evidence and judgement:** implementers and the verifier produce evidence;
+   sufficiency, and objective/scope alignment. When needed, it transparently drives
+   the analyst's contract work and setup/readiness, while the analyst retains
+   ownership of the functional contract through four phases:
+   - **Intake:** establish the objective brief and analysis mode.
+   - **Discovery:** perform evidence-first functional-contract discovery.
+   - **Review:** perform the requirements quality gate and guided validation.
+   - **Baseline:** establish stable IDs, traceability, and evidence mapping.
+   The analyst produces stable requirements, provenance, traceability, verification
+   definitions, wireframes, and intended documentation, recording sources, findings,
+   confidence, assumptions, and provenance, including motivation, beneficiaries,
+   outcomes, and reasonable user or operational expectations, without presenting
+   inferred expectations as explicit human requirements. The conductor then
+   decomposes, executes, reviews, escalates failures, and reports for code and
+   non-code work. The baseline identifies applicable contractual scenarios, code
+   unit-test expectations, verification/evidence methods, and non-code acceptance
+   criteria / evidence before decomposition; passing results are required during
+   Execute and at completion, not before decomposition.
+3. **Evidence and judgement:** implementers and the verifier produce evidence;
    the reviewer audits it; the conductor assesses the functional outcome; and the
    human makes the final outcome judgement.
 

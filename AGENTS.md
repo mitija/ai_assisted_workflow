@@ -66,7 +66,7 @@ invoke the analyst rather than loading them directly.
 ### Other general skills
 | [`coding-standards`](skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
 | [`handover`](skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
-| [`init-project`](skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
+| [`init-project`](skills/init-project/SKILL.md) | `project_context.yaml` is missing, incomplete, unusable, or has an unsupported schema |
 | [`specification-methodology`](skills/specification-methodology/SKILL.md) | Creating or writing software specifications |
 | [`test-scenarios`](skills/test-scenarios/SKILL.md) | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
 | [`todo-list`](skills/todo-list/SKILL.md) | Generating a TDD-based TODO list for entry-level programmers |

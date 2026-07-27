@@ -316,7 +316,7 @@ internal orchestration steps loaded automatically by the conductor.
 | [`analyst-review`](../skills/analyst-review/SKILL.md) | Phase 3 — requirements quality gate and validation |
 | [`coding-standards`](../skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
 | [`handover`](../skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
-| [`init-project`](../skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
+| [`init-project`](../skills/init-project/SKILL.md) | `project_context.yaml` is missing, incomplete, unusable, or has an unsupported schema |
 | [`specification-methodology`](../skills/specification-methodology/SKILL.md) | Optional post-baseline structuring of an existing functional contract into specification artefacts |
 | [`test-scenarios`](../skills/test-scenarios/SKILL.md) | Authoring or reviewing `<epic>_TESTS.md` contractual scenarios |
 | [`todo-list`](../skills/todo-list/SKILL.md) | Optional TDD-oriented decomposition for coding work when a task list is useful |
