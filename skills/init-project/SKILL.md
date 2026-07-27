@@ -101,10 +101,25 @@ v2 data.
 4. For an existing valid v2 file, preserve unknown extension keys while repairing
    only unusable v2 values. Discover external paths only from active v2 profile
    data.
-5. Expand variables and `~`, normalize `.`/`..`, resolve absolute paths, and
-   canonicalize symlinks before classifying. Reject broad paths and present
-   concrete project-specific paths one at a time for permission approval. The
-   authoritative allow list is `opencode.json`; never bypass or silently alter it.
+5. First perform only lexical handling: expand known environment-variable and `~`
+   syntax when values are available, normalize textual `.`/`..`, and reject obvious
+   broad home, Projects/workspace, or parent paths. Do not read, list, search, stat,
+   traverse, resolve symlinks, or otherwise access the external path at this stage.
+   A configuration reference is discovery evidence only and does not authorize access.
+   For a concrete project-specific candidate, present one path at a time with its
+   lexically expanded/normalized form, required operation, necessity, why the project
+   root or a narrower path cannot satisfy the need, and the risk and scope. Only after
+   explicit approval to access it may you resolve its absolute path and canonicalize
+   symlinks. If the canonical target is broader than or outside the exact scope of the
+   approved candidate, stop even if an existing allow entry happens to cover it. Present
+   the exact canonical target and renewed justification, obtain renewed explicit approval
+   to access it, and obtain a second, separate explicit approval before adding or relying
+   on permission for that changed target. Harmless canonical spelling differences within
+   the exact approved scope do not require re-approval; never continue silently. If a
+   genuinely necessary operation requires a broad directory, stop and ask with a
+   reasoned, risk-aware justification; approval must identify the narrowest concrete
+   subpath possible. The authoritative allow list is `opencode.json`; never bypass or
+   silently alter it.
 6. Write a valid v2 context after each approved answer. Ensure literal secrets
    are absent and references point to protected config or environment values.
 7. Verify YAML parsing, selected-profile validity, controlled-extension handling,

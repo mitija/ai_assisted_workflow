@@ -72,35 +72,57 @@ Before starting the six-phase workflow in **autonomous mode**, you **must** run 
 filesystem-boundary preflight. Interactive-mode users may handle this during
 normal dialogue.
 
+At all times, including autonomous preflight and mid-execution discovery, do not
+read, list, search, stat, resolve, traverse, or scan broad external directories such
+as the user's home, a general Projects/workspace directory, or a parent workspace.
+A path reference found in configuration is discovery evidence only, not authorization
+or permission to access the referenced path.
+
 ### Preflight steps
 
 1. **Read** the project's `opencode.json` — delegate to the `explore` sub-agent.
    Extract the current `permission.external_directory` entries.
-2. **Scan** `project_context.yaml` for absolute paths outside the project root
+2. **Scan** `project_context.yaml` for absolute path references outside the project root
    (Odoo source dirs, script paths, config paths — anywhere an absolute path is
    referenced).
-3. **Extend scanning** to also discover paths from:
+3. **Extend reference scanning** to also discover paths from:
    - Project config files — `.ini`, `.cfg`, `.env`, and equivalent config files.
-   - Environment-variable references — `$HOME`, `$PROJECTS`, or other variables
-     used in config, resolved after expansion.
+    - Environment-variable references — `$HOME`, `$PROJECTS`, or other variables
+      used in config, expanded when their values are available.
    - Git-linked directories — `git submodule`, `git worktree` locations.
    - Dependency-link targets — `npm link` or equivalent symlinked dependency
      directories.
    - User declaration — any path the user explicitly stated is required.
-4. **Normalize** — for each discovered path, perform environment-variable and
-   tilde expansion, normalize `.`/`..`, resolve to an absolute path, and
-   canonicalize symlinks before classifying it.
+4. **Lexically classify** — for each discovered path, expand known
+   environment-variable and tilde syntax when the values are available, normalize
+   textual `.`/`..`, and reject obvious broad home, Projects/workspace, or parent
+   paths. Do not read, list, stat, traverse, resolve symlinks, or otherwise access
+   the external path at this stage.
 5. **Filter** — reject broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`,
    `~/Projects/**`, or a parent workspace directory. Only concrete project-specific
    paths are eligible as authorization candidates.
 6. **Compare** the discovered external paths against the authorized entries.
 7. **If any legitimate external path is missing authorization:**
-   - In **autonomous mode**: **stop** and present the missing paths to the user.
-     Ask for confirmation to add each one. Only proceed after all are resolved.
+   - **Stop before accessing it** and present one path at a time with its exact
+     lexically expanded/normalized candidate, required operation, necessity, why
+     the project root or a narrower path cannot satisfy the need, and the risk and
+     scope.
+   - In **autonomous mode**, obtain the first explicit user approval to access
+     and canonicalize that candidate. Only then resolve its absolute path and
+     canonicalize symlinks. If the canonical target is broader than or outside
+      the exact scope of the approved candidate, stop even if an existing allow
+      entry happens to cover it. Present the exact canonical target and renewed
+      justification, obtain renewed explicit approval to access it, and obtain
+      separate explicit approval before adding or relying on permission for that
+      changed target. Harmless canonical spelling differences within the exact
+      approved scope do not require re-approval; do not continue silently.
+   - After canonicalization confirms a concrete eligible path, obtain a second,
+     separate explicit user approval to persist its permission. Do not collapse
+     these approvals, and do not persist before the second approval.
    - Record the outcome.
-8. **Persist** approved paths by delegating to the `general` sub-agent with clear
-   edit instructions for `opencode.json`: add the glob pattern under
-   `permission.external_directory` as `"<path>/**": "allow"`.
+8. **Persist** only after the second approval by delegating to the `general`
+   sub-agent with clear edit instructions for `opencode.json`: add the glob
+   pattern under `permission.external_directory` as `"<path>/**": "allow"`.
 9. **Validate** that the updated `opencode.json` is valid JSON and the path was
    persisted correctly.
 10. **Proceed** to Phase 1 only after the boundary is confirmed and persistence
@@ -111,13 +133,27 @@ the conductor must apply the **mid-execution discovery sequence**:
 
 1. **Pause** the affected task immediately.
 2. **Classify and explain** — identify the concrete project-specific path and explain why it is needed.
-3. **Ask the user** for approval to add the path to `permission.external_directory`. Present one path at a time.
-4. **do not update before approval** — do not modify `opencode.json` until the user gives explicit consent.
-5. **Wait** for the user's answer before continuing.
-6. **If approved**: delegate editing `opencode.json` to a `general` sub-agent with exact instructions to add `"<path>/**": "allow"`.
-7. **Validate** that the updated `opencode.json` is valid JSON and the path was persisted correctly.
-8. **Resume** execution only after persistence is confirmed.
-9. **If denied or the path is unrelated** to the project: do not add it. Leave it at the default "ask" policy. Do not resume with broad access or re-present the same path.
+3. **Justify and ask** — present one path at a time with its exact lexically
+   expanded/normalized candidate, required operation, necessity, why the project root
+   or a narrower path cannot satisfy the need, and the risk and scope. Ask for first
+   explicit approval to access and canonicalize the path.
+4. **Canonicalize after approval** — only then resolve its absolute path and canonicalize
+   symlinks. If the canonical target is broader than or outside the exact scope of the
+   approved candidate, stop even if an existing allow entry happens to cover it. Present
+   the exact canonical target and renewed justification, obtain renewed explicit approval
+   to access it, and obtain separate explicit approval before adding or relying on
+   permission for that changed target. Harmless canonical spelling differences within
+   the exact approved scope do not require re-approval; do not continue silently.
+5. **Ask separately to persist** — after canonicalization confirms a concrete eligible
+   path, obtain a second explicit approval to add it to `permission.external_directory`.
+   Do not collapse the approvals or persist before the second approval.
+6. **do not access or update before approval** — do not attempt the operation or modify
+   `opencode.json` until the relevant explicit consent is given.
+7. **Wait** for the user's answer before continuing.
+8. **If approved**: delegate editing `opencode.json` to a `general` sub-agent with exact instructions to add `"<path>/**": "allow"`.
+9. **Validate** that the updated `opencode.json` is valid JSON and the path was persisted correctly.
+10. **Resume** execution only after persistence is confirmed.
+11. **If denied or the path is unrelated** to the project: do not add it. Leave it at the default "ask" policy. Do not resume with broad access or re-present the same path.
 
 Do **not** update `opencode.json` before receiving user approval. Never silently allow an unauthorized external path.
 

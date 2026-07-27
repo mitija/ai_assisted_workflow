@@ -57,99 +57,44 @@ decisions, external-permission approval, final review, or final human judgement
 remain blocking where applicable. A genuine blocker always stops the affected
 work; do not guess, weaken tests, or work ahead of unresolved interpretation.
 
-### Phase-specific rules
+### Contract and implementation safeguards
 
-These rules distinguish the two phases of work — analysis (drafting the
-functional contract) and implementation (building against a frozen baseline).
+The analyst owns the functional contract. Analyst-specific lifecycle,
+decision-classification, provenance, and documentation-tag procedures live in the
+analyst agent and `analyst-*` skills.
 
-#### During analysis
+For spec-driven implementation:
 
-The analyst owns the functional contract: authoring requirements, business
-rules, success criteria, documentation, and wireframes. The analyst performs
-evidence-first task, domain, and background research, including motivation,
-problem, beneficiaries, outcomes, and reasonable user or operational
-expectations. Record sources, findings, confidence, assumptions, and provenance,
-distinguishing observed or domain expectations from explicit human requirements.
-The analyst may:
-
-- Resolve **Class A** (minor, low-impact, reversible) decisions
-  autonomously with provenance and rationale.
-- Resolve **Class B** (low-impact functional) decisions autonomously with
-  provenance and guided-package visibility.
-- Handle **Class C** (material/consequential) decisions: in autonomous mode
-  ask immediately; in guided mode defer non-blocking to the validation
-  package and ask blocking ones immediately.
-- Handle **Class D** (blocking/high-risk) decisions: always stop and ask
-  immediately, never decide autonomously.
-- Author and maintain all functional documentation under `docs/working/` and
-  prepare artefacts for `docs/customer-facing/` before a tag freeze.
-
-The analyst must never implement code or perform delivery work. The analyst may
-create an immutable documentation tag in the configured documentation repository
-only under the documentation-tag policy in the analyst baseline skill, using
-`~/.agents/create-spec-tag`.
-
-Requirement provenance is a separate seven-value concept, not Class A-D.
-Every requirement and important business rule carries exactly one provenance label:
-explicitly-requested, inferred-context, inherited, domain-practice,
-design-decision, risk-control, or unresolved. Never present an inferred
-requirement as though it was explicitly requested.
-
-#### During implementation (coding against a frozen baseline)
-
-Implementation agents work against an immutable tagged baseline:
-
-- **The spec is the contract.** If behaviour is not in the spec or the tests,
-  it is not required. Do not invent requirements. Do not fill functional gaps
-  or silently alter the contract.
-- **Stop on real ambiguity.** A genuine ambiguity that affects implementation
-  is a blocker: stop and route to the analyst for functional interpretation rather than
-  guessing. When the analyst escalates a question to the human, ask **one
-  question at a time** and wait for the answer before asking the next. For a
-  complex question, **unpack it first** — state the ambiguity, why it matters,
-  the options and their trade-offs, and your recommendation — then ask. Do not
-  batch unrelated questions into a single dump. Do not work ahead of an
-  unresolved blocker; building against an open question only produces rework.
-- **No silent doc edits.** Implementation agents cannot silently edit
-  `docs/customer-facing/` spec/test documents. The analyst owns authoring and
-  maintaining functional documentation. If implementation reveals a gap that
-  changes contractual behaviour, follow the analyst-baseline discovery sequence
-  and require human review plus a new analyst-created docs tag.
-- **Tests are executable spec for spec-driven work, and tests win.** Every business rule is a
-  specification-level, contractual test scenario in `<epic>_TESTS.md` (see the
-  `test-scenarios` skill for the format). Derive automated tests from these
-  scenarios. If the spec and the tests disagree, the tests are authoritative —
-  flag the discrepancy to the user. Any extra tests you add during
-  implementation to strengthen the build are non-contractual and separate from
-  these.
-  For generic work, use the analyst's explicit acceptance criteria and evidence
-  instead of imposing contractual test scenarios.
-- **Work against the docs tag.** Specs and tests live in a separate
-  documentation repo, tagged at each freeze (e.g. `spec-260513`). Read the
-  current spec and TESTS docs at that tag before implementing. Their location
-  is in `project_context.yaml`. Record the docs tag used for implementation so
-  the source repo can always be traced back to the exact specification state.
+- Work against the immutable documentation tag: read the tagged specification
+  and contractual scenarios before implementing, and record the tag used.
+- The specification and contractual scenarios define required behaviour. Tests
+  win over contradictory prose; do not invent requirements or silently fill
+  contractual gaps.
+- A genuine contractual ambiguity blocks work and routes to the analyst for
+  interpretation. Do not work ahead of an unresolved ambiguity.
+- Do not silently edit `docs/customer-facing/`. Contract-changing discoveries
+  route through the analyst baseline-change process; implementation resumes only
+  against the resulting approved documentation tag.
+- Derive automated tests from contractual scenarios. Extra developer tests are
+  non-contractual; generic work uses its explicit acceptance criteria and
+  evidence instead of spec-driven obligations.
 
 ### Delivery evidence
 
-For **spec-driven coding**, implement against the immutable docs tag and produce
-the source changes, automated tests for the contractual scenarios and invariants
-in scope, and a development report tied to the requirements, use cases, evidence,
-coverage, deviations, and design decisions. Commit/tag actions follow the project
-workflow; only the analyst may create documentation tags under the analyst-baseline
-policy, and no other agent is authorized to create tags.
+For **spec-driven code**, produce the source changes, automated tests for the
+contractual scenarios and in-scope invariants, and a development report tied to
+the requirements, evidence, coverage, deviations, and design decisions.
 
-For **non-code work**, use the explicit acceptance criteria and evidence defined
-for that work. Produce the applicable artefacts, verification results, traceability,
-and outcome report. Do not impose source-code, automated-test, docs-tag, or commit
-deliverables where they do not apply.
-The analyst must provide an explicit acceptance-criteria list for non-code work.
+For **generic code and non-code work**, use the explicit acceptance criteria and
+evidence for that work. Produce applicable artefacts, verification results,
+traceability, and outcome reporting without imposing spec-driven or code-only
+deliverables.
 
-Before decomposition, the analyst baseline must identify the applicable contractual
-scenarios, code unit-test expectations, verification/evidence methods, and explicit
-non-code acceptance criteria/evidence. These are planned delivery expectations, not
-passing results. Applicable tests, checks, and acceptance evidence are produced and
-assessed during Execute and are required at completion.
+Before decomposition, the baseline must identify applicable contractual scenarios,
+code unit-test expectations, verification/evidence methods, and explicit non-code
+acceptance criteria/evidence. These are planned expectations, not passing results;
+the applicable tests, checks, and acceptance evidence are produced and assessed
+during Execute and required at completion.
 
 ## Build, Lint & Verify
 Use the applicable build, lint, typecheck, format, and test commands configured in
@@ -236,6 +181,18 @@ The **project root** (the workspace directory containing `project_context.yaml`,
 are expected to stay within this root. Access to directories outside the root requires
 explicit permission via OpenCode's `permission.external_directory` rules.
 
+Agents must not read, list, search, stat, resolve, traverse, or scan broad external
+directories such as the user's home directory, a general Projects/workspace directory,
+or a parent workspace. A configuration reference may reveal that a path exists, but it
+does not authorize accessing that path. Before accessing an eligible concrete
+project-specific external path, state its exact lexically expanded/normalized candidate, the
+operation that requires it, why it is necessary, why the project root or a narrower
+path cannot satisfy the need, and the associated risk and scope. Require explicit user
+approval before access and again before persisting the permission. If a genuinely
+necessary operation would require a broad directory, stop and present a reasoned,
+risk-aware justification to the user; approval must identify the narrowest concrete
+subpath possible, and broad permission patterns remain prohibited.
+
 ### Where permissions live
 
 OpenCode's external-directory permissions are stored in the project-level
@@ -264,15 +221,25 @@ Paths outside the project root that a project legitimately needs may include:
 Paths are discovered via:
 - `project_context.yaml` — external `source.*`, `scripts.*`, or other path values.
 - Project configuration files — `.ini`, `.cfg`, `.env`, and equivalent config files that reference absolute paths.
-- Environment variables — values such as `$HOME`, `$PROJECTS`, or other variables used in config, resolved after expansion.
+- Environment variables — values such as `$HOME`, `$PROJECTS`, or other variables used in config, expanded when their values are available.
 - Git-linked directories — `git submodule`, `git worktree` locations.
 - Dependency-link targets — `npm link` or equivalent symlinked dependency directories.
 - User declaration — the user explicitly naming a required external path.
 
-Before comparing or authorizing a discovered path, require environment-variable
-and tilde expansion, normalization of `.`/`..`, resolution to an absolute
-path, and symlink canonicalization. Only then classify it as inside the project
-root, a broad parent/workspace path, or an eligible concrete external path.
+Before comparing or authorizing a discovered path, first perform only lexical
+handling: expand known environment-variable and tilde syntax when the values
+are available, normalize textual `.`/`..`, and reject obvious broad home,
+Projects/workspace, or parent paths. This stage must not read, list, stat,
+traverse, resolve symlinks, or otherwise access the external path. Only for a
+ concrete project-specific candidate, and only after explicit approval to access
+ it, resolve its absolute path and canonicalize symlinks. If the canonical target
+ is broader than or outside the exact scope of the approved candidate, stop even
+ if an existing allow entry happens to cover it. Present the exact canonical
+ target and renewed justification, obtain renewed explicit approval to access it,
+ and obtain separate explicit approval before adding or relying on permission for
+ that changed target. Harmless canonical spelling differences within the exact
+ approved scope do not require re-approval; never continue silently after a
+ broader or out-of-scope target is found.
 
 Broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`, `~/Projects/**`, or a parent workspace directory are **rejected** and must never be presented as authorization candidates; only concrete project-specific paths are eligible.
 The `local/` directory is unversioned project-local storage for safe configuration,

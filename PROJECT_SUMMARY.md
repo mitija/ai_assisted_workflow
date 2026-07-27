@@ -180,8 +180,6 @@ every requirement and important business rule carries exactly one label (explici
   model across intake, discovery, review, and baseline; the conductor owns Analyze,
   Decomposition, Execute, Review, Escalate, and Report delivery orchestration; the human
   owns intent, consequential decisions, and final functional-outcome judgement.
-- Active review comments are framework-wide requirements: resolve their intent in the
-  normative Markdown guidance and do not treat the comment marker itself as policy.
 - `analysis_mode` and `interaction_mode` are independent; autonomous operation does not
   bypass objective confirmation, functional validation, Class C/D decisions,
   external-permission approval, final review, or final human judgement where applicable.
@@ -213,13 +211,16 @@ every requirement and important business rule carries exactly one label (explici
   extensions are preserved only inside valid v2.
 - **Filesystem Boundary & External Access**: project root is the default boundary;
   external directories require `permission.external_directory` entries in the
-  project `opencode.json`. Broad patterns (`~/Projects/**`, `~/**`) prohibited.
-  Conductor autonomous mode requires a permission preflight before execution:
-  scans `project_context.yaml` and config for absolute external paths, compares
-  against authorized entries, asks user for confirmation, persists approved paths
-  in `opencode.json`. New legitimate paths discovered during execution follow the
-  same update path. Only project-specific paths are added; unrelated paths remain
-  at default "ask" policy.
+  project `opencode.json`. Broad patterns (`~/Projects/**`, `~/**`) and broad
+  discovery/access attempts are prohibited. References discovered in configuration
+  are not authorization. Before access approval, paths undergo lexical expansion and
+  normalization with broad-path rejection; the operation, necessity, alternatives, and
+  risk/scope must then be justified to the user and explicitly approved one path at a
+  time. Only after explicit approval to access may filesystem-dependent absolute-path
+  and symlink canonicalization occur. A separate approval is required before
+  permission persistence. Necessary broad access stops for risk-aware user review and
+  must be narrowed to the
+  smallest concrete subpath; unrelated paths remain at default "ask" policy.
 - Working conventions (don't code unless asked, use subagents, minimal diff, blocker
   protocol — never weaken/skip/mock contractual tests, keep samples in sync). This
   repository itself follows a no-tag working convention; that is distinct from the
