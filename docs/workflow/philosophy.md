@@ -11,7 +11,7 @@ Two failure modes drive this methodology:
 
 > **If the specification is precise enough and the test suite is exhaustive enough, an LLM-assisted developer should be able to produce conforming software in hours, not days — and the cycle should be reproducible by another developer or another LLM later.**
 
-The methodology trades up-front specification rigour for short, lean implementation cycles. The center of gravity sits with the analyst and conductor, not the human or the developer.
+The methodology trades up-front specification rigour for short, lean implementation cycles. The center of gravity sits with the analyst and conductor, not the human or the developer. The analyst reaches that contract through evidence-first research and records the difference between observed expectations, domain practice, recommendations, and human-confirmed intent.
 
 **Every task — whether code, documentation, research, or configuration — must have explicit acceptance criteria defined before work begins, and completion must be checked against those criteria.**
 
@@ -44,6 +44,12 @@ This broader scope is partly aspirational: current practice is increasingly focu
 Coding-project support is relatively mature, especially specification-driven coding work (the spec → test → implement cycle). The current priority is validating and improving the framework for non-coding projects — including documentation, research, analysis, planning, configuration, and other long-horizon AI activities.
 
 Improvements to the framework should be judged by reliable autonomous completion against explicit acceptance criteria across both coding and non-coding work.
+
+The framework also separates documentation-baseline authority from publication
+authority. After the applicable gates, only the analyst may create an immutable
+documentation tag in the configured documentation repository; this does not grant
+permission to push or publish it. This repository may still choose a no-tag working
+convention, which is distinct from the framework capability.
 
 ## Navigation
 

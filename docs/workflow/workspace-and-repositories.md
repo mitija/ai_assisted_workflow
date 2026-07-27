@@ -19,7 +19,7 @@ This separation is deliberate:
 
 ## Documentation Repo
 
-Single branch, with two top-level areas: `customer-facing/` and `working/`. Customer has read access from day one and validates the customer-facing artifacts directly on the branch. There is no separate review copy. Customer sign-off triggers tagging at each spec freeze (e.g. `spec-260513`). The tag is the stable implementation contract.
+Single branch, with two top-level areas: `customer-facing/` and `working/`. Customer has read access from day one and validates the customer-facing artifacts directly on the branch. There is no separate review copy. After the applicable quality and baseline gates, the analyst may create an immutable tag at each spec freeze (e.g. `spec-260513`). The tag is the stable implementation contract; push or publication requires separate authorization.
 
 ```
 docs/
@@ -54,6 +54,15 @@ treated as contractual.
 Temporary files for project work should use `local/tmp/` rather than system `/tmp`
 to keep scratch material within the project boundary. The `local/tmp/` directory
 is created automatically by the init-project workflow.
+
+## Project Context
+
+`project_context.yaml` uses a minimal envelope with optional visible typed profiles,
+such as `code`, `non_code`, and `odoo`. Only selected profiles impose fields or
+validation requirements. Controlled self-describing extensions are preserved, and
+legacy v1 files remain readable during migration. Secrets stay in protected config
+or environment references, while external-path authorization remains in
+`opencode.json`. The conductor routes missing or unusable context to `init-project`.
 
 ## Navigation
 

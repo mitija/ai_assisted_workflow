@@ -10,10 +10,16 @@ are still evolving.
 
 1. **Human intent:** the human provides the problem, desired outcome, high-level
    criteria, constraints, and consequential decisions.
-2. **Analyst contract:** the analyst runs intake, discovery, review, and baseline
-   to produce stable requirements, provenance, traceability, verification
-   definitions, wireframes, and intended documentation.
-3. **Conductor delivery:** the conductor analyzes, decomposes, executes, reviews,
+2. **Analyst contract:** the analyst runs evidence-first intake, discovery, review,
+   and baseline to produce stable requirements, provenance, traceability,
+   verification definitions, wireframes, and intended documentation. The analyst
+   records sources, findings, confidence, assumptions, and provenance, including
+   motivation, beneficiaries, outcomes, and reasonable user or operational
+   expectations, without presenting inferred expectations as explicit human
+   requirements.
+3. **Conductor delivery:** the conductor performs a thin Analyze gate for modes,
+   permissions, context readiness, work classification, analyst-baseline
+   sufficiency, and objective/scope alignment, then decomposes, executes, reviews,
    escalates failures, and reports for code and non-code work.
 4. **Evidence and judgement:** implementers and the verifier produce evidence;
    the reviewer audits it; the conductor assesses the functional outcome; and the
@@ -44,9 +50,13 @@ git clone <repo-url>
 
 The installer symlinks `agents/` to `~/.agents`, `agents/agent/` to
 `~/.config/opencode/agent`, and `skills/` to `~/.config/opencode/skills`.
-Alternatively, copy the directories manually. Then run the `init-project` skill
-to create and populate `project_context.yaml`; agents read it and `AGENTS.md` at
-the start of each session.
+Alternatively, copy the directories manually. The conductor invokes
+`init-project` when `project_context.yaml` is absent or unusable. Init creates or
+repairs the minimal v2 envelope, infers visible typed profiles such as `code`,
+`non_code`, and `odoo`, asks only for missing fields in selected profiles, and
+preserves readable legacy v1 structures and controlled self-describing extensions.
+Secrets and external-path authorization remain protected. Agents read the
+resulting context and `AGENTS.md` at the start of each session.
 
 ## Known limitations
 
@@ -66,6 +76,9 @@ the start of each session.
   baseline; add deeper analyst discovery and traceability, then frozen
   specifications and contractual tests, as complexity and consequence grow.
   Trivial tasks do not require the full process.
+- Profile-aware context reduces setup noise but adds migration and selection
+  complexity; legacy v1 compatibility and controlled extensions remain important
+  maintenance concerns.
 
 ## What the repository contains
 
@@ -90,8 +103,10 @@ tools/           Installation scripts and utilities
 
 ## Skills
 
-General skills are reusable by any agent or user. Conductor-specific skills are
-loaded automatically by the conductor during its workflow.
+General skills are reusable by any agent or user, except that the four
+`analyst-*` lifecycle skills are loaded by the analyst agent rather than directly
+by users or general agents. Conductor-specific skills are loaded automatically by
+the conductor during its workflow.
 
 ### Analyst lifecycle skills
 

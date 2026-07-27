@@ -10,7 +10,11 @@ This is the authoritative overview for the detailed [workflow documentation](wor
 
 The human supplies intent, desired outcomes, high-level criteria, constraints, and
 consequential decisions. The **analyst** turns that intent into a defensible
-functional contract. The **conductor** delivers against the contract across code
+functional contract through evidence-first research and analysis. The analyst owns
+research into motivation, the problem, beneficiaries, outcomes, and reasonable user
+or operational expectations, recording sources, findings, confidence, assumptions,
+and provenance while distinguishing observed or domain expectations from explicit
+human requirements. The **conductor** delivers against the contract across code
 and non-code work. Implementers may use any suitable AI workflow; the deliverable
 and its evidence are what matter.
 
@@ -39,7 +43,9 @@ human requirements.
 
 The conductor owns six delivery phases:
 
-1. **Analyze** determines goal, scope, work type, context, and analyst readiness.
+1. **Analyze** is a thin orchestration gate for modes, permissions, project-context
+   readiness, work classification, analyst-baseline sufficiency, and objective/scope
+   alignment. It does not perform the analyst's research or requirements analysis.
 2. **Decompose** creates a dependency-aware graph for code or non-code work.
 3. **Execute** delegates implementation and verification, using the verifier and
    committer where appropriate.
@@ -54,6 +60,22 @@ The conductor owns six delivery phases:
 requirements decisions and validation; the second governs how the conductor handles
 orchestration ambiguity. Neither mode removes the need to stop for genuine
 blockers or consequential decisions.
+
+The analyst may create an immutable tag only in the configured documentation
+repository, after the applicable quality and baseline gates (and human validation
+in guided mode; autonomous analysis must have no blocking Class C or D decision),
+using the canonical naming convention, normally `spec-YYMMDD` with a collision
+suffix. The analyst records the repository, tag, commit, baseline, validation, and
+publication status. Existing tags are never moved, deleted, or repointed; a changed
+baseline receives a new tag. Tag creation is separate from push or publication
+authorization. No agent other than the analyst may create tags, and the analyst
+may not create source, release, deployment, or production tags.
+
+Project context uses a minimal envelope with optional visible typed profiles such
+as `code`, `non_code`, and `odoo`. Inactive profiles impose no requirements;
+controlled self-describing extensions are preserved, legacy v1 remains readable,
+and secrets and external paths remain protected. If context is missing or unusable,
+the conductor routes the work to `init-project`.
 
 ## Traceability and completion
 

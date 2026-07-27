@@ -4,9 +4,12 @@
 
 1. **Human:** provides the problem, desired functional outcome, high-level
    criteria, constraints, and consequential decisions.
-2. **Analyst:** runs intake, discovery, review, and baseline. The result is a
-   requirements baseline with stable IDs, provenance, verification definitions,
-   intended documentation, and traceability.
+2. **Analyst:** performs evidence-first intake, discovery, review, and baseline.
+   The analyst researches task/domain/background context and records motivation,
+   beneficiaries, outcomes, reasonable expectations, sources, findings,
+   confidence, assumptions, and provenance. The result is a requirements baseline
+   with stable IDs, verification definitions, intended documentation, and
+   traceability.
 3. **Conductor:** confirms analyst readiness and alignment, then runs Analyze,
    Decompose, Execute, Review, Escalate on failure, and Report.
 4. **Implementers:** deliver code or non-code work against the baseline. In code
@@ -18,8 +21,10 @@
 
 The conductor's six phases are:
 
-1. **Analyze** — determines goal, scope, constraints, work type, context, and
-   whether a sufficient analyst baseline exists.
+1. **Analyze** — a thin orchestration gate that records modes and permissions,
+   initializes missing or unusable project context, classifies work, checks
+   analyst-baseline sufficiency, and checks objective/scope alignment. Detailed
+   research and functional analysis remain the analyst's responsibility.
 2. **Decompose** — builds a dependency-aware code or non-code task graph.
 3. **Execute** — delegates ready work in topological rounds, with verification and
    focused commits where appropriate.
@@ -53,7 +58,7 @@ contract may be recorded in `docs/working/` or `local/`.
 | Role | Owns | Tools |
 |---|---|---|
 | Human | Intent, high-level criteria, consequential decisions, final judgement | Docs and outcome review |
-| Analyst | Functional contract, provenance, traceability, verification definitions | Analyst skills and git |
+| Analyst | Evidence-first functional contract, research record, provenance, traceability, verification definitions, and documentation tags under policy | Analyst skills and git |
 | Conductor | Delivery orchestration, review, evidence, outcome assessment | Conductor skills and agents |
 | Implementer | Code or non-code deliverable and implementation tests | Method of choice |
 | Reviewer | Independent correctness and completeness audit | Read-only reviewer agent |

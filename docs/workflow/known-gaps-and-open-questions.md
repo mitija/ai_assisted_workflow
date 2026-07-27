@@ -67,7 +67,20 @@ UI/UX nuance, and non-code outcomes also lack equally standardized verification.
 
 ## Analyst / Conductor Git Fluency
 
-The workflow assumes the analyst and conductor can use git fluently — commits, tags, branches, conflicts. Most functional analysts and consultants can't. This is a real obstacle to extending the methodology beyond technically-fluent practitioners. Options: a wrapper UI, a "spec publishing" step that hides git, or accepting the constraint on adoption.
+The workflow assumes the analyst and conductor can use git fluently — commits,
+documentation tags, branches, conflicts, and publication boundaries. Most
+functional analysts and consultants can't. This is a real obstacle to extending
+the methodology beyond technically-fluent practitioners. The bounded analyst tag
+policy reduces one hand-off but does not remove the need for a wrapper UI, a
+"spec publishing" step that hides git, or an explicit authorization workflow.
+
+## Profile-Aware Project Context
+
+The minimal envelope with optional typed profiles reduces irrelevant setup fields
+for non-code and mixed projects while retaining legacy v1 readability and
+self-describing extensions. Profile selection, migration, validation, and
+extension governance add complexity, and the right balance between flexibility and
+machine-readable consistency remains an active maintenance concern.
 
 ## Navigation
 

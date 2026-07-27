@@ -45,9 +45,12 @@ tools/
 
 ## Skills
 
-General skills are reusable by any agent or user. Conductor-specific skills are internal orchestration steps loaded automatically by the conductor during its workflow.
+General skills are reusable by any agent or user, except that the four
+`analyst-*` lifecycle skills are loaded by the analyst agent rather than directly
+by users or general agents. Conductor-specific skills are internal orchestration
+steps loaded automatically by the conductor during its workflow.
 
-### General skills
+### Analyst lifecycle skills
 
 | Skill | When to load |
 |---|---|
@@ -55,6 +58,11 @@ General skills are reusable by any agent or user. Conductor-specific skills are 
 | [`analyst-discovery`](skills/analyst-discovery/SKILL.md) | Phase 2 of the analyst workflow — structured discovery process |
 | [`analyst-intake`](skills/analyst-intake/SKILL.md) | Phase 1 of the analyst workflow — objective brief and intake Q&A |
 | [`analyst-review`](skills/analyst-review/SKILL.md) | Phase 3 of the analyst workflow — requirements quality gate and validation |
+
+These four skills are loaded by the analyst agent. Users and general agents should
+invoke the analyst rather than loading them directly.
+
+### Other general skills
 | [`coding-standards`](skills/coding-standards/SKILL.md) | Writing or modifying any application code, script, or service |
 | [`handover`](skills/handover/SKILL.md) | Creating a self-contained `HANDOVER-xx.md` at session end for the next session to continue |
 | [`init-project`](skills/init-project/SKILL.md) | `project_context.yaml` is missing or incomplete |
@@ -113,6 +121,10 @@ changes, check the other two.
   `skills/`.
 - If a skill is added or removed, update both `agents/AGENTS.md` (skills table)
   and `README.md` (skills table).
+- The project context uses a minimal envelope with optional visible typed profiles;
+  inactive profiles impose no requirements, legacy v1 remains readable, and
+  controlled self-describing extensions are preserved. Keep secrets and external
+  path authorization protected.
 
 ### Agent definitions
 
@@ -146,4 +158,7 @@ Before reporting a task complete:
 - [ ] The consistency triangle is checked (template ↔ AGENTS.md ↔ init-project skill).
 - [ ] `README.md` skills table is up to date.
 - [ ] `PROJECT_SUMMARY.md` reflects the new state.
-- [ ] No git tags were created (tagging is a user action only).
+- [ ] No git tags were created for this repository's working convention. The
+      framework permits only the analyst to create immutable documentation tags in
+      the configured documentation repository after its applicable gates; no
+      source, release, deployment, or production tags are permitted.

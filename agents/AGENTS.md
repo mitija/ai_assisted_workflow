@@ -61,7 +61,12 @@ functional contract) and implementation (building against a frozen baseline).
 #### During analysis
 
 The analyst owns the functional contract: authoring requirements, business
-rules, success criteria, documentation, and wireframes. The analyst may:
+rules, success criteria, documentation, and wireframes. The analyst performs
+evidence-first task, domain, and background research, including motivation,
+problem, beneficiaries, outcomes, and reasonable user or operational
+expectations. Record sources, findings, confidence, assumptions, and provenance,
+distinguishing observed or domain expectations from explicit human requirements.
+The analyst may:
 
 - Resolve **Class A** (minor, low-impact, reversible) decisions
   autonomously with provenance and rationale.
@@ -168,6 +173,14 @@ and instance credentials) live in `project_context.yaml` in the project folder,
 one level above the `docs` and `src` repos. Read it at the start of a session. If
 it is missing, copy `project_context.template.yaml` to `project_context.yaml` and
 ask the user to fill it in. Never hard-code these paths or credentials in code or docs.
+
+The project context uses a minimal envelope with optional visible typed profiles
+for code, non-code, Odoo, and other controlled extensions. Inactive profiles impose
+no requirements; legacy v1 remains readable; and unknown extension keys are
+preserved without reinterpretation. The conductor routes missing or unusable
+context to `init-project`, which infers profiles and asks only for active-profile
+values. Secrets remain protected and external-path authorization remains in
+`opencode.json`.
 
 ## Maintain Context
 Maintain a `PROJECT_SUMMARY.md` (path may be set in `project_context.yaml`) recording
