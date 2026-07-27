@@ -84,30 +84,42 @@ with the user's agreement, and document the migration result.
 
 1. Inspect `project_context.yaml`, the standalone template, root directories,
    `PROJECT_SUMMARY.md`, package/build metadata, docs/spec files, git remotes,
-   Odoo indicators, and relevant configuration. Infer project name, layout,
-   commands, and profiles from evidence.
-2. If no context exists, create it from the v2 template above. If it exists,
-   preserve its schema and unknown fields while repairing only unusable values.
-3. Set `profiles.inferred` to the detected signals and ask the user to confirm
-   or correct `profiles.selected`. Ask only for missing fields belonging to
-   active profiles. A non-code project must not be asked for source, build,
-   test, or Odoo fields.
-4. Validate active profiles. Check required paths and commands, acceptance
-   criteria/evidence for non-code work, spec/tag references for code work, and
-   Odoo fields only when `odoo` is active. Record unresolved values explicitly.
-5. Discover external paths from active profile data and project configuration.
-   Expand variables and `~`, normalize `.`/`..`, resolve absolute paths, and
+   Odoo indicators, and relevant configuration. Detect the schema before making
+   any write: `schema_version: 2` is v2; a missing `schema_version` is legacy v1.
+2. For v2, infer project name, layout, commands, and profiles from evidence. Set
+   `profiles.inferred` to those signals, ask the user to confirm or correct
+   `profiles.selected`, and write the confirmed active profile selection. Ask
+   only for missing fields belonging to active profiles. A non-code project
+   must not be asked for source, build, test, or
+   Odoo fields. Validate the selected active profiles: check required paths and
+   commands, acceptance criteria/evidence for non-code work, spec/tag references
+   for code work, and Odoo fields only when `odoo` is selected. Record unresolved
+   values explicitly.
+3. For legacy v1, preserve the existing top-level schema, meanings, and unknown
+   keys. Infer work type/profile only in the inspection report; do not write
+   `profiles.inferred` or otherwise add v2 profile keys to the v1 file. Validate
+   recognized v1 fields and report missing or unusable values. Offer migration
+   to v2, but migrate and write only after the user explicitly agrees; preserve
+   unknown content under `extensions` only with that agreement and document the
+   migration result.
+4. If no context exists, create it from the v2 template above. For an existing
+   file, preserve its detected schema and unknown fields while repairing only
+   unusable values under that schema. Discover external paths from active v2
+   profile data, or from the corresponding recognized legacy v1 data when
+   inspecting v1.
+5. Expand variables and `~`, normalize `.`/`..`, resolve absolute paths, and
    canonicalize symlinks before classifying. Reject broad paths and present
    concrete project-specific paths one at a time for permission approval. The
    authoritative allow list is `opencode.json`; never bypass or silently alter
    it.
-6. Write the context after each answer. Preserve extensions and unknown fields.
-   Ensure literal secrets are absent and references point to protected config or
-   environment values.
-7. Verify YAML parsing, active-profile validity, legacy preservation where
-   applicable, and that the standalone and embedded templates remain
-   semantically and structurally synchronized. Report inferred values, blanks,
-   compatibility status, and any proposed migration.
+6. For v2, write the context after each answer. For legacy v1, write only
+   repairs that preserve v1 semantics; do not write a v2 migration until the
+   user agrees. In either schema, ensure literal secrets are absent and
+   references point to protected config or environment values.
+7. Verify YAML parsing, selected-profile validity for v2, recognized-field
+   validity and preservation for v1, and that the standalone and embedded v2
+   templates remain semantically and structurally synchronized. Report inferred
+   values, blanks, compatibility status, and any proposed migration.
 
 The conductor invokes this skill when context is absent or unusable; an
 unresolved human choice or permission decision remains a gate, not a reason to

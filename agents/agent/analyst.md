@@ -18,12 +18,12 @@ permission:
     git diff*: allow
     grep*: allow
     ls*: allow
-    git tag --list spec-[0-9][0-9][0-9][0-9][0-9][0-9]: allow
-    git tag --list spec-[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9]: allow
-    git tag -l spec-[0-9][0-9][0-9][0-9][0-9][0-9]: allow
-    git tag -l spec-[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9]: allow
-    git tag -a spec-[0-9][0-9][0-9][0-9][0-9][0-9] -m *: allow
-    git tag -a spec-[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9] -m *: allow
+    git tag --list spec-??????: allow
+    git tag --list spec-??????-?: allow
+    git tag -l spec-??????: allow
+    git tag -l spec-??????-?: allow
+    git tag -a spec-?????? -m *: allow
+    git tag -a spec-??????-? -m *: allow
     "git tag * --force*": deny
     "git tag * -f*": deny
     "git tag * --delete*": deny

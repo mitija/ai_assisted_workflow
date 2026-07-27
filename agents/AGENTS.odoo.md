@@ -1,8 +1,9 @@
 # AGENTS.odoo.md
 
 Odoo-specific guidance. Append/include alongside the generic `AGENTS.md`.
-All concrete paths and credentials come from `project_context.yaml` (see
-`odoo:` section) — do not hard-code them here.
+All concrete paths and credentials come from protected configuration referenced by
+`project_context.yaml` (see `profiles.odoo` in v2, or the legacy equivalent when
+reading v1) — do not hard-code or expose them here.
 
 ## Odoo Source Code (read-only reference)
 The base and enterprise source trees (`odoo.source.base` / `odoo.source.enterprise`)
@@ -15,7 +16,8 @@ database before each run:
 
     <run_tests.sh> [-d DATABASE] module1 [module2 ...]
 
-Options: `-d DATABASE` (default from `odoo.database.default_name`), `-h/--help`.
+Options: `-d DATABASE` (default from the protected local Odoo config referenced by
+`profiles.odoo.scripts.config_ini`), `-h/--help`.
 
 The wrapper must configure Odoo's native `--logfile <path>` option so that Odoo
 writes all logging to `local/tmp/odoo_test_<timestamp>.log` instead of stderr.
@@ -28,7 +30,8 @@ are not streamed to the terminal in real time. Only non-log command output
 (e.g. wrapper progress messages) may appear live. Always read the log file for
 the actual Odoo test results rather than the truncated Bash output.
 
-Direct CLI alternative (using `odoo.scripts.config_ini`):
+Direct CLI alternative (using the protected config referenced by
+`profiles.odoo.scripts.config_ini`):
 
     ./odoo-bin -c <odoo.conf> -d <database> --test-tags <tag> -i <module> --stop-after-init
     ./odoo-bin -c <odoo.conf> -d <database> --test-file addons/<module>/tests/<file>.py --stop-after-init
@@ -39,8 +42,10 @@ Direct CLI alternative (using `odoo.scripts.config_ini`):
 - Never pipe/redirect via Bash to read or search log files.
 
 ## Database & Instances
-- Local dev/test DB: see `odoo.database` in `project_context.yaml`.
-- QA instance (optional): credentials in `odoo.qa_instance.config_ini`,
+- Local dev/test DB: use the protected config referenced by
+  `profiles.odoo.scripts.config_ini` (or its recognized legacy v1 equivalent).
+- QA instance (optional): use the protected config referenced by
+  `profiles.odoo.qa_instance.config_ini`,
   reachable via XMLRPC for data checks.
 
 ## Modules

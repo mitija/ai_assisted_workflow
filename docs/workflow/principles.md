@@ -2,7 +2,7 @@
 
 1. **The spec is the contract.** If behaviour is not specified or tested, it is not required.
 2. **Tests are executable spec.** Every business rule appears as a test scenario with concrete state transitions. Prose alone is not acceptance criteria.
-3. **Cycles are short by design.** Typical implementation cycle: a few hours of AI-assisted work. Design effort is pushed upstream so downstream is mechanical. *(TOL Improvements stats to be added.)*
+3. **Cycles are short by design.** Typical implementation cycle: a few hours of AI-assisted work. Design effort is pushed upstream so downstream is mechanical.
 4. **No mid-flight spec changes.** Genuine questions stop work, update the spec, produce a new tag. Implementation never runs in parallel with spec clarification.
 5. **The developer is autonomous on method.** We specify the *what* (spec + tests + acceptance), not the *how* (which AI, which IDE, which prompts).
 6. **Documentation is a first-class artifact** — own repository, versioned, customer-accessible, kept up to date. The analyst owns documentation across the full lifecycle; it is not a separate administrative task assigned to the human.
