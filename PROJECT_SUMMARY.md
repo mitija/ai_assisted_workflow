@@ -16,10 +16,13 @@ less mature and evolving. The established paradigm is human objective ownership;
 an analyst-owned four-phase functional-contract lifecycle (intake, discovery, review,
 and traceable baseline); and conductor-owned six-phase code/non-code delivery
 (analyze, decompose, execute, review, escalate, and report). `analysis_mode` and
-`interaction_mode` are independent. Implementers and the verifier produce evidence,
-the mandatory reviewer audits it, the conductor assesses the functional outcome, and
-the human makes the final judgement. Analysis quality, non-functional and non-code
-verification, tooling, environment setup, and adoption remain honest limitations.
+`interaction_mode` are independent. Analyst discovery is evidence-first: it researches
+motivation, problem, beneficiaries, outcomes, and reasonable user or operational
+expectations, recording sources, findings, confidence, assumptions, and provenance.
+Implementers and the verifier produce evidence, the mandatory reviewer audits it, the
+conductor assesses the functional outcome, and the human makes the final judgement.
+Analysis quality, non-functional and non-code verification, tooling, environment setup,
+and adoption remain honest limitations.
 No code/app component — this is a guidance/skill bundle for agents. The root-level
 `skills/` directory holds ten general skills and six conductor-specific skills
 (internal orchestration steps).
@@ -31,8 +34,10 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
 - `AGENTS.odoo.md` — Odoo-specific companion (testing, source layout, DB/instances,
   acceptance demo). Referenced from `AGENTS.md` via `@AGENTS.odoo.md`.
 - `project_context.template.yaml` — template for machine/project-specific values
-  (paths, spec docs repo + tag, generic `commands:` block for build/lint/typecheck/
-  format/test, Odoo source/scripts, modules). Odoo DB credentials removed — they
+  (minimal v2 envelope with optional typed code, non-code, Odoo, and controlled
+  extension profiles; paths, spec docs repo + tag, generic `commands:` block for
+  build/lint/typecheck/format/test, Odoo source/scripts, modules). Legacy v1 files
+  remain readable and unknown extension keys are preserved. Odoo DB credentials removed — they
   live in `odoo_config.ini` exclusively. Copy to `project_context.yaml` (gitignored)
   per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
@@ -50,7 +55,8 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   (functional contract owner). Classification: Both (`mode: all`). Transforms high-level
   human intent into a complete, defensible functional contract — requirements, business rules,
   success criteria, traceability, documentation, and wireframes. Operates in autonomous or
-  guided mode. Orchestrates four lifecycle phases via analyst-* skills loaded on demand:
+  guided mode. Performs evidence-first research and orchestrates four lifecycle phases via
+  analyst-* skills loaded on demand:
   Phase 1 Intake (`analyst-intake`), Phase 2 Discovery (`analyst-discovery`),
   Phase 3 Review (`analyst-review`), Phase 4 Baseline (`analyst-baseline`).
 Class A-D decisions are impact-based (A=minor/reversible, B=low-impact functional,
@@ -63,8 +69,12 @@ every requirement and important business rule carries exactly one label (explici
     silently presented as human-requested. Analysis mode (autonomous/guided) is an
    independent value selected at intake, distinct from the conductor's interaction
    style or implementation autonomy. Never implements
-  application code. Permission: `edit: allow`, `task: allow`, `bash` limited to read-only
-  inspection commands (`git status`, `git log`, `git diff`, `grep`, `ls`).
+  application code. After the applicable quality and baseline gates, it is the only role
+  authorized to create an immutable documentation tag in the configured documentation
+  repository. Tag creation is separate from push/publication authorization. It may not
+  create source, release, deployment, or production tags. Permission: `edit: allow`,
+  `task: allow`, `bash` limited to read-only inspection commands (`git status`, `git log`,
+  `git diff`, `grep`, `ls`).
 - `agent/conductor.md` — ...
   (orchestration agent). Classification: Primary. Symlinked to `~/.config/opencode/agent` by
   `tools/install.sh` for auto-discovery. Conductor runs on a better AI model
@@ -161,6 +171,8 @@ every requirement and important business rule carries exactly one label (explici
   model across intake, discovery, review, and baseline; the conductor owns Analyze,
   Decomposition, Execute, Review, Escalate, and Report delivery orchestration; the human
   owns intent, consequential decisions, and final functional-outcome judgement.
+- Active review comments are framework-wide requirements: resolve their intent in the
+  normative Markdown guidance and do not treat the comment marker itself as policy.
 - `analysis_mode` and `interaction_mode` are independent; autonomous operation does not
   bypass objective confirmation, functional validation, Class C/D decisions,
   external-permission approval, final review, or final human judgement where applicable.
@@ -184,7 +196,10 @@ every requirement and important business rule carries exactly one label (explici
 - Project config via `project_context.yaml` (lives in the project folder, one level
   above the `docs` and `src` repos); maintain `PROJECT_SUMMARY.md`.
 - `project_context.template.yaml` and the embedded template in `skills/init-project/SKILL.md`
-  remain synchronized.
+  remain synchronized. The project context is a minimal profile-aware envelope with
+  optional typed code, non-code, Odoo, and controlled extension profiles; inactive
+  profiles impose no requirements, legacy v1 remains readable, and unknown extensions
+  are preserved without reinterpretation.
 - **Filesystem Boundary & External Access**: project root is the default boundary;
   external directories require `permission.external_directory` entries in the
   project `opencode.json`. Broad patterns (`~/Projects/**`, `~/**`) prohibited.
@@ -195,8 +210,11 @@ every requirement and important business rule carries exactly one label (explici
   same update path. Only project-specific paths are added; unrelated paths remain
   at default "ask" policy.
 - Working conventions (don't code unless asked, use subagents, minimal diff, blocker
-  protocol — never weaken/skip/mock contractual tests, never create git tags, keep
-  samples in sync).
+  protocol — never weaken/skip/mock contractual tests, keep samples in sync). This
+  repository itself follows a no-tag working convention; that is distinct from the
+  analyst-only immutable documentation-tag capability in a configured documentation
+  repository. All other roles remain prohibited from tagging, and publication requires
+  separate authorization.
 - Security & Secrets: treat config values (esp. credentials) as secret; never emit them.
 - Communication & Output: concise responses, `file_path:line` references.
 - Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).
@@ -279,8 +297,11 @@ immediately; Class A/B resolved autonomously. Provenance is a separate concept �
     every requirement and important business rule carries exactly one label (explicitly-requested, inferred-context,
     inherited, domain-practice, design-decision, risk-control, or unresolved) and is
     never silently presented as human-requested. Analysis mode is an independent value
-   selected at intake, distinct from the conductor's interaction style or implementation
-   autonomy.
+  selected at intake, distinct from the conductor's interaction style or implementation
+    autonomy. After the quality and baseline gates, only the analyst may create an
+    immutable documentation tag in the configured documentation repository; push or
+    publication requires separate authorization, and no role may create source,
+    release, deployment, or production tags.
 - `analyst-intake` skill (Phase 1): high-level Q&A producing a confirmed objective
    brief. `analyst-discovery` skill (Phase 2): 20-step evidence-first discovery
    process producing functional, non-functional, operational, and documentation
@@ -303,11 +324,10 @@ VER), consistency maintenance across the full lifecycle, and a documentation/tra
   The `specification-methodology` skill remains as a general-purpose spec authoring
   tool, but is no longer a conductor-phase prerequisite — spec writing is the
   analyst's responsibility when detailed requirements are needed.
-- The conductor's Phase 1 (Analyze) now includes an analyst readiness gate:
-  before proceeding to decomposition, the conductor must confirm a sufficient
-  functional analysis baseline exists. If not, it delegates to the analyst
-  sub-agent. The conductor owns the decision to delegate, the alignment check,
-  and acceptance of the baseline — not detailed elicitation.
+- The conductor retains a thin Phase 1 (Analyze) readiness gate: before proceeding
+  to decomposition, it confirms that a sufficient functional analysis baseline exists.
+  If not, it delegates to the analyst sub-agent. The conductor owns delegation,
+  alignment checking, and baseline acceptance, not detailed elicitation.
 
 ## Planned / open
 - Consider an `agents/AGENTS.md` note on non-functional requirements (workflow §8.8 gap).
