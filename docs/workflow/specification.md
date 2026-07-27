@@ -13,9 +13,18 @@ Every requirement and important business rule records its provenance — exactly
 
 For full details of the analyst's process, see the [analyst agent definition](../../agents/agent/analyst.md) and the four `analyst-*` skills (intake, discovery, review, baseline).
 
-The conductor's Analyze phase is only an orchestration gate: it checks modes,
+The conductor is the normal delivery entry point. Its Analyze phase checks modes,
 permissions, context readiness, work classification, baseline sufficiency, and
-objective/scope alignment. It does not replace the analyst's functional analysis.
+objective/scope alignment, and transparently invokes the analyst when the
+functional baseline is absent or stale. It does not replace the analyst's
+functional analysis.
+
+The analyst lifecycle is proportional to the work. Trivial, bounded, low-risk
+work may use one consolidated lightweight baseline containing only the applicable
+artefacts, but it must still meet minimum readiness: objective and scope,
+acceptance and requirements, verification and evidence, objective/scope
+alignment, and no unresolved blocker. Consequential, ambiguous, high-risk, or
+multi-step work uses the full lifecycle artefacts and gates.
 
 ## Optional 5-Step Specification Methodology
 

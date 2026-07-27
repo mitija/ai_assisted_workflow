@@ -181,17 +181,20 @@ layout, database/instance access). Skip it for non-Odoo projects.
 ## Project-Specific Paths & Config
 All machine/project-specific values (source/docs paths, build/test commands, DB
 and instance credentials) live in `project_context.yaml` in the project folder,
-one level above the `docs` and `src` repos. Read it at the start of a session. If
-it is missing, copy `project_context.template.yaml` to `project_context.yaml` and
-ask the user to fill it in. Never hard-code these paths or credentials in code or docs.
+one level above the `docs` and `src` repos. Read it at the start of a session.
+The conductor routes missing or unusable context to `init-project`. Init-project
+scans available evidence, infers visible active profiles, and asks only for
+unavailable values required by those active profiles. Missing or unsupported
+`schema_version` requires explicit approved reinitialization or conversion; no
+v1 preservation guarantee exists. Routine setup is conductor-owned. Never
+hard-code these paths or credentials in code or docs.
 
 The project context uses a minimal v2 envelope with optional visible typed profiles
 for code, non-code, Odoo, and other controlled extensions. `schema_version: 2` is
 required; missing or unsupported versions are unusable and route to `init-project`
 for explicit reinitialization or conversion. Inactive profiles impose no
 requirements, and unknown extension keys in valid v2 are preserved without
-reinterpretation. The conductor routes missing or unusable context to
-`init-project`, which infers profiles and asks only for active-profile values.
+reinterpretation.
 Secrets remain protected and external-path authorization remains in
 `opencode.json`.
 
