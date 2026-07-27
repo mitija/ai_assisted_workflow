@@ -7,8 +7,9 @@ Spec-driven coding is the mature supported path within the [broader Agentic
 Framework for Long-Horizon AI Work](../docs/AI_assisted_development_workflow.md);
 the rules below apply proportionately to either path.
 
-The project workspace is intentionally one level above the git repositories. Treat
-the workspace root as the operational project folder, not as a single git repo:
+The project workspace is intentionally one level above the git repositories. The
+workspace root is not itself a git repository; `docs/` and `src/` are separate
+repositories with separate lifecycles:
 
 ```text
 project-folder/
@@ -30,7 +31,6 @@ Within `docs`, `customer-facing/` contains the contractual spec/test artifacts
 that are tagged when ready, while `working/` contains versioned project
 documentation work. Do not treat unversioned workspace-level `local/` material as
 contractual.
-
 ### Role and lifecycle ownership
 
 - The **human** owns intent, priorities, consequential decisions, and final
@@ -75,7 +75,9 @@ rules, success criteria, documentation, and wireframes. The analyst may:
 - Author and maintain all functional documentation under `docs/working/` and
   prepare artefacts for `docs/customer-facing/` before a tag freeze.
 
-The analyst must never implement code.
+The analyst must never implement code or perform delivery work. The analyst may
+create an immutable documentation tag in the configured documentation repository
+only under the documentation-tag policy in the analyst baseline skill.
 
 Requirement provenance is a separate seven-value concept, not Class A-D.
 Every requirement and important business rule carries exactly one provenance label:
@@ -102,14 +104,16 @@ Implementation agents work against an immutable tagged baseline:
   `docs/customer-facing/` spec/test documents. The analyst owns authoring and
   maintaining functional documentation. If implementation reveals a gap that
   changes contractual behaviour, follow the analyst-baseline discovery sequence
-  and require a new human-created docs tag.
-- **Tests are executable spec, and tests win.** Every business rule is a
+  and require human review plus a new analyst-created docs tag.
+- **Tests are executable spec for spec-driven work, and tests win.** Every business rule is a
   specification-level, contractual test scenario in `<epic>_TESTS.md` (see the
   `test-scenarios` skill for the format). Derive automated tests from these
   scenarios. If the spec and the tests disagree, the tests are authoritative —
   flag the discrepancy to the user. Any extra tests you add during
   implementation to strengthen the build are non-contractual and separate from
   these.
+  For generic work, use the analyst's explicit acceptance criteria and evidence
+  instead of imposing contractual test scenarios.
 - **Work against the docs tag.** Specs and tests live in a separate
   documentation repo, tagged at each freeze (e.g. `spec-260513`). Read the
   current spec and TESTS docs at that tag before implementing. Their location
@@ -122,28 +126,28 @@ For **spec-driven coding**, implement against the immutable docs tag and produce
 the source changes, automated tests for the contractual scenarios and invariants
 in scope, and a development report tied to the requirements, use cases, evidence,
 coverage, deviations, and design decisions. Commit/tag actions follow the project
-workflow; this guidance never authorizes an agent to create a tag.
+workflow; only the analyst may create documentation tags under the analyst-baseline
+policy, and no other agent is authorized to create tags.
 
 For **non-code work**, use the explicit acceptance criteria and evidence defined
 for that work. Produce the applicable artefacts, verification results, traceability,
 and outcome report. Do not impose source-code, automated-test, docs-tag, or commit
 deliverables where they do not apply.
+The analyst must provide an explicit acceptance-criteria list for non-code work.
 
 ## Build, Lint & Verify
-Build, lint, typecheck, format, and generic test commands live in the `commands:`
-section of `project_context.yaml` (the Odoo test wrapper is separate — see
-@AGENTS.odoo.md). Use configured commands rather than guessing or inventing them.
-Run each applicable check before completion; if a check is not applicable, record
-why. Do not introduce new lint or type errors. Only auto-format or auto-fix files
-already being changed; do not reformat or re-fix unrelated files.
+Use the applicable build, lint, typecheck, format, and test commands configured in
+`project_context.yaml`. Do not guess commands. Record checks that are not
+applicable. Odoo-specific test handling belongs in `AGENTS.odoo.md`; this policy
+also applies to non-Odoo code projects and non-code work.
 
 ## Definition of Done
 Before reporting a task complete, confirm, as applicable:
 - The analyst completion gate is satisfied: the functional baseline, quality gate,
   traceability, and required documentation are complete.
-- Every in-scope automated test and contractual scenario passes, including each
-  state-table row and cross-cutting invariant; non-code acceptance evidence is
-  complete instead.
+- For spec-driven code, every in-scope automated test and contractual scenario
+  passes, including state-table rows and cross-cutting invariants. For generic
+  code, applicable tests pass. For non-code work, acceptance evidence is complete.
 - Applicable configured build, lint, typecheck, format, and test checks are clean,
   with any non-applicable checks explicitly recorded.
 - Evidence maps the outcome to the requirements and success criteria, and any
@@ -181,9 +185,10 @@ what's done, what's planned next).
 - **Blocker protocol.** If a contractual test fails or the environment is broken,
   never weaken, skip, or mock away the test to make it pass — report the blocker.
   Tests win (see Spec-Driven Workflow); the build conforms to them, not the reverse.
-- **Never create git tags.** Tagging is a user action. The AI must not create tags
-  on the user's behalf. Document the docs tag to trace against but never run
-  `git tag` or equivalent.
+- Only the analyst may create an immutable documentation tag, and only under the
+  documentation-tag policy in `analyst-baseline`. All conductor, committer,
+  reviewer, verifier, and implementation roles remain prohibited from tagging.
+  No role may create source, release, deployment, or production tags.
 - When a feature is added, behaviour changes, or a bug is fixed, keep any test-doc
   and config-sample files (including `project_context.template.yaml`) in sync.
 
@@ -210,8 +215,8 @@ OpenCode's external-directory permissions are stored in the project-level
 must never be added — only concrete, project-specific external paths are permitted.
 
 The `permission.external_directory` block is **generated and maintained by the agent
-workflow**, not by hand. Agents add entries only through the documented preflight
-process (see Conductor startup preflight below).
+workflow**, not by hand. Agents add entries only through the documented conductor
+or `init-project` preflight process.
 
 ### Legitimate external paths
 
@@ -241,48 +246,23 @@ path, and symlink canonicalization. Only then classify it as inside the project
 root, a broad parent/workspace path, or an eligible concrete external path.
 
 Broad values such as `$HOME`, `~/`, `~/**`, `$PROJECTS`, `~/Projects/**`, or a parent workspace directory are **rejected** and must never be presented as authorization candidates; only concrete project-specific paths are eligible.
+The `local/` directory is unversioned project-local storage for safe configuration,
+data, prompts, logs, and scratch material that would otherwise be placed under a
+user-level config or share directory. Use it when the project can safely own the
+data; keep credentials protected and never move machine-wide or unrelated data
+there. The conductor and `init-project` skill own the procedural permission
+preflight; this file defines only the policy.
 
-### Conductor startup preflight (autonomous mode)
-
-Before beginning autonomous execution, the conductor must run a **permission preflight**
-that:
-
-1. **Reads** `opencode.json` at the project root to determine currently authorized
-   external directories.
-2. **Scans** `project_context.yaml` and other project config files for absolute
-   paths that fall outside the project root.
-3. **Normalizes** — for each discovered path, perform environment-variable and
-   tilde expansion, normalize `.`/`..`, resolve to an absolute path, and
-   canonicalize symlinks before classifying it.
-4. **Identifies** any legitimate project-specific external paths that are not yet
-   in `permission.external_directory`.
-5. **Confirms** with the user — presents the proposed additions and asks for approval.
-6. **Persists** the approved paths by editing `opencode.json`'s
-   `permission.external_directory` block.
-7. **Proceeds** only after the boundary is confirmed and the config is updated.
-
-If a new legitimate external path is discovered during execution (e.g. a sub-agent
-encounters a needed path), the conductor must apply the **mid-execution discovery
-sequence**:
-
-1. **Pause** the affected task immediately.
-2. **Classify and explain** — identify the concrete project-specific path and why it is needed.
-3. **Ask** the user for approval to add the path to `permission.external_directory`. Present one path at a time.
-4. **Wait** for the user's answer before continuing.
-5. **If approved**: delegate editing `opencode.json` to a `general` sub-agent with exact instructions to add `"<path>/**": "allow"`.
-6. **Validate** that the updated `opencode.json` is valid JSON and the path was persisted correctly.
-7. **Resume** execution only after persistence is confirmed.
-8. **If denied or the path is unrelated** to the project: do not add it. Leave it at the default "ask" policy. Do not resume with broad access or re-present the same path.
-
-Do **not** update `opencode.json` before receiving user approval. Unrelated or clearly illegitimate paths must **not** be added — they remain at the default "ask" policy.
-
-Interactive mode does not require a formal preflight — the conductor can ask about
-external access as part of the normal ambiguity-resolution dialogue.
+The conductor and `init-project` skill own the procedural permission preflight:
+they normalize discovered paths, request approval one path at a time, and persist
+only approved concrete project-specific permissions. Do not update `opencode.json`
+before approval and never authorize broad paths.
 
 ## Communication & Output
 - Keep responses concise and skimmable; lead with the answer, not the process.
 - When referring to code, use `file_path:line` references so the user can navigate
   directly to the location.
+  Use clear, direct sentences.
 
 ## Reading Files & Logs (stay autonomous)
 Use the `Read` tool with `offset`/`limit` and the `Grep` tool instead of running
@@ -292,7 +272,10 @@ permission prompts and keeps the workflow autonomous.
 
 ## Skills
 
-General skills are reusable by any agent or user. Conductor-specific skills are internal orchestration steps loaded automatically by the conductor during its workflow.
+General skills are reusable by agents, but the `analyst-*` skills are loaded only
+by the analyst agent. Users and general agents should invoke the analyst rather
+than loading those lifecycle skills directly. Conductor-specific skills are
+internal orchestration steps loaded automatically by the conductor.
 
 ### General skills
 
