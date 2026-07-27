@@ -34,6 +34,7 @@ The objective brief, containing where applicable:
   conditions taken as true
 - **Selected analysis mode** — autonomous or guided (analysis governance;
   distinct from conductor interaction style or implementation autonomy)
+- **Analysis tier** — full or lightweight, with risk/proportionality rationale
 
 ## Intake process
 
@@ -59,7 +60,9 @@ Before asking questions, inspect the project:
   project workspace.
 - Check the git log for recent work and context.
 - Determine whether sufficient analysis already exists — if yes, skip the
-  full Q&A and proceed to confirm the existing baseline.
+  full Q&A and proceed to confirm the existing baseline. For trivial, bounded,
+  low-risk delivery, assess whether a consolidated lightweight baseline is
+  sufficient; otherwise select the full tier.
 
 ### 2. Conduct the initial Q&A
 
@@ -83,7 +86,8 @@ Keep questions at the level of:
 - What are the important constraints?
 - What is explicitly out of scope?
 - What existing systems must this work with?
-- **What analysis mode do you want?** (autonomous / guided)
+- **What analysis mode do you want?** (autonomous / guided), unless the
+  conductor has already selected and recorded it
 
 **Ask one question at a time.** Include your recommended answer where
 reasonable. Wait for the answer before asking the next question.
@@ -127,6 +131,7 @@ conductor's interaction style.
 
 - `docs/working/objective-brief.md` — confirmed by the human
 - `analysis_mode` field: `autonomous` or `guided` — explicit independent value
+- `analysis_tier` field: `lightweight` or `full`, with rationale
 - Assessment of whether existing analysis suffices or full discovery is needed
 
 ## Quality checklist

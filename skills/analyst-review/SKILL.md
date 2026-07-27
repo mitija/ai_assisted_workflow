@@ -11,7 +11,8 @@ completes.
 
 ## Purpose
 
-Perform a structured quality gate on the complete requirements set. In guided
+Perform a structured, proportionate quality gate on the applicable requirements
+set. In guided
 mode, produce a concise functional validation package for human review and
 propagate feedback across all affected artefacts. There is no separate
 requirements-reviewer agent — this skill implements the quality gate.
@@ -20,7 +21,7 @@ requirements-reviewer agent — this skill implements the quality gate.
 
 ### Per-requirement checklist
 
-Check every requirement, business rule, and detailed success criterion against
+Check every applicable requirement, business rule, and detailed success criterion against
 these criteria:
 
 | Criterion | What to check |
@@ -77,7 +78,8 @@ baseline.
 
 ## Guided mode validation package
 
-If the operating mode is **guided**, produce a functional validation package
+If the operating mode is **guided**, produce one consolidated functional
+validation package (lightweight or full according to the selected tier)
 for the human. The package must be concise and focused on matters requiring
 human judgement — not a document dump. Include where applicable:
 

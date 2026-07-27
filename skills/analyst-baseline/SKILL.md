@@ -11,8 +11,8 @@ This is Phase 4 of the analyst workflow. Load it after the quality gate
 
 ## Purpose
 
-Establish the authoritative requirements baseline with stable identifiers and
-full traceability. Maintain consistency across all functional artefacts
+Establish the authoritative, proportionate requirements baseline with stable
+identifiers and applicable traceability. Maintain consistency across all functional artefacts
 throughout implementation, verification, and completion. The baseline is the
 single source of truth for the functional contract.
 
@@ -74,7 +74,7 @@ Maintain traceability that answers these questions:
 
 ### Traceability structure
 
-Prefer a machine-readable source (YAML) with a generated or maintained
+For full-tier work, prefer a machine-readable source (YAML) with a generated or maintained
 Markdown summary. The structure should support:
 
 ```text
@@ -82,7 +82,9 @@ artefacts/traceability.yaml     (machine-readable source)
 docs/traceability.md            (human-readable summary)
 ```
 
-Adapt the file locations to the project's conventions.
+Adapt the file locations to the project's conventions. Lightweight work may use
+one consolidated baseline containing only applicable requirements or acceptance
+criteria, rules, traceability, verification/evidence methods, and documentation.
 
 ### Traceability chain
 
@@ -196,6 +198,11 @@ The analyst is the consistency owner. If automated checks exist, use them.
 Otherwise, perform manual cross-referencing proportionate to project risk.
 
 ## Documentation completion gate
+
+Apply this gate proportionately. The lightweight tier must still confirm the
+objective and scope, applicable requirements or acceptance criteria, rules,
+verification/evidence links, no blocking decisions, consistency, and analyst
+readiness. Full-tier work additionally requires the complete checklist below.
 
 Before declaring documentation complete, verify:
 

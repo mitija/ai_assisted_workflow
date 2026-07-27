@@ -7,7 +7,9 @@ allowed-tools: Read, Grep, Glob, Edit, Write, WebFetch, Question
 # Analyst Discovery Skill
 
 This is Phase 2 of the analyst workflow. Load it after the objective brief is
-confirmed.
+confirmed. For a lightweight tier, use these steps as coverage checkpoints and
+retain only applicable findings in one consolidated baseline; do not manufacture
+full artefact sets for a trivial request.
 
 ## Purpose
 
@@ -29,8 +31,9 @@ replaces human ownership of intent.
 
 Follow these steps in order as ordered coverage checkpoints. They are not a fixed
 questionnaire: probing follows the available evidence and unresolved ambiguity.
-Do not skip steps unless the project is trivially small and the step clearly does
-not apply (state why if skipping). In interactive clarification, ask one
+For the full tier, do not skip steps unless a step clearly does not apply (state
+why if skipping). For the lightweight tier, skip inapplicable or disproportionate
+steps with a recorded rationale. In interactive clarification, ask one
 question at a time and wait for the answer. In guided mode, the validation
 package may consolidate non-blocking decisions under the existing policy.
 
