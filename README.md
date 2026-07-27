@@ -86,6 +86,7 @@ resulting context and `AGENTS.md` at the start of each session.
 agents/          Agent instructions and opencode agent definitions
   AGENTS.md        Generic guidance for all projects
   AGENTS.odoo.md   Odoo-specific companion
+  create-spec-tag  Safe annotated documentation-tag wrapper
   project_context.template.yaml  Project configuration template
   agent/           analyst, conductor, reviewer, verifier, committer, and escalation agents
 skills/          Reusable and conductor-specific skills

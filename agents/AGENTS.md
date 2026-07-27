@@ -82,7 +82,8 @@ The analyst may:
 
 The analyst must never implement code or perform delivery work. The analyst may
 create an immutable documentation tag in the configured documentation repository
-only under the documentation-tag policy in the analyst baseline skill.
+only under the documentation-tag policy in the analyst baseline skill, using
+`~/.agents/create-spec-tag`.
 
 Requirement provenance is a separate seven-value concept, not Class A-D.
 Every requirement and important business rule carries exactly one provenance label:

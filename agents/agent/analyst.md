@@ -22,8 +22,7 @@ permission:
     git tag --list spec-??????-?: allow
     git tag -l spec-??????: allow
     git tag -l spec-??????-?: allow
-    git tag -a spec-?????? -m *: allow
-    git tag -a spec-??????-? -m *: allow
+    ~/.agents/create-spec-tag *: allow
     "git tag * --force*": deny
     "git tag * -f*": deny
     "git tag * --delete*": deny
@@ -226,14 +225,13 @@ mapping), and completion (final documentation baseline).
   specifications, traceability, wireframes, and documentation — never source
   code, tests, infrastructure configuration, or build scripts.
 - **Documentation-tag authority is narrow.** After the `analyst-baseline`
-  gates, and only in the configured documentation repository, you may inspect
-  or create an immutable tag named `spec-YYMMDD` with an optional deterministic
-  numeric suffix (for example, `spec-260727-1`). Use only the permitted
-  `git tag` commands in frontmatter; never force, move, delete, repoint, push,
-  publish, or create source, release, deployment, or production tags. A custom
-  naming convention outside the permitted `spec-*` command pattern requires
-  explicit permission/configuration; do not broaden the command pattern
-  yourself.
+  gates, and only from the configured documentation repository, invoke
+  `~/.agents/create-spec-tag <tag> <message>`. The wrapper validates the
+  `spec-YYMMDD` name (with an optional deterministic numeric suffix), requires
+  a clean worktree, and creates the annotated tag at `HEAD`. Never force, move,
+  delete, repoint, push, publish, or create source, release, deployment, or
+  production tags. Custom tag naming requires an explicit wrapper and policy
+  update; do not broaden the permission pattern yourself.
 - **Analysis decisions are distinct from implementation work.** You classify
   decisions, set requirements direction, define verification intent. Delivery
   agents execute against that intent.

@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+timestamp() {
+  date -u '+%Y-%m-%dT%H:%M:%SZ'
+}
+
+log() {
+  printf '%s %s\n' "$(timestamp)" "$*" >&2
+}
+
+log 'create-spec-tag start'
+trap 'log "create-spec-tag end"' EXIT
+
+die() {
+  log "create-spec-tag error: $1"
+  exit 1
+}
+
+if [[ $# -ne 2 ]]; then
+  die 'expected --validate <tag> or <tag> <message>'
+fi
+
+validation_only=false
+tag=$1
+if [[ "$tag" == '--validate' ]]; then
+  validation_only=true
+  tag=$2
+else
+  message=$2
+fi
+
+if [[ ! "$tag" =~ ^spec-[0-9]{6}(-[1-9][0-9]*)?$ ]]; then
+  die 'tag must match spec-YYMMDD or spec-YYMMDD-N'
+fi
+
+date_part=${tag#spec-}
+date_part=${date_part%%-*}
+if ! command -v python3 >/dev/null 2>&1; then
+  die 'python3 is required for calendar-date validation'
+fi
+# Python 3 supplies the same strict calendar validation on macOS and Linux.
+if ! python3 - "$date_part" <<'PY'
+import sys
+from datetime import date
+
+value = sys.argv[1]
+try:
+    date(2000 + int(value[:2]), int(value[2:4]), int(value[4:6]))
+except (TypeError, ValueError):
+    raise SystemExit(1)
+PY
+then
+  die 'YYMMDD is not a real calendar date'
+fi
+
+if "$validation_only"; then
+  log "create-spec-tag success: validated $tag"
+  exit 0
+fi
+
+if [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" != true ]]; then
+  die 'current directory is not a Git worktree'
+fi
+
+if [[ -n "$(git status --porcelain --untracked-files=all)" ]]; then
+  die 'worktree must be clean, including untracked files'
+fi
+
+if git rev-parse --verify --quiet "refs/tags/$tag" >/dev/null; then
+  die 'tag already exists'
+fi
+
+if ! git tag -a "$tag" -m "$message" HEAD; then
+  die 'tag creation failed'
+fi
+log "create-spec-tag success: created $tag"

@@ -21,16 +21,17 @@ single source of truth for the functional contract.
 Only the analyst may create an immutable tag in the configured documentation
 repository. Do so only after the applicable quality and baseline gates; guided
 analysis additionally requires human validation approval, while autonomous
-analysis requires that no blocking Class C or D decision remains. Use the
-project's canonical naming convention, defaulting to `spec-YYMMDD` with a
-deterministic numeric collision suffix (for example, `spec-260727-1`). Custom
-naming conventions outside the permitted `spec-*` command pattern require
-explicit permission/configuration. The tag must point to the committed approved
-documentation baseline and be recorded with repository, tag, commit, baseline,
-validation, and publication status. Record it as the current implementation
-tag. Never move, delete, or repoint an existing tag; any change requires a new
-tag. Tag creation is distinct from push or publication, which requires separate
-authorization. The analyst may not create source, release, deployment, or
+analysis requires that no blocking Class C or D decision remains. Run
+`~/.agents/create-spec-tag <tag> <message>` from that repository. The wrapper
+validates `spec-YYMMDD` with an optional positive, non-zero-padded numeric suffix,
+checks the date, requires a Git worktree with no tracked or untracked changes,
+rejects an existing tag, and creates exactly one annotated tag at `HEAD`.
+Validation can be run non-mutating with `--validate`; it does not require a
+repository. Record repository, tag, `HEAD`, baseline, validation, and
+publication status as evidence. Tag creation is distinct from push or
+publication, which requires separate authorization. Custom tag naming requires
+an explicit wrapper and policy update. Never move, delete, or repoint an
+existing tag; the analyst may not create source, release, deployment, or
 production tags. Conductor, committer, reviewer, verifier, and implementation
 roles remain prohibited from tagging.
 

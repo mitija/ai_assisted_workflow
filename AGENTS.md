@@ -13,6 +13,7 @@ continuously as I work.
 agents/                        Deployable agent bundle (symlinked to ~/.agents)
   AGENTS.md                    Generic agent guidance — drop into any project
   AGENTS.odoo.md               Odoo-specific companion (testing, DB, acceptance)
+  create-spec-tag              Safe annotated documentation-tag wrapper
   project_context.template.yaml  Template for machine/project-specific config
   agent/
     analyst.md               Analyst agent — functional contract owner (opencode agent definition)
@@ -102,6 +103,7 @@ These are loaded automatically by the conductor agent during its workflow. They 
 This repo has no application code. A "task" here is editing one or more of:
 - `opencode.json` (project-level config — per-agent model assignments)
 - `agents/AGENTS.md` or `agents/AGENTS.odoo.md`
+- `agents/create-spec-tag`
 - `agents/project_context.template.yaml`
 - An agent definition under `agents/agent/`
 - A skill file under `skills/`

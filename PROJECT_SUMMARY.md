@@ -33,6 +33,9 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
 - `AGENTS.md` — generic, all-projects guidance.
 - `AGENTS.odoo.md` — Odoo-specific companion (testing, source layout, DB/instances,
   acceptance demo). Referenced from `AGENTS.md` via `@AGENTS.odoo.md`.
+- `create-spec-tag` — executable wrapper for validated, annotated documentation
+  tags; validation is non-mutating and creation is restricted to a clean docs
+  worktree at `HEAD`.
 - `project_context.template.yaml` — template for machine/project-specific values
   (minimal v2 envelope with optional typed code, non-code, Odoo, and controlled
   extension profiles; paths, spec docs repo + tag, generic `commands:` block for
@@ -71,11 +74,11 @@ every requirement and important business rule carries exactly one label (explici
    style or implementation autonomy. Never implements
   application code. After the applicable quality and baseline gates, it is the only role
   authorized to create an immutable documentation tag in the configured documentation
-  repository. Tag creation is separate from push/publication authorization. It may not
-  create source, release, deployment, or production tags. Permission: `edit: allow`,
-  `task: allow`, `bash` deny-by-default with read-only inspection plus narrowly
-  matched `spec-YYMMDD` tag listing/annotated creation in the configured docs repository;
-  force, move, delete, ref-update, push, and publication commands remain denied.
+  repository via `~/.agents/create-spec-tag` after all gates. Tag creation is separate
+  from push/publication authorization. It may not create source, release, deployment,
+  or production tags. Permission: `edit: allow`, `task: allow`, `bash` deny-by-default
+  with read-only inspection plus the narrowly matched wrapper invocation; force, move,
+  delete, ref-update, push, and publication commands remain denied.
 - `agent/conductor.md` — ...
   (orchestration agent). Classification: Primary. Symlinked to `~/.config/opencode/agent` by
   `tools/install.sh` for auto-discovery. Conductor runs on a better AI model

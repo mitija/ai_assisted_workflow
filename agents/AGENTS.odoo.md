@@ -6,12 +6,13 @@ All concrete paths and credentials come from protected configuration referenced 
 reading v1) — do not hard-code or expose them here.
 
 ## Odoo Source Code (read-only reference)
-The base and enterprise source trees (`odoo.source.base` / `odoo.source.enterprise`)
+The base and enterprise source trees (`profiles.odoo.source.base` /
+`profiles.odoo.source.enterprise`)
 are available for reference. Consult them to understand inherited models, views,
 and behaviour. Do not modify them.
 
 ## Running Tests
-Prefer the test wrapper (`odoo.scripts.run_tests`) — it drops and recreates the
+Prefer the test wrapper (`profiles.odoo.scripts.run_tests`) — it drops and recreates the
 database before each run:
 
     <run_tests.sh> [-d DATABASE] module1 [module2 ...]
@@ -49,7 +50,7 @@ Direct CLI alternative (using the protected config referenced by
   reachable via XMLRPC for data checks.
 
 ## Modules
-The modules maintained in this project are listed under `odoo.modules` in
+The modules maintained in this project are listed under `profiles.odoo.modules` in
 `project_context.yaml` (name, path, dependencies).
 
 ## Acceptance: behavioural / UI-UX demo
