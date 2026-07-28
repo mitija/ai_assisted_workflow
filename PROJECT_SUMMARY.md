@@ -30,13 +30,16 @@ set and gates.
 No code/app component — this is a guidance/skill bundle for agents. The root-level
 `skills/` directory holds ten general skills and six conductor-specific skills
 (internal orchestration steps).
-Linked skill tables are maintained in README.md, root AGENTS.md, and the deployable agents/AGENTS.md, documenting both categories.
+README.md and root AGENTS.md retain repository inventories and skill tables;
+the deployable agents/AGENTS.md contains universal invariants only.
 Session handover files (`HANDOVER*`) are gitignored at the root.
 
 ## Repo layout (`agents/`)
-- `AGENTS.md` — generic, all-projects guidance.
+- `AGENTS.md` — concise, deployable universal invariants for all projects;
+  detailed lifecycle, orchestration, filesystem-approval, Odoo, and skill
+  procedures remain in the relevant agent and skill files.
 - `AGENTS.odoo.md` — Odoo-specific companion (testing, source layout, DB/instances,
-  acceptance demo). Referenced from `AGENTS.md` via `@AGENTS.odoo.md`.
+  acceptance demo). Referenced from `AGENTS.md`.
 - `create-spec-tag` — executable wrapper for validated, annotated documentation
   tags; validation is non-mutating and creation is restricted to a clean docs
   worktree at `HEAD`.
@@ -174,63 +177,14 @@ every requirement and important business rule carries exactly one label (explici
   rules were removed.)
 
 ## What `agents/AGENTS.md` covers
-- Generic deployed guidance applies proportionately to code and non-code work,
-  including documentation, research, analysis, planning, configuration, and project setup.
-- Role ownership and lifecycle: the analyst owns the functional contract and evidence
-  model across intake, discovery, review, and baseline; the conductor owns Analyze,
-  Decomposition, Execute, Review, Escalate, and Report delivery orchestration; the human
-  owns intent, consequential decisions, and final functional-outcome judgement.
-- `analysis_mode` and `interaction_mode` are independent; autonomous operation does not
-  bypass objective confirmation, functional validation, Class C/D decisions,
-  external-permission approval, final review, or final human judgement where applicable.
-- Delivery evidence is applicable to the work type: code follows the frozen spec baseline
-  and produces contractual tests/reporting, while non-code work produces applicable
-  artefacts, verification, traceability, and outcome reporting without imposed code-only
-  deliverables.
-- Spec-driven workflow rules: spec is the contract; never fill gaps with assumptions
-   (genuine ambiguity is a blocker — stop and route to the analyst for functional
-   interpretation, one question at a time, unpacking complex ones); no mid-flight spec
-   changes; tests are executable spec and tests win;
-  work against the docs tag.
-- Coding deliverables: code against the docs tag, automated tests, development report;
-  non-code work follows its applicable artefacts and evidence.
-- Build/Lint/Verify: use configured `project_context.yaml` `commands:` rather than
-  guessing or inventing commands; run each applicable check and record non-applicable
-  checks; minimal-diff/no scope-creep formatting.
-- Definition of Done includes the analyst completion gate, applicable tests or non-code
-  acceptance evidence, evidence/traceability, mandatory reviewer audit, functional-outcome
-  assessment, human judgement where required, and synchronized reports/config samples.
-- Project config via `project_context.yaml` (lives in the project folder, one level
-  above the `docs` and `src` repos); maintain `PROJECT_SUMMARY.md`.
-- `project_context.template.yaml` and the embedded template in `skills/init-project/SKILL.md`
-  remain synchronized. The project context is a minimal profile-aware envelope with
-  optional typed code, non-code, Odoo, and controlled extension profiles; inactive
-  profiles impose no requirements. `schema_version: 2` is required; missing or
-  unsupported versions are unusable and routed to explicit reinitialization or
-  conversion. There is no automatic preservation guarantee; controlled unknown
-  extensions are preserved only inside valid v2.
-- **Filesystem Boundary & External Access**: project root is the default boundary;
-  external directories require `permission.external_directory` entries in the
-  project `opencode.json`. Broad patterns (`~/Projects/**`, `~/**`) and broad
-  discovery/access attempts are prohibited. References discovered in configuration
-  are not authorization. Before access approval, paths undergo lexical expansion and
-  normalization with broad-path rejection; the operation, necessity, alternatives, and
-  risk/scope must then be justified to the user and explicitly approved one path at a
-  time. Only after explicit approval to access may filesystem-dependent absolute-path
-  and symlink canonicalization occur. A separate approval is required before
-  permission persistence. Necessary broad access stops for risk-aware user review and
-  must be narrowed to the
-  smallest concrete subpath; unrelated paths remain at default "ask" policy.
-- Working conventions (don't code unless asked, use subagents, minimal diff, blocker
-  protocol — never weaken/skip/mock contractual tests, keep samples in sync). This
-  repository itself follows a no-tag working convention; that is distinct from the
-  analyst-only immutable documentation-tag capability in a configured documentation
-  repository. All other roles remain prohibited from tagging, and publication requires
-  separate authorization.
-- Security & Secrets: treat config values (esp. credentials) as secret; never emit them.
-- Communication & Output: concise responses, `file_path:line` references.
-- Autonomous file/log reading (Read/Grep, no Bash pipes/redirects).
-- Skills: `analyst-intake`, `analyst-discovery`, `analyst-review`, `analyst-baseline`, `coding-standards`, `handover`, `init-project`, `specification-methodology`, `test-scenarios`, `todo-list`.
+- Universal invariants only: workspace boundaries and contractual status, project
+  context and secret handling, minimal-diff and ambiguity safeguards, external
+  filesystem boundaries, outcome-based completion, and the Odoo companion reference.
+- README.md and root AGENTS.md retain the repository's agent and skill inventories;
+  deployable `agents/AGENTS.md` intentionally does not duplicate those catalogues.
+- Detailed analyst/conductor lifecycle mechanics, orchestration, filesystem
+  approval, communication, tool use, and skill procedures remain owned by the
+  relevant agent and skill files.
 
 ## What `AGENTS.md` (workspace root) covers
 - Meta-guidance for working on this repo itself.
