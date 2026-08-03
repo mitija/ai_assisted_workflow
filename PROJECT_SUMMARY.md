@@ -13,7 +13,9 @@ Deliverables live in `agents/`.
 Production-ready but still evolving, and internally consistent. No code/app component — this is a
 guidance/skill bundle for agents. The root-level `skills/` directory holds seven general skills
 and six conductor-specific skills (internal orchestration steps).
-Linked skill tables are maintained in README.md, root AGENTS.md, and the deployable agents/AGENTS.md, documenting both categories.
+README.md is the concise public-facing framework landing page and retains the current
+agent and skill inventories; linked skill tables are also maintained in root AGENTS.md
+and the deployable agents/AGENTS.md, documenting both categories.
 Session handover files (`HANDOVER*`) are gitignored at the root.
 
 ## Repo layout (`agents/`)

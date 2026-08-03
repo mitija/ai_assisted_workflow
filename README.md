@@ -1,29 +1,44 @@
 # AI Assisted Workflow
 
-A reusable set of agent instructions, skills, and project templates for
-AI-assisted, multi-step task orchestration — code, documentation, configuration,
-research, and more. Drop into any project to give AI coding agents a consistent,
-structured workflow. Its stated goal is to enable long-horizon autonomous agentic flows.
-Spec-driven development with red/green phases is a key supported workflow.
+A reusable framework of agent instructions, skills, and project templates for
+structured long-horizon work: software, documentation, configuration, research,
+and project setup. Spec-driven development is the most mature supported workflow;
+broader non-code workflows use the same decomposition and evidence principles but
+are still evolving.
 
-## Continuous improvement
+## Framework steps
 
-Experience from real projects feeds improvements back into the framework's skills,
-agents, and workflow documents. See [`docs/workflow/philosophy.md`](docs/workflow/philosophy.md)
-for the fuller rationale.
+1. **Human intent:** the human provides the problem, desired outcome, high-level
+   criteria, constraints, and consequential decisions.
+2. **Conductor-led delivery:** the conductor analyzes the goal, scope, constraints,
+   and work type, then decomposes the work into a dependency-aware task graph. It
+   delegates implementation and mechanical work to sub-agents across six phases:
+   **Analyze, Decompose, Execute, Review, Escalate, and Report**. Ready tasks may
+   run in parallel; the verifier checks delegated commands, the committer handles
+   focused commits, and the reviewer audits the completed work. Interactive mode is
+   the default, so genuine ambiguity is resolved with the user rather than filled
+   with assumptions.
+3. **Evidence and judgement:** task verification, contractual tests, review findings,
+   and the final report provide evidence of what was delivered. The human remains
+   responsible for consequential decisions and the final outcome judgement.
 
-## What's inside
+For spec-driven coding, the workflow can refine a rough requirement, structure the
+specification, write contractual test scenarios, and generate TDD-based implementation
+tasks. Implementation is performed against the frozen documentation state recorded in
+the project context. For non-code work, explicit acceptance criteria and evidence
+replace the software test suite where appropriate.
 
-```
-agents/          Agent instructions and opencode agent definitions (copy/symlink to ~/.agents)
-  AGENTS.md        Generic agent guidance for all projects
-  AGENTS.odoo.md   Odoo-specific companion (testing, source layout, DB/instances)
-  project_context.template.yaml  Template for machine/project-specific config
-  agent/           opencode agent definitions (conductor, committer, verifier, reviewer, escalate1, escalate2)
-skills/          Reusable agent skills (symlinked via install to ~/.config/opencode/skills)
-docs/            Methodology documentation
-tools/           Shell scripts and utilities
-```
+## Strengths and benefits
+
+- Separates intent, task decomposition, implementation, verification, and review.
+- Makes unresolved ambiguity a visible blocker instead of an implementation
+  assumption.
+- Applies one orchestration model to code, documentation, configuration, research,
+  and project setup.
+- Connects spec-driven implementation to a frozen documentation tag, contractual
+  scenarios, and Red / Green / Commit task phases.
+- Provides verification, final review, failure diagnosis, and a report rather than
+  stopping after code generation.
 
 ## Quick start
 
@@ -32,151 +47,107 @@ git clone <repo-url>
 ./tools/install.sh
 ```
 
-This symlinks `agents/` to `~/.agents`, `agents/agent/` to
-`~/.config/opencode/agent` (so opencode discovers the bundled agents), and
-`skills/` to `~/.config/opencode/skills` (so the `skill` tool discovers
-the bundled skills). Alternatively, copy the directories manually.
+The installer symlinks `agents/` to `~/.agents`, `agents/agent/` to
+`~/.config/opencode/agent`, and `skills/` to `~/.config/opencode/skills`.
+Alternatively, copy the directories manually. The conductor is the normal entry
+point for multi-step work; it delegates file changes and command execution to the
+appropriate sub-agents.
+
+For a project using the framework:
+
+1. Run the `init-project` skill when `project_context.yaml` is absent. It copies
+   [`agents/project_context.template.yaml`](agents/project_context.template.yaml)
+   and guides you through the project-specific paths, commands, and configuration.
+2. Keep `AGENTS.md` and `project_context.yaml` at the project root so agents can
+   read the project guidance and context at the start of a session.
+3. Invoke the **conductor** for a multi-step task. For the spec-driven coding path,
+   follow the workflow described in
+   [`docs/AI_assisted_development_workflow.md`](docs/AI_assisted_development_workflow.md).
+
+## Known limitations
+
+- The quality of the specification and contractual tests remains the main
+  determinant of the result. A bad specification can produce bad software on
+  schedule.
+- AI-assisted drafting controls drift between the specification and implementation,
+  but customer or stakeholder validation is still needed to catch drift between
+  intent and the specification.
+- The current workflow assumes a technically fluent consultant who can make or
+  validate architectural decisions. A purely functional consulting workflow would
+  need an additional technical-design and architecture-review step.
+- Plain-English contractual scenarios must still be translated into executable
+  tests, and API or scheduled-job triggers can be awkward to validate behaviourally.
+- Non-functional requirements and non-code outcomes have less standardized
+  verification than functional software behaviour.
+- Linear documentation tags and an intentionally unspecified developer-side AI
+  workflow are adequate for the current model but do not cover every multi-team or
+  long-running delivery shape.
+
+See the [known gaps and open questions](docs/workflow/known-gaps-and-open-questions.md)
+for the fuller assessment.
+
+## What the repository contains
+
+```
+agents/          Agent instructions and OpenCode agent definitions
+  AGENTS.md        Generic guidance for all projects
+  AGENTS.odoo.md   Odoo-specific companion
+  project_context.template.yaml  Project configuration template
+  agent/           conductor, committer, verifier, reviewer, and escalation agents
+skills/          Reusable and conductor-specific skills
+docs/            Methodology and workflow documentation
+tools/           Installation scripts and utilities
+```
 
 ## Documentation
 
-The full methodology is documented in two places:
-
-- [`docs/AI_assisted_development_workflow.md`](docs/AI_assisted_development_workflow.md) — landing page with a top-level overview and status context.
-- [`docs/workflow/README.md`](docs/workflow/README.md) — wiki-style collection with detailed pages on philosophy, principles, workspace layout, specification, test suite, workflow, acceptance, and known gaps.
-
-## How it works
-
-1. Run the `init-project` skill — it copies
-   [`agents/project_context.template.yaml`](agents/project_context.template.yaml) to your project root as
-   `project_context.yaml` and guides you through filling in local paths, commands, and credentials.
-2. The agent reads `AGENTS.md` and `project_context.yaml` at the start of each
-   session to understand the project context and workflow.
-3. Use the **conductor** agent as a general orchestrator for multi-step tasks.
-   For spec-driven feature implementation, follow the workflow described in
-   [docs/AI_assisted_development_workflow.md](docs/AI_assisted_development_workflow.md).
-
-## End-to-end flow
-
-The **conductor** agent orchestrates any multi-step task — code implementation,
-documentation, configuration, research, project setup, and more. Its workflow is
-split across six phases:
-
-### Phase 1 — Analyze
-
-The conductor determines the goal, scope, and constraints; identifies the type
-of work needed (code vs non-code); and gathers relevant context. If the
-requirement is rough or ambiguous, it resolves questions interactively with the
-user.
-
-### Phase 2 — Decompose
-
-Depending on the work type, the conductor loads the appropriate decomposition
-skill:
-
-- **`conductor-code-decomposition`** — for code-related tasks. If the
-  requirement is rough, it first loads `spec-refinement` then
-  `specification-methodology` to produce a spec, then uses the `todo-list` skill
-  to generate a TDD-based TODO list and a dependency-aware task graph.
-- **`conductor-noncode-decomposition`** — for non-code tasks (documentation,
-  configuration, research, project setup). Produces a task graph directly.
-
-### Phase 3 — Execute
-
-The `conductor-execute` skill guides topological-round execution: ready tasks
-are spawned in parallel via `general` sub-agents, each task is verified with
-appropriate checks (e.g. lint, typecheck, tests, build) on completion —
-delegated to the `verifier` sub-agent for shell-command verification steps,
-and passing tasks are committed via the `committer` sub-agent.
-
-### Phase 4 — Review
-
-After the task graph is exhausted, a **higher-level review** is performed by
-the `reviewer` sub-agent: it audits all completed work against the original
-goal, specification, and acceptance criteria, producing findings classified as
-critical, blocking, warning, or suggestion. Critical or blocking findings
-trigger a remediation loop that repeats review until no critical or blocking
-findings remain, while warnings and suggestions are assessed by the conductor
-and do not trigger another reviewer invocation on their own.
-
-### Phase 5 — Escalate on failure
-
-If a task fails verification, the `conductor-escalate` skill spawns `escalate1`
-(first-tier, read-only diagnosis + task plan) and, if needed, `escalate2`
-(second-tier, deep-dive) before continuing or aborting.
-
-### Phase 6 — Report
-
-The `conductor-report` skill writes a full report to `docs/working/` covering
-every task, its verification result, reviewer findings and resolution, and the
-overall status.
-
-The conductor runs in **interactive mode** by default (it consults the user when
-it encounters ambiguity) and switches to **autonomous mode** when requested.
-
-### Spec-driven development (supported workflow)
-
-A key use case of the conductor is spec-driven feature implementation. In this
-workflow, the specification is written interactively before the conductor runs:
-
-1. **Refine** a rough requirement with `spec-refinement` (one question at a time
-   until entities, relationships, and business rules are clear).
-2. **Write the spec** with `specification-methodology` (models, roles, use
-   cases).
-3. **Write contractual tests** with `test-scenarios` (every business rule mapped
-   to a `T-NN` scenario in `<epic>_TESTS.md`).
-4. **Freeze** the spec doc repo with a tag (e.g. `spec-260613`).
-
-The conductor then runs its general flow against the frozen spec. It loads the
-spec docs at the current tag, determines what to implement — for example, by
-comparing against the previous implementation tag — and drives development
-through the six phases above. Verification runs the contractual tests as part
-of every task round.
-
-The user typically touches the process at two points: writing/refining the spec
-and freezing it, then reviewing the final report. Everything between runs
-autonomously by default.
+- [`docs/AI_assisted_development_workflow.md`](docs/AI_assisted_development_workflow.md)
+  - authoritative methodology overview and topic navigation.
+- [`docs/workflow/README.md`](docs/workflow/README.md) - detailed wiki index.
+- [`docs/workflow/philosophy.md`](docs/workflow/philosophy.md) - rationale and
+  guiding principles.
+- [`docs/workflow/known-gaps-and-open-questions.md`](docs/workflow/known-gaps-and-open-questions.md)
+  - current limitations and areas for feedback.
 
 ## Skills
 
-General skills are reusable by any agent or user. Conductor-specific skills are internal orchestration steps loaded automatically by the conductor during its workflow.
+General skills are reusable by any agent or user. Conductor-specific skills are
+internal orchestration steps loaded automatically by the conductor during its
+workflow.
 
 ### General skills
 
 | Skill | Description |
-|-------|-------------|
+|---|---|
 | [`coding-standards`](skills/coding-standards/SKILL.md) | Coding standards when writing or modifying application code. Currently covers logging requirements. |
 | [`handover`](skills/handover/SKILL.md) | Create session-end handover documents for the next chat session to continue. |
 | [`init-project`](skills/init-project/SKILL.md) | Initialize or inspect a project's `project_context.yaml` configuration file. |
 | [`spec-refinement`](skills/spec-refinement/SKILL.md) | Guided session that refines a rough requirement before specification-methodology. |
-| [`specification-methodology`](skills/specification-methodology/SKILL.md) | 5-step spec writing methodology (Models, Roles, Use Cases, Documentation, Review). |
-| [`test-scenarios`](skills/test-scenarios/SKILL.md) | Writing contractual, customer-facing test scenarios. |
-| [`todo-list`](skills/todo-list/SKILL.md) | TDD-based TODO list generator (Red → Green → Commit phases). |
+| [`specification-methodology`](skills/specification-methodology/SKILL.md) | Five-step specification methodology covering models, roles, use cases, documentation, and review. |
+| [`test-scenarios`](skills/test-scenarios/SKILL.md) | Write contractual, customer-facing test scenarios. |
+| [`todo-list`](skills/todo-list/SKILL.md) | Generate TDD-based implementation TODOs with Red, Green, and Commit phases. |
 
 ### Conductor-specific skills
 
-These are loaded automatically by the conductor agent during its workflow. They are not meant to be loaded directly by users or general agents.
-
 | Skill | Description |
-|-------|-------------|
-| [`conductor-analyze`](skills/conductor-analyze/SKILL.md) | [Conductor-internal] Phase 1 — goal/scope/constraints analysis. |
-| [`conductor-code-decomposition`](skills/conductor-code-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — code-work task graph generation (uses spec-refinement, specification-methodology, todo-list). |
-| [`conductor-noncode-decomposition`](skills/conductor-noncode-decomposition/SKILL.md) | [Conductor-internal] Phase 2 — non-code task graph generation. |
-| [`conductor-execute`](skills/conductor-execute/SKILL.md) | [Conductor-internal] Phase 3 — topological-round execution and verification. |
-| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | [Conductor-internal] Phase 5 — failure escalation (escalate1 → escalate2). |
-| [`conductor-report`](skills/conductor-report/SKILL.md) | [Conductor-internal] Phase 6 — final report generation. |
+|---|---|
+| [`conductor-analyze`](skills/conductor-analyze/SKILL.md) | Phase 1: goal, scope, and constraints analysis. |
+| [`conductor-code-decomposition`](skills/conductor-code-decomposition/SKILL.md) | Phase 2: code-work task graph generation. |
+| [`conductor-noncode-decomposition`](skills/conductor-noncode-decomposition/SKILL.md) | Phase 2: non-code task graph generation. |
+| [`conductor-execute`](skills/conductor-execute/SKILL.md) | Phase 3: topological-round execution and verification. |
+| [`conductor-escalate`](skills/conductor-escalate/SKILL.md) | Phase 5: failure diagnosis and recovery. |
+| [`conductor-report`](skills/conductor-report/SKILL.md) | Phase 6: final report generation. |
 
 ## Agents
 
-General agents usable directly by the user or as sub-agents. See each agent's definition for detailed invocation rules.
-
-| Agent | Role / Description | Invocable as |
-|-------|-------------------|--------------|
-| [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. The workflow is split across six phases; five are driven by conductor-* skills loaded on demand, while Phase 4 (Review) is performed by the reviewer agent. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
-| [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
-| [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Both |
-| [`escalate1`](agents/agent/escalate1.md) | First-tier escalation. Read-only diagnosis of build failures + ordered task plan. | Subagent |
-| [`escalate2`](agents/agent/escalate2.md) | Second-tier escalation. Deep-dive diagnosis of hard problems (spec ambiguities, complex logic, cross-cutting refactors). Read-only. | Subagent |
-| [`verifier`](agents/agent/verifier.md) | Runs exact delegated verification commands, reports structured PASS/FAIL/BLOCKED evidence. Never edits files. | Subagent |
+| Agent | Role | Invocable as |
+|---|---|---|
+| [`conductor`](agents/agent/conductor.md) | Primary orchestrator for multi-step code and non-code work. | Primary |
+| [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits. | Subagent |
+| [`reviewer`](agents/agent/reviewer.md) | Read-only correctness and completeness audit. | Both |
+| [`escalate1`](agents/agent/escalate1.md) | First-tier read-only failure diagnosis. | Subagent |
+| [`escalate2`](agents/agent/escalate2.md) | Deep-dive read-only failure diagnosis. | Subagent |
+| [`verifier`](agents/agent/verifier.md) | Runs delegated verification commands and records evidence. | Subagent |
 
 ## License
 
