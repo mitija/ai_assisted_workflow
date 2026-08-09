@@ -29,7 +29,8 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
 - `opencode.json` — project-level per-agent model assignments (merged with global config).
-  Current assignments: `conductor`, `reviewer`, `escalate1`, `plan` run on
+  Current assignments: `fast` runs on `openrouter/openai/gpt-5.6-terra`;
+  `conductor`, `reviewer`, `escalate1`, `plan` run on
   `openrouter/openai/gpt-5.6-luna`; `escalate2` on
   `openrouter/openai/gpt-5.6-terra`; `committer`, `build`, `explore`,
   `general`, `verifier` on `openrouter/deepseek/deepseek-v4-flash`. OpenRouter model
@@ -62,6 +63,13 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   Final review by `reviewer` is mandatory — cannot substitute another agent.
   The `verifier` sub-agent handles delegated shell-command verification steps.
   Loop prevention rules prohibit recursive or self-delegation.
+- `agent/fast.md` — opencode agent definition for the `fast` agent. Classification:
+   Primary and default. Uses `openrouter/openai/gpt-5.6-terra` and follows a five-step
+   lifecycle that defines success criteria before planning, proceeds autonomously
+   after intent and criteria are established, documents non-blocking decisions
+   guided by them, stops only for genuine blockers, and reports decisions when it
+   made any. It does not triage suitability, select a workflow, or automatically
+   hand off to the conductor.
 - `agent/committer.md` — opencode agent definition for the `committer` (sub-agent).
   Classification: Subagent. Inspects the working tree, groups changes by topic into focused commits with
   descriptive messages, and executes them. Never tags, pushes, or branches unless
@@ -172,7 +180,16 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   known gaps), linked from the landing page above.
 
 ## Design notes / decisions
-- `conductor` agent created to orchestrate multi-step work. Conductor owns the
+- `fast` agent is the default primary agent for a five-step intent-to-result
+  process: understand intent, define success criteria, prepare a plan, review the
+  plan against intent and criteria, execute, and review the result. It proceeds
+  autonomously after intent and criteria are established, makes and documents
+  non-blocking decisions guided by them, stops only for genuine blockers, and
+  reports decisions when it made any. It does not select a workflow or
+  automatically hand off to Conductor.
+- `conductor` agent created to orchestrate multi-step work through the thorough
+  six-phase workflow: Analyze, Code or non-code Decompose, Execute, Review,
+  Escalate when needed, and Report. Conductor owns the
   thinking (goal/scope/constraint analysis, task decomposition, result interpretation)
   and delegates all mechanical actions (file I/O, command execution, report writing)
   to sub-agents. Interactive mode is the default — the Analyze phase is designed as a

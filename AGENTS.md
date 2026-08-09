@@ -15,6 +15,7 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
   AGENTS.odoo.md               Odoo-specific companion (testing, DB, acceptance)
   project_context.template.yaml  Template for machine/project-specific config
   agent/
+    fast.md                   Fast intent-to-result primary agent: criteria-first, autonomous after intent/criteria, decision-reporting
     conductor.md               Conductor orchestration agent (opencode agent definition)
     committer.md               Committer agent — groups changes into focused commits (opencode agent definition)
     reviewer.md                Reviewer agent — read-only code review (opencode agent definition)
@@ -72,7 +73,8 @@ These are loaded automatically by the conductor agent during its workflow. They 
 
 | Agent | Role / Description | Invocable as |
 |---|---|---|
-| [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end. Runs on a better AI model than sub-agents — owns the thinking, planning, and decision-making. Interactive by default for ambiguity resolution; autonomous when requested. | Primary |
+| [`fast`](agents/agent/fast.md) | OpenCode's default primary agent. Uses `openrouter/openai/gpt-5.6-terra` and follows a five-step lifecycle that defines success criteria before planning, proceeds autonomously after intent and criteria are established, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
+| [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end through its thorough six-phase workflow: Analyze, Code or non-code Decompose, Execute, Review, Escalate when needed, and Report. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
 | [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Both |
 | [`escalate1`](agents/agent/escalate1.md) | First-tier escalation. Read-only diagnosis + task plan. | Subagent |

@@ -46,7 +46,11 @@
 | BA            | Behavioural validation, customer-facing demo      | Dev server                  |
 | Developer     | Code, automated tests, dev server, dev report     | AI (method of their choice) |
 | Customer      | Sign-off on customer-facing docs                  | Read access to docs repo    |
-| AI (any side) | Drafting, translation, review — never decisions   | —                           |
+| AI (any side) | Drafting, translation, review; fast may make non-consequential execution decisions guided by intent and success criteria and document them — humans own consequential decisions | — |
+
+### Fast agent
+
+Fast establishes intent and explicit success criteria before planning, then autonomously plans, executes, and reviews against them. It documents non-consequential decisions and stops only for genuine blockers. If it made decisions, its final report records the decisions and rationales, work performed, verification/result, and limitations or blockers. Human ownership of consequential decisions remains intact.
 
 ## Developer Deliverables
 

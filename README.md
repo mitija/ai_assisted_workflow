@@ -6,18 +6,30 @@ and project setup. Spec-driven development is the most mature supported workflow
 broader non-code workflows use the same decomposition and evidence principles but
 are still evolving.
 
+## Version 3
+
+Version 1 worked, but required substantial manual intervention.
+
+Version 2 aimed to support longer-horizon work through many constraints and checks,
+which created overhead and left tasks unfinished.
+
+Version 3 supports long-horizon work by giving the AI greater autonomy, guided by
+preserving task intent and success criteria rather than adding constraints.
+
+Version 3 is still evolving, and initial trials of the `fast` agent are promising.
+
 ## Framework steps
 
 1. **Human intent:** the human provides the problem, desired outcome, high-level
    criteria, constraints, and consequential decisions.
-2. **Conductor-led delivery:** the conductor analyzes the goal, scope, constraints,
-   and work type, then decomposes the work into a dependency-aware task graph. It
-   delegates implementation and mechanical work to sub-agents across six phases:
-   **Analyze, Decompose, Execute, Review, Escalate, and Report**. Ready tasks may
-   run in parallel; the verifier checks delegated commands, the committer handles
-   focused commits, and the reviewer audits the completed work. Interactive mode is
-   the default, so genuine ambiguity is resolved with the user rather than filled
-   with assumptions.
+2. **Fast-led delivery:** the default `fast` agent first understands intent, then
+   defines success criteria before planning, prepares a plan, reviews the plan against
+   intent and criteria, executes, and reviews the result. After intent and
+   criteria are established, it proceeds autonomously, makes and documents
+   non-blocking decisions guided by them, and stops only for genuine blockers;
+   its report includes those decisions when it made any. The selectable
+   `conductor` remains available for its thorough six-phase workflow: **Analyze,
+   Code or non-code Decompose, Execute, Review, Escalate when needed, and Report**.
 3. **Evidence and judgement:** task verification, contractual tests, review findings,
    and the final report provide evidence of what was delivered. The human remains
    responsible for consequential decisions and the final outcome judgement.
@@ -31,8 +43,8 @@ replace the software test suite where appropriate.
 ## Strengths and benefits
 
 - Separates intent, task decomposition, implementation, verification, and review.
-- Makes unresolved ambiguity a visible blocker instead of an implementation
-  assumption.
+- Treats genuine ambiguity and required approvals as blockers, while routine
+  implementation decisions are made autonomously.
 - Applies one orchestration model to code, documentation, configuration, research,
   and project setup.
 - Connects spec-driven implementation to a frozen documentation tag, contractual
@@ -49,9 +61,8 @@ git clone <repo-url>
 
 The installer symlinks `agents/` to `~/.agents`, `agents/agent/` to
 `~/.config/opencode/agent`, and `skills/` to `~/.config/opencode/skills`.
-Alternatively, copy the directories manually. The conductor is the normal entry
-point for multi-step work; it delegates file changes and command execution to the
-appropriate sub-agents.
+Alternatively, copy the directories manually. `fast` is the default entry point;
+the conductor is available when its thorough six-phase workflow is required.
 
 For a project using the framework:
 
@@ -60,7 +71,8 @@ For a project using the framework:
    and guides you through the project-specific paths, commands, and configuration.
 2. Keep `AGENTS.md` and `project_context.yaml` at the project root so agents can
    read the project guidance and context at the start of a session.
-3. Invoke the **conductor** for a multi-step task. For the spec-driven coding path,
+3. Use the default **fast** agent for a request, or invoke the **conductor** for its
+   thorough multi-step workflow. For the spec-driven coding path,
    follow the workflow described in
    [`docs/AI_assisted_development_workflow.md`](docs/AI_assisted_development_workflow.md).
 
@@ -93,7 +105,7 @@ agents/          Agent instructions and OpenCode agent definitions
   AGENTS.md        Generic guidance for all projects
   AGENTS.odoo.md   Odoo-specific companion
   project_context.template.yaml  Project configuration template
-  agent/           conductor, committer, verifier, reviewer, and escalation agents
+  agent/           fast, conductor, committer, verifier, reviewer, and escalation agents
 skills/          Reusable and conductor-specific skills
 docs/            Methodology and workflow documentation
 tools/           Installation scripts and utilities
@@ -142,7 +154,8 @@ workflow.
 
 | Agent | Role | Invocable as |
 |---|---|---|
-| [`conductor`](agents/agent/conductor.md) | Primary orchestrator for multi-step code and non-code work. | Primary |
+| [`fast`](agents/agent/fast.md) | Default primary agent for the five-step intent-to-result process: defines success criteria before planning, proceeds autonomously after intent and criteria are established, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
+| [`conductor`](agents/agent/conductor.md) | Primary orchestrator for the thorough six-phase code and non-code workflow. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits. | Subagent |
 | [`reviewer`](agents/agent/reviewer.md) | Read-only correctness and completeness audit. | Both |
 | [`escalate1`](agents/agent/escalate1.md) | First-tier read-only failure diagnosis. | Subagent |
