@@ -7,7 +7,7 @@ This directory contains the detailed documentation for the **Agentic Framework f
 | Page | Covers |
 |---|---|
 | [Philosophy](philosophy.md) | Problem, intent, thesis, and the three guiding principles |
-| [Principles](principles.md) | The seven load-bearing principles |
+| [Principles](principles.md) | The nine load-bearing principles |
 | [Workspace and Repositories](workspace-and-repositories.md) | Project layout, two-repo model, local area |
 | [Specification](specification.md) | Requirement refinement and the 5-step methodology |
 | [Test Suite](test-suite.md) | State-table test format and acceptance criteria |

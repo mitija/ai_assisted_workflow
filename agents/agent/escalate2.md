@@ -62,6 +62,9 @@ Read the full context — spec, tests, source code, logs, environment. Identify
 not just the symptom but the root cause. Consider subtle possibilities:
 type-system mismatches, cross-module side effects, race conditions, spec
 ambiguities, environmental drift, toolchain version incompatibilities.
+Also determine whether the observed failure is work nonconformity or a defective
+or insufficient verification control. Correct the control and rerun it rather
+than changing compliant work to match accidental wording.
 
 ### 2. Produce an ordered task plan
 
@@ -70,8 +73,10 @@ not write any files). Each task must be:
 
 - **Self-contained** — a normal agent can execute it with no extra context.
 - **Ordered** — numbered in dependency order (earlier tasks first).
-- **Precise** — include exact file paths, line numbers, and the exact change
-  or command to run.
+- **Bounded** — include intent/outcome, relevant scope/touchpoints, context,
+  fixed constraints and why they are fixed, semantic success criteria, and
+  required evidence. Exact paths or mechanisms are required only when fixed by
+  a traced contract, interface, convention, safety rule, or user decision.
 
 For example, a task might say:
 
@@ -79,9 +84,10 @@ For example, a task might say:
 > Run `npm install uuid` in `/path/to/project`.
 > **Verification**: `node -e "require('uuid')"` exits 0.
 
-> **T2** — Fix import in `src/services/process.ts:12`
-> Change `import { v4 } from 'uuid4'` to `import { v4 } from 'uuid'`.
-> **Verification**: `npx tsc --noEmit` passes.
+> **T2** — Restore the task's required dependency interface at the identified
+> import touchpoint without changing unrelated behavior. The exact import is
+> fixed only if the repository interface requires it.
+> **Verification**: `npx tsc --noEmit` passes and the dependent behavior works.
 
 If the root cause is a spec ambiguity, include a task to document the
 ambiguity and the recommended interpretation, then a task to fix the code.

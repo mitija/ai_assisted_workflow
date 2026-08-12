@@ -122,12 +122,17 @@ same schema so the execute and report phases are interchangeable:
 - **`id`** — short unique label (`T01`, `T02`, …).
 - **`dependencies`** — list of task ids that must complete before this task (empty if none).
 - **`description`** — one-line summary.
-- **`prompt`** — a **fully self-contained** prompt for a `general` sub-agent.
-  Include: goal, exact files/paths, context, constraints, success criteria,
-  and commands. Assume the executor knows nothing beyond the project's
-  `AGENTS.md` and `project_context.yaml`.
-- **`verification`** — how to confirm the task succeeded: commands to run and
-  expected result, plus any success criteria.
+- **`prompt`** — a **fully self-contained, bounded-autonomy** prompt for a
+  `general` sub-agent. Include intent/outcome, relevant scope/touchpoints,
+  context, fixed constraints and why they are fixed, semantic success criteria,
+  required evidence, and authoritative commands. Name exact paths or mechanisms
+  only when fixed by a traced requirement, interface, convention, safety
+  constraint, or user decision. Leave internal design and final file set open
+  otherwise. Assume the executor knows nothing beyond the project's `AGENTS.md`
+  and `project_context.yaml`.
+- **`verification`** — how to confirm the task succeeded: authoritative commands,
+  expected evidence mapped to semantic success criteria, and any inspection
+  criteria. Exact text is conclusive only when it is the contract.
 
 ## Available sub-agents
 
@@ -154,6 +159,17 @@ same schema so the execute and report phases are interchangeable:
 - Interactive mode is the default — the Analyze phase is intentionally a
   dialogue with the user. Only go autonomous when explicitly told.
 - Keep each task atomic and independently executable.
+- Task prompts, reviewer remediation tasks, and escalation plans preserve intent
+  while leaving implementation wording and mechanism open unless a traced
+  constraint fixes them. They must not defer genuine product/design ambiguity.
+- Interpret verification semantically: assess behavior and evidence against the
+  intended outcome. Exact text is a contract only for machine protocols, API or
+  config keys, legal wording, explicit user requirements, or another traced
+  exact-text requirement.
+- Before treating a failed check as a work defect, distinguish work
+  nonconformity from a defective or insufficient verification control. Correct a
+  defective control and rerun it; do not alter compliant work merely to satisfy
+  that control.
 - Respect the project's `AGENTS.md` (spec-driven workflow, minimal diff,
   blocker protocol, secrets handling). The blocker protocol still applies: in
   interactive mode a failing contractual test or broken environment is a

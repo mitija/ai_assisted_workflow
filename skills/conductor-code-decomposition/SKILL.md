@@ -40,8 +40,8 @@ execute and report phases depend on these exact field names:
 | `id` | Short unique label (`T01`, `T02`, …) |
 | `dependencies` | List of task ids that must complete before this task (empty if none) |
 | `description` | One-line summary of what the task accomplishes |
-| `prompt` | A **fully self-contained** prompt that a `general` sub-agent can execute with no access to this conversation. Include: goal, exact files/paths, relevant context and constraints, success criteria, and any commands to run. Assume the executor knows nothing beyond the project's `AGENTS.md` and `project_context.yaml`. |
-| `verification` | How to confirm the task succeeded. Command(s) to run (tests, lint, typecheck, build) and the expected result, plus any success criteria to check. |
+| `prompt` | A **fully self-contained, bounded-autonomy** prompt stating intent/outcome, relevant scope/touchpoints, context, fixed constraints with their reasons, semantic success criteria, required evidence, and authoritative commands. Exact paths or mechanisms are included only when traced to a requirement, interface, convention, safety constraint, or user decision; otherwise implementation remains open. |
+| `verification` | Evidence mapped to the semantic outcome: exact authoritative command(s), expected evidence, and inspection/manual criteria. Literal checks are conclusive only when exact text is the contract. |
 
 ### 3. Map TDs onto tasks
 
@@ -49,7 +49,9 @@ For each TD from the TODOxx.md:
 
 - Create one or more tasks that implement the TD's intent.
 - Carry the TD's dependency order into the task's `dependencies` field.
-- The `prompt` should fully describe the work the sub-agent must do (Red/Green phases per the todo-list skill's convention).
+- The `prompt` should fully describe the outcome and bounded scope the sub-agent
+  must achieve (including Red/Green phases per the todo-list skill's convention)
+  without prescribing an unfixed implementation recipe.
 - The `verification` field should reference tests the TD covers.
 
 ### 4. Validate the graph

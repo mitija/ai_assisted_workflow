@@ -25,7 +25,15 @@ Then by extension:
 
 The methodology trades up-front specification rigour for short, lean implementation cycles. The center of gravity sits with the consultant, not the developer.
 
-Beyond coding, the same acceptance-driven autonomy applies. For non-coding flows (research, analysis, documentation, configuration), every task is defined with explicit acceptance criteria and the LLM is instructed how to assess its work against those criteria, continuing until they are met. For software flows, the acceptance criteria are operationalized as a test suite and the LLM runs the tests until they pass.
+Beyond coding, the same acceptance-driven autonomy applies. For non-coding flows
+(research, analysis, documentation, configuration), every task is defined with
+explicit semantic acceptance criteria and evidence, and the LLM assesses the
+outcome against intent rather than accidental literal wording. For software
+flows, the acceptance criteria are operationalized as a test suite and the LLM
+runs the tests until they pass. A failed check is first distinguished as work
+nonconformity or a defective/insufficient verification control; defective
+controls are corrected and rerun rather than forcing compliant work to match
+them. Exact text remains binding where it is itself the contract.
 
 **Primary context: Odoo customization.** Framework constraints (ORM, view system, module structure, standard UX patterns) remove many decisions that would otherwise need to be specified. The principles generalize to other constrained-framework projects.
 
@@ -34,7 +42,7 @@ Beyond coding, the same acceptance-driven autonomy applies. For non-coding flows
 | Topic | Description |
 |---|---|
 | [Philosophy](workflow/philosophy.md) | Problem, intent, and the three guiding principles of the methodology |
-| [Principles](workflow/principles.md) | The seven load-bearing principles |
+| [Principles](workflow/principles.md) | The nine load-bearing principles |
 | [Workspace and Repositories](workflow/workspace-and-repositories.md) | Project layout, two-repo model, local area |
 | [Specification](workflow/specification.md) | Requirement refinement and the 5-step methodology |
 | [Test Suite](workflow/test-suite.md) | State-table test format and acceptance criteria |

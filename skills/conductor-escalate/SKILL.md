@@ -30,12 +30,22 @@ Spawn the `escalate1` sub-agent. Provide it with:
 Escalate1 is read-only — it inspects and plans but does not edit. It returns its
 diagnostic task plan **in its final message** (it does not write a file).
 
+The diagnosis must test two hypotheses separately: (a) the work does not meet
+the intended outcome, or (b) the verification control is defective, too narrow,
+or otherwise insufficient. A literal mismatch is a work defect only when exact
+text is a traced contract. If the control is defective, plan its correction and
+rerun; do not rewrite compliant work to satisfy it.
+
 ### 2. Evaluate escalate1's plan
 
 Read escalate1's plan directly from the sub-agent's return message — you do not
 need a separate file read.
 
 - **If escalate1 produced a plan**: create new tasks from it. Add these new tasks to the task graph as dependencies of the original failed task (so the original can be retried after them). Continue execution by loading the [`conductor-execute`](../conductor-execute/SKILL.md) skill via the `skill` tool with the updated graph.
+- Remedial tasks must be self-contained and atomic, with intent/outcome,
+  scope/touchpoints, context, fixed constraints and reasons, semantic success
+  criteria, and required evidence. Leave the implementation mechanism open
+  unless a traced constraint fixes it.
 - **If escalate1 returned no plan or its tasks also fail**: proceed to second-tier escalation (step 3).
 
 ### 3. Second-tier escalation

@@ -31,8 +31,12 @@ Version 3 is still evolving, and initial trials of the `fast` agent are promisin
    `conductor` remains available for its thorough six-phase workflow: **Analyze,
    Code or non-code Decompose, Execute, Review, Escalate when needed, and Report**.
 3. **Evidence and judgement:** task verification, contractual tests, review findings,
-   and the final report provide evidence of what was delivered. The human remains
-   responsible for consequential decisions and the final outcome judgement.
+   and the final report provide evidence of what was delivered. Verification is
+   interpreted against semantic intent and behavior, not accidental literal
+   wording; exact text is binding only when it is itself a traced contract. A
+   failed check is first classified as work nonconformity or a defective control,
+   which is corrected and rerun without rewriting compliant work. The human
+   remains responsible for consequential decisions and the final outcome judgement.
 
 For spec-driven coding, the workflow can refine a rough requirement, structure the
 specification, write contractual test scenarios, and generate TDD-based implementation
@@ -43,6 +47,9 @@ replace the software test suite where appropriate.
 ## Strengths and benefits
 
 - Separates intent, task decomposition, implementation, verification, and review.
+- Keeps delegated work bounded: tasks provide outcome, scope, context, fixed
+  constraints with reasons, semantic criteria, and evidence while leaving
+  unfixed implementation choices to the executor.
 - Treats genuine ambiguity and required approvals as blockers, while routine
   implementation decisions are made autonomously.
 - Applies one orchestration model to code, documentation, configuration, research,

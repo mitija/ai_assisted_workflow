@@ -80,6 +80,11 @@ You cannot:
 
 Read the changed/new files. Check for:
 - **Correctness** — does the implementation match the spec and pass contractual tests?
+- **Semantic verification** — does the evidence demonstrate the intended
+  behavior? Treat exact wording as binding only for a machine protocol, API or
+  config key, legal wording, explicit user requirement, or another traced
+  exact-text contract. Classify a failed check as work nonconformity or a
+  defective/insufficient control before requesting remediation.
 - **Style** — does it follow the project's AGENTS.md conventions (minimal diff, no invented requirements, blocker protocol)?
 - **Completeness** — are all state-table rows and cross-cutting invariants covered? Are test-doc and config-sample files in sync?
 
@@ -106,10 +111,10 @@ required; if a field cannot be filled, treat it as a blocker (see below).
 | Field | Requirement |
 |---|---|
 | **File** | Exact path and line/symbol/section the change targets. Example: `agents/agent/reviewer.md:75-81` |
-| **Change** | Concrete, atomic edit instruction. Example: *Replace the two-sentence task-list description with a 10-field table format (see new text below).* Use active voice: "Replace", "Add", "Remove", "Rename", "Move". |
+| **Change** | Concrete, atomic required outcome and boundaries. Preserve the finding's scope and file/line evidence, but leave wording, internal design, final file set, and mechanism open unless a traced requirement, interface, convention, safety constraint, or user decision fixes them. State why any exact detail is fixed. |
 | **Rationale / rule** | The intended behaviour or rule the change enforces. Must link back to a finding and, where applicable, to a spec or test. |
 | **Depends on** | Task numbers this one must follow (or "none"). |
-| **Verify** | Exact command or test to run and the expected result. Example: `grep -n 'vague\|investigate\|fix as appropriate' agents/agent/reviewer.md` — expect zero matches. |
+| **Verify** | Exact authoritative command or test and expected evidence mapped to the intended outcome. A grep absence/presence check is not conclusive semantic proof unless exact text is the contract. |
 
 If a field genuinely cannot be filled (e.g. the correct behaviour is unclear
 because the spec does not cover the case), the reviewer **must do one of**:
@@ -126,8 +131,10 @@ The following patterns are **not allowed** in any task:
 - "investigate", "look into", "explore", "research" (the reviewer already has
   context and must make the decision)
 - "devise later", "decide later", "fix as appropriate", "or similar", "etc."
-- Implementation alternatives left open (pick one and justify it)
-- Any phrasing that defers a decision or design choice to the implementer
+- Required product/design decisions or genuine ambiguities that must be resolved
+  before delegation, deferred to the implementer
+- Ordinary internal implementation choices left open within the stated outcome,
+  scope, constraints, and evidence requirements are allowed
 
 ##### Ordering and priority
 
@@ -135,8 +142,8 @@ The following patterns are **not allowed** in any task:
   list.
 - Within the same dependency level, sort by severity (critical, then blocking, then warning, then suggestion).
 - Every task must be self-contained for a less capable implementation model:
-  it must contain everything the implementer needs (exact file, exact change,
-  expected outcome).
+  it must contain intent/outcome, relevant scope/touchpoints, context, fixed
+  constraints with reasons, semantic success criteria, and required evidence.
 
 ##### No-changes result
 

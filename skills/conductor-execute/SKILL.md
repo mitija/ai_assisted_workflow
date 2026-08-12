@@ -26,6 +26,12 @@ Issue one `general` sub-agent per task in the ready set. Each sub-agent receives
 When all sub-agents in the round return:
 
 - For each task, spawn a `verifier` sub-agent to execute the exact verification commands. Pass the commands verbatim and require structured `VERIFY PASS|FAIL|BLOCKED` evidence. Treat BLOCKED as a failed verification — it routes through normal failure/escalation (step 6). Do **not** run verification commands yourself.
+- Interpret the result against the task's semantic success criteria and evidence,
+  not accidental literal wording. If a check fails, first determine whether the
+  work is nonconformant or the verification control is defective/insufficient.
+  Correct a defective control and rerun it; do not alter compliant work merely
+  to satisfy that control. Preserve the verifier's exact-command and response
+  protocol: that exactness is a trust/protocol boundary, not an acceptance rule.
 - Collect the pass/fail results for every task in the round.
 
 ### 4. Commit passing tasks

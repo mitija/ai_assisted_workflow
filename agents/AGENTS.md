@@ -104,6 +104,15 @@ what's done, what's planned next).
 - Use subagents extensively to keep the main context window small and save tokens.
 - **Minimal diff.** Make the smallest change that satisfies the spec and tests. Do
   not refactor, rename, or reformat code that is outside the scope of the task.
+- **Semantic verification and bounded autonomy.** Verification evaluates intent,
+  behavior, and evidence rather than accidental literal wording. Exact text is
+  binding only when it is a traced machine protocol, API/config key, legal or
+  explicit user contract, or equivalent requirement. Before treating a failed
+  check as a work defect, distinguish nonconforming work from a defective or
+  insufficient control; correct and rerun a defective control rather than
+  rewriting compliant work. TODOs, task prompts, reviewer tasks, and escalation
+  plans state outcome, scope/touchpoints, context, fixed constraints with
+  reasons, semantic criteria, and evidence while leaving unfixed mechanisms open.
 - **Blocker protocol.** If a contractual test fails or the environment is broken,
   never weaken, skip, or mock away the test to make it pass — report the blocker.
   Tests win (see Spec-Driven Workflow); the build conforms to them, not the reverse.

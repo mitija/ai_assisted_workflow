@@ -18,6 +18,16 @@ agent and skill inventories; linked skill tables are also maintained in root AGE
 and the deployable agents/AGENTS.md, documenting both categories.
 Session handover files (`HANDOVER*`) are gitignored at the root.
 
+Verification guidance now evaluates semantic intent, behavior, and evidence;
+exact text is treated as binding only for traced protocol or exact-text
+contracts. Failed checks are diagnosed as either work nonconformity or a
+defective/insufficient control, with defective controls corrected and rerun.
+TODOs, task graphs, reviewer tasks, and escalation plans use bounded autonomy:
+they state outcome, scope/touchpoints, context, fixed constraints with reasons,
+semantic criteria, and evidence while leaving unfixed implementation choices
+open. The verifier's exact-command execution and machine-readable protocol are
+unchanged because they are trust requirements.
+
 ## Repo layout (`agents/`)
 - `AGENTS.md` — generic, all-projects guidance.
 - `AGENTS.odoo.md` — Odoo-specific companion (testing, source layout, DB/instances,
@@ -79,8 +89,8 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   inspection of work for correctness, style, and completeness. Produces a structured
   review plan with findings (issues, warnings, passes), verdict, and an
   implementation-ready task list: every task specifies exact file path + line,
-  a concrete change instruction, the rationale/behaviour rule, dependency ordering,
-  and a verify command with expected result. Prohibits vague/deferred wording
+  an outcome-oriented change and boundaries, the rationale/behaviour rule, dependency ordering,
+  and evidence mapped to semantic intent. Prohibits vague/deferred wording
   ("review this", "investigate", "fix as appropriate"); unresolved ambiguities are
   reported as blockers/questions rather than left for the implementer. Outputs an
   explicit "No tasks" result when no changes are needed. Never edits files.
@@ -130,7 +140,9 @@ Session handover files (`HANDOVER*`) are gitignored at the root.
   `<epic>_TESTS.md` scenarios.
 - `skills/todo-list/SKILL.md` — TDD-based TODO list generator. Each implementation TD
   has Red (TDxx.1) / Green (TDxx.2) / Commit (TDxx.3) phases; the TD's changes are
-  committed after the Green phase passes, delegated to the `committer` agent. (The old
+  committed after the Green phase passes, delegated to the `committer` agent. Red proves
+  missing behavior for the expected reason rather than blindly requiring every new test
+  to fail; Green leaves implementation mechanism open. (The old
   per-feature "Review & Commit" human-checkpoint TD and the one-TD-at-a-time / no-commit
   rules were removed.)
 

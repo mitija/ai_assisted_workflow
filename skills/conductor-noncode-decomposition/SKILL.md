@@ -32,8 +32,8 @@ execute and report phases depend on these exact field names:
 | `id` | Short unique label (`T01`, `T02`, …) |
 | `dependencies` | List of task ids that must complete before this task (empty if none) |
 | `description` | One-line summary of what the task accomplishes |
-| `prompt` | A **fully self-contained** prompt that a `general` sub-agent can execute with no access to this conversation. Include: goal, exact files/paths, relevant context and constraints, success criteria, and any commands to run (if applicable). Assume the executor knows nothing beyond the project's `AGENTS.md` and `project_context.yaml`. |
-| `verification` | How to confirm the task succeeded. For non-code work this might be: verifying the file was written correctly, checking output with a tool, running a dry-run command, or manual inspection criteria. |
+| `prompt` | A **fully self-contained, bounded-autonomy** prompt stating intent/outcome, relevant scope/touchpoints, context, fixed constraints with reasons, semantic success criteria, required evidence, and commands where applicable. Leave wording, internal design, and final file set open unless a traced requirement or convention fixes them. |
+| `verification` | Evidence mapped to the intended outcome, such as an authoritative command, dry run, inspection, or manual criterion. Exact wording is required only when it is itself the contract; accidental literal markers are not semantic proof. |
 
 ### 3. Validate the graph
 

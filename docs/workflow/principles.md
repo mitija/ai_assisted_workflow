@@ -7,6 +7,17 @@
 5. **The developer is autonomous on method.** We specify the *what* (spec + tests + acceptance), not the *how* (which AI, which IDE, which prompts).
 6. **Documentation is a first-class artifact** — own repository, versioned, customer-accessible, kept up to date. A stale spec is worse than no spec.
 7. **Local scratch material is not the contract.** Prompts, session notes, copied logs, and experiments may live in the project workspace outside both git repositories. Versioned documentation work may also live under `docs/working/`, but it is still not the frozen implementation contract unless promoted into the tagged customer-facing spec/test docs.
+8. **Verification follows semantic intent.** Evidence must demonstrate the
+   intended behavior or outcome, not accidental literal wording. Exact text is
+   binding only when it is itself a traced contract, such as a machine protocol,
+   API/config key, legal wording, or explicit user requirement. A failed check is
+   first classified as work nonconformity or a defective/insufficient control;
+   defective controls are corrected and rerun without rewriting compliant work.
+9. **Tasks preserve bounded autonomy.** TODOs, task graphs, reviews, and
+   escalation plans state intent, scope/touchpoints, context, fixed constraints
+   with reasons, semantic success criteria, and evidence. They leave internal
+   design and mechanism open unless a traced constraint fixes them, while
+   resolving genuine product/design ambiguity before delegation.
 
 > **A note on strictness.** These principles are not guidelines — they are load-bearing. Loosening any one of them collapses the economics of the lean cycle. The methodology is designed to be adopted as a package, not partially.
 
