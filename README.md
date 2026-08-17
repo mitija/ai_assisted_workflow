@@ -25,11 +25,13 @@ Version 3 is still evolving, and initial trials of the `fast` agent are promisin
 2. **Fast-led delivery:** the default `fast` agent first understands intent, then
    defines success criteria before planning, prepares a plan, reviews the plan against
    intent and criteria, executes, and reviews the result. After intent and
-   criteria are established, it proceeds autonomously, makes and documents
-   non-blocking decisions guided by them, and stops only for genuine blockers;
+   criteria are established, it proceeds autonomously, automatically invokes
+   ordered escalation for failures when needed, makes and documents non-blocking
+   decisions guided by them, and stops only for genuine blockers;
    its report includes those decisions when it made any. The selectable
    `conductor` remains available for its thorough six-phase workflow: **Analyze,
-   Code or non-code Decompose, Execute, Review, Escalate when needed, and Report**.
+   Code or non-code Decompose, Execute, Review, automatically Escalate when needed,
+   and Report**.
 3. **Evidence and judgement:** task verification, contractual tests, review findings,
    and the final report provide evidence of what was delivered. Verification is
    interpreted against semantic intent and behavior, not accidental literal
@@ -161,8 +163,8 @@ workflow.
 
 | Agent | Role | Invocable as |
 |---|---|---|
-| [`fast`](agents/agent/fast.md) | Default primary agent for the five-step intent-to-result process: defines success criteria before planning, proceeds autonomously after intent and criteria are established, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
-| [`conductor`](agents/agent/conductor.md) | Primary orchestrator for the thorough six-phase code and non-code workflow. | Primary |
+| [`fast`](agents/agent/fast.md) | Default primary agent for the six-step intent-to-result process: defines success criteria before planning, proceeds autonomously after intent and criteria are established, automatically invokes ordered escalation for failures when needed, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
+| [`conductor`](agents/agent/conductor.md) | Primary orchestrator for the thorough six-phase code and non-code workflow, automatically escalating failures when needed. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits. | Subagent |
 | [`reviewer`](agents/agent/reviewer.md) | Read-only correctness and completeness audit. | Both |
 | [`escalate1`](agents/agent/escalate1.md) | First-tier read-only failure diagnosis. | Subagent |

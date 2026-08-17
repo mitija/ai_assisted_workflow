@@ -63,8 +63,8 @@ Repeat step 2 with escalate2's plan.
 
 ### Interactive mode
 
-In interactive mode (default), report each escalation attempt to the user and ask for guidance before proceeding to the next tier:
+In both autonomous and interactive modes, invoke needed escalation automatically and keep the user informed. In interactive mode (default), do not ask for workflow confirmation before either tier. This autonomy does not waive runtime tool permissions or approvals that inherently require human consent.
 
-1. Before spawning escalate1, tell the user a task failed and ask if they want to proceed with escalation.
-2. Before spawning escalate2, report what escalate1 found and ask for confirmation.
-3. Before aborting, inform the user and ask if they want to try a different approach.
+1. Before spawning `escalate1`, tell the user a task failed, then spawn it.
+2. If `escalate2` is needed, report what `escalate1` found, then spawn it without waiting for confirmation.
+3. If escalation is exhausted, inform the user and surface only a genuine blocker or required human input after the final review gate.

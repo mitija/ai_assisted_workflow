@@ -39,12 +39,11 @@ unchanged because they are trust requirements.
   per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
 - `opencode.json` — project-level per-agent model assignments (merged with global config).
-  Current assignments: `fast` runs on `openrouter/openai/gpt-5.6-terra`;
-  `conductor`, `reviewer`, `escalate1`, `plan` run on
-  `openrouter/openai/gpt-5.6-luna`; `escalate2` on
-  `openrouter/openai/gpt-5.6-terra`; `committer`, `build`, `explore`,
-  `general`, `verifier` on `openrouter/deepseek/deepseek-v4-flash`. OpenRouter model
-  entries `openai/gpt-5.6-luna` and `openai/gpt-5.6-terra` use the
+  Current assignments: `fast`, `conductor`, `escalate1`, `plan`, and `verifier`
+  run on `openrouter/openai/gpt-5.6-terra`; `reviewer`, `committer`, `build`,
+  `explore`, and `general` run on `openrouter/openai/gpt-5.6-luna`; `escalate2`
+  runs on `openrouter/openai/gpt-5.6-sol`. OpenRouter model
+  entries `openai/gpt-5.6-luna`, `openai/gpt-5.6-terra`, and `openai/gpt-5.6-sol` use the
   `reasoningEffort: "max"` option under `provider.openrouter.models`.
   Also includes `permission.external_directory` — the authoritative list of
   approved external paths outside the project root, generated and maintained
@@ -65,7 +64,8 @@ unchanged because they are trust requirements.
   user for ambiguity resolution; autonomous mode only when requested.
   Decomposes work into a dependency-aware task graph, uses `explore` sub-agents
   for file reading, `general` sub-agents for execution, `verifier` sub-agents for verification,
-  `committer` for commits, `escalate1`/`escalate2` for failure diagnosis, and
+  `committer` for commits, automatically invokes `escalate1` then `escalate2` when
+  needed for failure diagnosis, and
   delegates report writing to a sub-agent. After graph completion, invokes the
   `reviewer` for a final audit; critical/blocking findings trigger a
   remediation/re-review loop, while warnings and suggestions are assessed by the
@@ -74,9 +74,11 @@ unchanged because they are trust requirements.
   The `verifier` sub-agent handles delegated shell-command verification steps.
   Loop prevention rules prohibit recursive or self-delegation.
 - `agent/fast.md` — opencode agent definition for the `fast` agent. Classification:
-   Primary and default. Uses `openrouter/openai/gpt-5.6-terra` and follows a five-step
-   lifecycle that defines success criteria before planning, proceeds autonomously
-   after intent and criteria are established, documents non-blocking decisions
+   Primary and default. Uses `openrouter/openai/gpt-5.6-terra` and follows a six-step
+   lifecycle that defines success criteria before planning, actively restates its
+   understanding and proposed criteria for human validation, then proceeds autonomously
+   after validation, automatically invokes ordered
+   escalation for failures when needed, documents non-blocking decisions
    guided by them, stops only for genuine blockers, and reports decisions when it
    made any. It does not triage suitability, select a workflow, or automatically
    hand off to the conductor.
@@ -192,10 +194,13 @@ unchanged because they are trust requirements.
   known gaps), linked from the landing page above.
 
 ## Design notes / decisions
-- `fast` agent is the default primary agent for a five-step intent-to-result
-  process: understand intent, define success criteria, prepare a plan, review the
-  plan against intent and criteria, execute, and review the result. It proceeds
-  autonomously after intent and criteria are established, makes and documents
+- `fast` agent is the default primary agent for a six-step intent-to-result
+  process: understand intent, define success criteria, actively restate its
+  understanding and proposed criteria for human validation, prepare a plan, review
+  the plan against intent and criteria, execute, and review the result. After
+  reviewing the outcome, it returns to execution and repeats the execution-review
+  cycle until the outcome meets the validated intent and criteria or a genuine
+  blocker arises. It proceeds autonomously after human validation, makes and documents
   non-blocking decisions guided by them, stops only for genuine blockers, and
   reports decisions when it made any. It does not select a workflow or
   automatically hand off to Conductor.

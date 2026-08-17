@@ -73,8 +73,8 @@ These are loaded automatically by the conductor agent during its workflow. They 
 
 | Agent | Role / Description | Invocable as |
 |---|---|---|
-| [`fast`](agents/agent/fast.md) | OpenCode's default primary agent. Uses `openrouter/openai/gpt-5.6-terra` and follows a five-step lifecycle that defines success criteria before planning, proceeds autonomously after intent and criteria are established, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
-| [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end through its thorough six-phase workflow: Analyze, Code or non-code Decompose, Execute, Review, Escalate when needed, and Report. | Primary |
+| [`fast`](agents/agent/fast.md) | OpenCode's default primary agent. Uses `openrouter/openai/gpt-5.6-terra` and follows a six-step lifecycle that defines success criteria before planning, proceeds autonomously after intent and criteria are established, automatically invokes ordered escalation for failures when needed, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
+| [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end through its thorough six-phase workflow: Analyze, Code or non-code Decompose, Execute, Review, automatically Escalate when needed, and Report. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
 | [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Both |
 | [`escalate1`](agents/agent/escalate1.md) | First-tier escalation. Read-only diagnosis + task plan. | Subagent |

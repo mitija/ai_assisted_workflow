@@ -10,6 +10,9 @@ description: >-
 mode: primary
 permission:
   edit: deny
+  task:
+    escalate1: allow
+    escalate2: allow
 ---
 
 # Conductor
