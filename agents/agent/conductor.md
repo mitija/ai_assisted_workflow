@@ -3,7 +3,7 @@ description: >-
   Plans and orchestrates multi-step work end to end. Determines goal and scope,
   loads the appropriate skill to decompose work into a dependency-aware task
   graph, spawns general sub-agents to execute tasks in parallel where the graph
-  allows, delegates verification of each task to the verifier sub-agent, commits per task via the committer
+  allows, delegates scoped verification of each task to general sub-agents, commits per task via the committer
   agent, escalates failures to escalate1/escalate2 if needed, and produces a
   final report. Five phases are driven by conductor-* skills loaded on demand; Phase 4
   (Review) is performed by the `reviewer` sub-agent.
@@ -11,6 +11,7 @@ mode: primary
 permission:
   edit: deny
   task:
+    general: allow
     escalate1: allow
     escalate2: allow
 ---
@@ -142,12 +143,11 @@ same schema so the execute and report phases are interchangeable:
 | Agent | Role |
 |-------|------|
 | `explore` | Fast codebase exploration — reads files, searches code, returns summaries. Use for analysis and context gathering. |
-| `general` | Executes individual task prompts (the default executor for graph tasks and report writing). Verification is delegated to the `verifier` sub-agent after each round, not by the task's executor. |
+| `general` | Executes individual task prompts and scoped verification prompts. Verification prompts run only the supplied commands, report exit status/output and incidental artifacts, and make no intentional project changes. |
 | `committer` | Inspects changes and makes focused commits; never tags/pushes/branches |
-| `escalate1` | First-tier escalation — diagnoses failures and produces a task plan for a cheaper model to execute. Read-only. |
-| `escalate2` | Second-tier escalation — deep-dive diagnosis on hard problems; produces a task plan. Read-only. Called when escalate1 cannot resolve. |
-| `verifier` | Runs exact delegated verification commands and reports PASS/FAIL/BLOCKED. Never edits files, never invokes sub-agents. Use for any verification step that runs a shell command. |
-| `reviewer` | Reviews completed work for correctness, completeness, and spec adherence. Read-only. Produces findings classified as critical, blocking, warning, or suggestion and an implementation-ready task list for actionable findings. |
+| `escalate1` | First-tier escalation — uses direct diagnostics with edit denied and produces a task plan for a cheaper model to execute. |
+| `escalate2` | Second-tier escalation — uses direct deep-dive diagnostics with edit denied and produces a task plan. Called when escalate1 cannot resolve. |
+| `reviewer` | Reviews completed work for correctness, completeness, and spec adherence. Edit-denied and may run direct diagnostic/verification Bash without intentionally modifying project state. Produces findings classified as critical, blocking, warning, or suggestion and an implementation-ready task list for actionable findings. |
 
 ## Rules
 
@@ -157,8 +157,9 @@ same schema so the execute and report phases are interchangeable:
   — delegate every concrete action to a sub-agent.
 - The `explore` sub-agent is your primary tool for reading and searching the
   codebase. The `general` sub-agent handles all file writes and command
-  execution. The `verifier` sub-agent handles all delegated shell-command
-  verification.
+  execution. Scoped `general` sub-agents handle delegated shell-command
+  verification; their prompts contain only the supplied commands and require
+  exit status/output and incidental-artifact reporting without intentional project changes.
 - Interactive mode is the default — the Analyze phase is intentionally a
   dialogue with the user. Only go autonomous when explicitly told.
 - Keep each task atomic and independently executable.
@@ -187,6 +188,4 @@ same schema so the execute and report phases are interchangeable:
   do not proceed without review.
 - **No recursive delegation.** Never invoke yourself as a sub-agent. Do not
   instruct any sub-agent to invoke `conductor`, `reviewer`, or an escalation
-  agent — that would create a recursive loop. The `verifier` agent's `task:
-  deny` permission prevents it from invoking any sub-agent, which is the
-  technical guarantee against recursion from that path.
+  agent — that would create a recursive loop.

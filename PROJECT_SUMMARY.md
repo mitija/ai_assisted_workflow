@@ -25,8 +25,10 @@ defective/insufficient control, with defective controls corrected and rerun.
 TODOs, task graphs, reviewer tasks, and escalation plans use bounded autonomy:
 they state outcome, scope/touchpoints, context, fixed constraints with reasons,
 semantic criteria, and evidence while leaving unfixed implementation choices
-open. The verifier's exact-command execution and machine-readable protocol are
-unchanged because they are trust requirements.
+open. Conductor verification uses scoped `general` sub-agents that run only
+supplied commands, report exit status/output and incidental artifacts, and make
+no intentional project changes. The edit-denied reviewer runs diagnostic and
+verification Bash directly without intentionally modifying project state.
 
 ## Repo layout (`agents/`)
 - `AGENTS.md` — generic, all-projects guidance.
@@ -63,7 +65,7 @@ unchanged because they are trust requirements.
   base prompt stays small. Interactive mode (default) is a dialogue with the
   user for ambiguity resolution; autonomous mode only when requested.
   Decomposes work into a dependency-aware task graph, uses `explore` sub-agents
-  for file reading, `general` sub-agents for execution, `verifier` sub-agents for verification,
+   for file reading, and `general` sub-agents for execution and scoped conductor verification,
   `committer` for commits, automatically invokes `escalate1` then `escalate2` when
   needed for failure diagnosis, and
   delegates report writing to a sub-agent. After graph completion, invokes the
@@ -71,7 +73,6 @@ unchanged because they are trust requirements.
   remediation/re-review loop, while warnings and suggestions are assessed by the
   conductor and do not trigger another reviewer invocation on their own.
   Final review by `reviewer` is mandatory — cannot substitute another agent.
-  The `verifier` sub-agent handles delegated shell-command verification steps.
   Loop prevention rules prohibit recursive or self-delegation.
 - `agent/fast.md` — opencode agent definition for the `fast` agent. Classification:
    Primary and default. Uses `openrouter/openai/gpt-5.6-terra` and follows a six-step
@@ -87,7 +88,7 @@ unchanged because they are trust requirements.
   descriptive messages, and executes them. Never tags, pushes, or branches unless
   explicitly asked.
 - `agent/reviewer.md` — opencode agent definition for the `reviewer`.
-  Classification: Both. `mode: all` (both primary and subagent invocable). Read-only
+   Classification: Both. `mode: all` (both primary and subagent invocable). Edit denied
   inspection of work for correctness, style, and completeness. Produces a structured
   review plan with findings (issues, warnings, passes), verdict, and an
   implementation-ready task list: every task specifies exact file path + line,
@@ -95,31 +96,19 @@ unchanged because they are trust requirements.
   and evidence mapped to semantic intent. Prohibits vague/deferred wording
   ("review this", "investigate", "fix as appropriate"); unresolved ambiguities are
   reported as blockers/questions rather than left for the implementer. Outputs an
-  explicit "No tasks" result when no changes are needed. Never edits files.
-  Delegates commands outside its curated read-only allowlist to the `verifier`
-  sub-agent.
+   explicit "No tasks" result when no changes are needed. Edit denied; runs
+   diagnostic and verification Bash directly, including tests, builds,
+   Python/imports, environment/log/database inspection, and normal temporary/test
+   artifacts, without intentionally modifying project source, configuration,
+   documentation, dependencies, Git state, or persistent application data.
 - `agent/escalate1.md` — opencode agent definition for `Escalate1`, the first-tier
   escalation subagent. Classification: Subagent. Called when the primary build agent hits an issue it cannot
-  resolve. Read-only (edit denied; webfetch allowed; bash limited to a curated
-  read-only inspection allow-list; task limited to invocations of `verifier` only) —
-  diagnoses and produces a task plan for a cheaper model to execute. Delegates
-  commands outside its curated allowlist to the `verifier` sub-agent.
+   resolve. Edit denied with unrestricted Bash for direct diagnostics, including
+   tests, Python/imports, environment/log/database inspection, and normal
+   temporary/test artifacts; diagnoses and produces a task plan for a cheaper
+   model to execute.
 - `agent/escalate2.md` — opencode agent definition for `Escalate2`, the second-tier
-  escalation subagent. Classification: Subagent. Called when Escalate1 cannot resolve an issue. Read-only
-  (edit denied; webfetch allowed; bash limited to a curated read-only inspection
-  allow-list; task limited to invocations of `verifier` only) — deep-dive diagnosis
-  producing a task plan for a cheaper model to execute. Delegates commands outside
-  its curated allowlist to the `verifier` sub-agent. Deep reasoning on hard problems.
-- `agent/verifier.md` — opencode agent definition for the `verifier` subagent.
-  Classification: Subagent. `mode: subagent`; `edit: deny`; `task: deny` (flat deny — recursion impossible);
-  `bash: allow` (unrestricted — see trust boundary caveat under Design notes).
-  Runs exact delegated verification shell commands and reports structured
-  PASS/FAIL/BLOCKED evidence (command, exit status, output). Strict prompt
-  forbids installs, deployments, destructive ops, invented commands, shell
-  composition, and asking the user. Reports BLOCKED if the command is unsafe,
-  absent, ambiguous, or requires approval. May be invoked by `reviewer`,
-  `escalate1`, or `escalate2` for commands outside their curated read-only
-  allowlists.
+   escalation subagent. Classification: Subagent. Called when Escalate1 cannot resolve an issue. Edit denied with unrestricted Bash for direct deep-dive diagnostics, including tests, Python/imports, environment/log/database inspection, and normal temporary/test artifacts; produces a task plan for a cheaper model to execute. Deep reasoning on hard problems.
 - `skills/coding-standards/SKILL.md` — coding standards (currently logging).
 - `skills/handover/SKILL.md` — creates self-contained HANDOVER-xx.md at session end.
 - `skills/init-project/SKILL.md` — scan-first workflow to create `project_context.yaml`
@@ -258,13 +247,3 @@ unchanged because they are trust requirements.
 
 ## Planned / open
 - Consider an `agents/AGENTS.md` note on non-functional requirements (workflow §8.8 gap).
-
-## Accepted trust boundary
-
-The `verifier` sub-agent has `bash: allow` — unrestricted shell access. This is
-an intentional design choice: project-specific verification commands (tests,
-builds, linters, typecheckers) vary arbitrarily across projects, and a
-project-specific allowlist would defeat the verifier's generality. Non-mutation
-and non-destructive restrictions are prompt-enforced rather than enforced by a
-technical sandbox. Delegating parent agents (Reviewer, Escalate1, Escalate2)
-must provide only trusted verification commands.

@@ -114,7 +114,7 @@ agents/          Agent instructions and OpenCode agent definitions
   AGENTS.md        Generic guidance for all projects
   AGENTS.odoo.md   Odoo-specific companion
   project_context.template.yaml  Project configuration template
-  agent/           fast, conductor, committer, verifier, reviewer, and escalation agents
+  agent/           fast, conductor, committer, reviewer, and escalation agents
 skills/          Reusable and conductor-specific skills
 docs/            Methodology and workflow documentation
 tools/           Installation scripts and utilities
@@ -166,10 +166,9 @@ workflow.
 | [`fast`](agents/agent/fast.md) | Default primary agent for the six-step intent-to-result process: defines success criteria before planning, proceeds autonomously after intent and criteria are established, automatically invokes ordered escalation for failures when needed, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
 | [`conductor`](agents/agent/conductor.md) | Primary orchestrator for the thorough six-phase code and non-code workflow, automatically escalating failures when needed. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits. | Subagent |
-| [`reviewer`](agents/agent/reviewer.md) | Read-only correctness and completeness audit. | Both |
-| [`escalate1`](agents/agent/escalate1.md) | First-tier read-only failure diagnosis. | Subagent |
-| [`escalate2`](agents/agent/escalate2.md) | Deep-dive read-only failure diagnosis. | Subagent |
-| [`verifier`](agents/agent/verifier.md) | Runs delegated verification commands and records evidence. | Subagent |
+| [`reviewer`](agents/agent/reviewer.md) | Edit-denied correctness and completeness audit with direct diagnostic and verification Bash. | Both |
+| [`escalate1`](agents/agent/escalate1.md) | First-tier edit-denied failure diagnosis with unrestricted Bash for direct diagnostics. | Subagent |
+| [`escalate2`](agents/agent/escalate2.md) | Deep-dive edit-denied failure diagnosis with unrestricted Bash for direct diagnostics. | Subagent |
 
 ## License
 

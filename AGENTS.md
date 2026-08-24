@@ -18,10 +18,9 @@ agents/                        Deployable agent bundle (symlinked to ~/.agents)
     fast.md                   Fast intent-to-result primary agent: criteria-first, autonomous after intent/criteria, decision-reporting
     conductor.md               Conductor orchestration agent (opencode agent definition)
     committer.md               Committer agent — groups changes into focused commits (opencode agent definition)
-    reviewer.md                Reviewer agent — read-only code review (opencode agent definition)
-    escalate1.md               First-tier escalation agent — read-only diagnosis + task plan
-    escalate2.md               Second-tier escalation agent — deep-dive diagnosis + task plan
-    verifier.md                Verification agent — runs exact delegated commands, reports PASS/FAIL/BLOCKED
+    reviewer.md                Reviewer agent — edit-denied review with direct diagnostic/verification Bash (opencode agent definition)
+    escalate1.md               First-tier escalation agent — edit-denied direct diagnostics + task plan
+    escalate2.md               Second-tier escalation agent — edit-denied deep-dive diagnostics + task plan
   .gitignore                   Ignores project_context.yaml and *.ini credentials
 skills/                        Reusable agent skills (symlinked via install to ~/.config/opencode/skills)
   coding-standards/SKILL.md    Logging and code quality standards
@@ -76,10 +75,9 @@ These are loaded automatically by the conductor agent during its workflow. They 
 | [`fast`](agents/agent/fast.md) | OpenCode's default primary agent. Uses `openrouter/openai/gpt-5.6-terra` and follows a six-step lifecycle that defines success criteria before planning, proceeds autonomously after intent and criteria are established, automatically invokes ordered escalation for failures when needed, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
 | [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end through its thorough six-phase workflow: Analyze, Code or non-code Decompose, Execute, Review, automatically Escalate when needed, and Report. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
-| [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Read-only agent — produces a structured review plan with findings and remediation tasks. Never edits files; runs only read-only inspection commands. | Both |
-| [`escalate1`](agents/agent/escalate1.md) | First-tier escalation. Read-only diagnosis + task plan. | Subagent |
-| [`escalate2`](agents/agent/escalate2.md) | Second-tier escalation. Deep-dive diagnosis + task plan. Read-only. | Subagent |
-| [`verifier`](agents/agent/verifier.md) | Runs exact delegated commands, reports PASS/FAIL/BLOCKED. Never edits files. | Subagent |
+| [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Edit-denied agent — produces a structured review plan and may directly run diagnostic and verification Bash without intentionally modifying project state. | Both |
+| [`escalate1`](agents/agent/escalate1.md) | First-tier edit-denied diagnosis with unrestricted Bash for direct evidence gathering and a task plan. | Subagent |
+| [`escalate2`](agents/agent/escalate2.md) | Second-tier edit-denied deep-dive diagnosis with unrestricted Bash for direct evidence gathering and a task plan. | Subagent |
 
 ## Working on this repo
 

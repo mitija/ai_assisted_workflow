@@ -1,6 +1,6 @@
 ---
 name: conductor-execute
-description: Phase 3 of the conductor workflow. Executes the task graph in topological rounds — spawns the ready set in parallel via general sub-agents, delegates verification to the verifier sub-agent, commits passing tasks via the committer. Routes to conductor-escalate on failure.
+description: Phase 3 of the conductor workflow. Executes the task graph in topological rounds — spawns the ready set in parallel via general sub-agents, delegates scoped verification to general sub-agents, commits passing tasks via the committer. Routes to conductor-escalate on failure.
 ---
 
 # Conductor: Execute
@@ -25,13 +25,13 @@ Issue one `general` sub-agent per task in the ready set. Each sub-agent receives
 
 When all sub-agents in the round return:
 
-- For each task, spawn a `verifier` sub-agent to execute the exact verification commands. Pass the commands verbatim and require structured `VERIFY PASS|FAIL|BLOCKED` evidence. Treat BLOCKED as a failed verification — it routes through normal failure/escalation (step 6). Do **not** run verification commands yourself.
+- For each task, spawn a `general` sub-agent with a scoped verification prompt containing only the task's exact verification commands. Require it to run only those commands, report each exit status and output plus incidental artifacts, and make no intentional project changes. Treat a failed or unavailable verification as a failed verification — it routes through normal failure/escalation (step 6). Do **not** run verification commands yourself.
 - Interpret the result against the task's semantic success criteria and evidence,
   not accidental literal wording. If a check fails, first determine whether the
   work is nonconformant or the verification control is defective/insufficient.
   Correct a defective control and rerun it; do not alter compliant work merely
-  to satisfy that control. Preserve the verifier's exact-command and response
-  protocol: that exactness is a trust/protocol boundary, not an acceptance rule.
+  to satisfy that control. The scoped command restriction is a delegation
+  boundary, not an acceptance rule; interpret evidence semantically.
 - Collect the pass/fail results for every task in the round.
 
 ### 4. Commit passing tasks
