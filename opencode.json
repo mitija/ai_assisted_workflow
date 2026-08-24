@@ -4,18 +4,16 @@
   "default_agent": "fast",
 
   "agent": {
-    "fast":       { "model": "openrouter/openai/gpt-5.6-terra" },
-    "conductor":  { "model": "openrouter/openai/gpt-5.6-terra" },
-    "reviewer":   { "model": "openrouter/openai/gpt-5.6-luna" },
-    "committer":  { "model": "openrouter/openai/gpt-5.6-luna" },
-    "escalate1":  { "model": "openrouter/openai/gpt-5.6-terra" },
+    "fast":       { "model": "openrouter/qwen/qwen3.8-max" },
+    "conductor":  { "model": "openrouter/qwen/qwen3.8-max" },
+    "reviewer":   { "model": "openrouter/qwen/qwen3.8-max" },
+    "plan":       { "model": "openrouter/qwen/qwen3.8-max" },
+    "escalate1":  { "model": "openrouter/qwen/qwen3.8-max" },
     "escalate2":  { "model": "openrouter/openai/gpt-5.6-sol" },
-    "build":      { "model": "openrouter/openai/gpt-5.6-luna" },
-    "plan":       { "model": "openrouter/openai/gpt-5.6-terra" },
-    "explore":    { "model": "openrouter/openai/gpt-5.6-luna" },
-    "general":    { "model": "openrouter/openai/gpt-5.6-luna" },
-    "verifier":   { "model": "openrouter/openai/gpt-5.6-terra" }
-
+    "build":      { "model": "openrouter/deepseek/deepseek-v4-pro-0813" },
+    "committer":  { "model": "openrouter/deepseek/deepseek-v4-pro-0813" },
+    "explore":    { "model": "openrouter/deepseek/deepseek-v4-pro-0813" },
+    "general":    { "model": "openrouter/deepseek/deepseek-v4-pro-0813" }
   },
 
   "permission": {

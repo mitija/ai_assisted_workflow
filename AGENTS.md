@@ -72,7 +72,7 @@ These are loaded automatically by the conductor agent during its workflow. They 
 
 | Agent | Role / Description | Invocable as |
 |---|---|---|
-| [`fast`](agents/agent/fast.md) | OpenCode's default primary agent. Uses `openrouter/openai/gpt-5.6-terra` and follows a six-step lifecycle that defines success criteria before planning, proceeds autonomously after intent and criteria are established, automatically invokes ordered escalation for failures when needed, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
+| [`fast`](agents/agent/fast.md) | OpenCode's default primary agent. Uses `openrouter/qwen/qwen3.8-max` and follows a six-step lifecycle that defines success criteria before planning, proceeds autonomously after intent and criteria are established, automatically invokes ordered escalation for failures when needed, documents non-blocking decisions guided by them, stops only for genuine blockers, and reports decisions when it made any. | Primary (default) |
 | [`conductor`](agents/agent/conductor.md) | Orchestrates multi-step work end to end through its thorough six-phase workflow: Analyze, Code or non-code Decompose, Execute, Review, automatically Escalate when needed, and Report. | Primary |
 | [`committer`](agents/agent/committer.md) | Groups changes by topic and makes focused commits with clear messages. Never tags. Does not push or create branches unless explicitly asked. | Subagent |
 | [`reviewer`](agents/agent/reviewer.md) | Reviews work for correctness, style, and completeness. Edit-denied agent — produces a structured review plan and may directly run diagnostic and verification Bash without intentionally modifying project state. | Both |

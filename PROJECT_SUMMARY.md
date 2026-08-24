@@ -41,9 +41,9 @@ verification Bash directly without intentionally modifying project state.
   per project.
 - `.gitignore` — ignores `project_context.yaml` and credential `.ini` files.
 - `opencode.json` — project-level per-agent model assignments (merged with global config).
-  Current assignments: `fast`, `conductor`, `escalate1`, `plan`, and `verifier`
-  run on `openrouter/openai/gpt-5.6-terra`; `reviewer`, `committer`, `build`,
-  `explore`, and `general` run on `openrouter/openai/gpt-5.6-luna`; `escalate2`
+  Current assignments: `fast`, `conductor`, `reviewer`, `plan`, and `escalate1`
+  run on `openrouter/qwen/qwen3.8-max`; `build`, `committer`, `explore`, and
+  `general` run on `openrouter/deepseek/deepseek-v4-pro-0813`; `escalate2`
   runs on `openrouter/openai/gpt-5.6-sol`. OpenRouter model
   entries `openai/gpt-5.6-luna`, `openai/gpt-5.6-terra`, and `openai/gpt-5.6-sol` use the
   `reasoningEffort: "max"` option under `provider.openrouter.models`.
@@ -75,7 +75,7 @@ verification Bash directly without intentionally modifying project state.
   Final review by `reviewer` is mandatory — cannot substitute another agent.
   Loop prevention rules prohibit recursive or self-delegation.
 - `agent/fast.md` — opencode agent definition for the `fast` agent. Classification:
-   Primary and default. Uses `openrouter/openai/gpt-5.6-terra` and follows a six-step
+   Primary and default. Uses `openrouter/qwen/qwen3.8-max` and follows a six-step
    lifecycle that defines success criteria before planning, actively restates its
    understanding and proposed criteria for human validation, then proceeds autonomously
    after validation, automatically invokes ordered
